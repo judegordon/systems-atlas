@@ -1,0 +1,18 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+
+# Fonts are effectively versioned by filename and never change under a given
+# name, so immutable is safe here and nowhere else.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Icons and og images do change. One day, and revalidation allowed.
+/assets/*
+  Cache-Control: public, max-age=86400
+
+/styles.css
+  Cache-Control: public, max-age=3600

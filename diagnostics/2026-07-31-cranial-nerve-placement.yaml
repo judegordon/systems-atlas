@@ -1,0 +1,19 @@
+date: 2026-07-31
+component_type: domain
+paths:
+  - human-biological/nervous-system/peripheral-nervous-system
+intent: stress-test
+issue: >
+  Cranial nerves are placed in the peripheral nervous system on anatomical
+  grounds. CN I and CN II are histologically central nervous tissue, and CN II
+  is a tract of the diencephalon rather than a peripheral nerve. Placing them
+  peripherally makes the division fail on histological criteria while passing
+  on anatomical ones, which means the division is only mutually exclusive once
+  it is fixed which criterion governs.
+outcome: unresolved
+resolution: >
+  Left standing. Anatomical placement is applied consistently across the whole
+  division rather than making an exception for two nerves, on the grounds that
+  a consistent rule with a recorded failure is more useful than an inconsistent
+  rule with none. The criterion question is the real issue and is not settled
+  by this entry.

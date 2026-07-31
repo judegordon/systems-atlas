@@ -1,0 +1,23 @@
+id: technological
+name: Technological
+definition: >
+  Artefacts, processes and infrastructures that apply organised knowledge to
+  achieve practical objectives, including the standardised technical
+  definitions and system components that enable design, deployment and
+  operation.
+inclusion:
+  - engineered artefacts and technical processes
+  - technical infrastructures such as communications, compute, energy and manufacturing
+  - standards and interoperability mechanisms
+  - technology life-cycle structures treated as system components
+exclusion:
+  - text: the scientific enterprise itself as a social institution
+    goes_to: academic
+  - text: economic allocation and accounting as primary objects
+    goes_to: economic
+  - text: human biological structures themselves
+    goes_to: human-biological
+sources: []
+boundary_cases: []
+uncertainty: []
+children: []

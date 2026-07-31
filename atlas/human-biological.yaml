@@ -1,0 +1,372 @@
+id: human-biological
+name: Human biological
+definition: >
+  The organised structures of the human organism, from cells to organ systems,
+  and the stable functional organisation those structures enable, including the
+  agreed terminologies that describe them.
+inclusion:
+  - anatomical structures and their standardised nomenclature
+  - cellular and molecular organisation directly constituting tissues and organs
+  - organ-system architecture
+  - reference-atlas representations of the body that preserve structural mapping
+exclusion:
+  - text: institutions delivering healthcare
+    goes_to: healthcare
+  - text: technological tools used to measure or operate on biology
+    goes_to: technological
+    relation: instrumentation
+  - text: normative judgements about life and health
+    goes_to: ethics
+    kind: lens
+sources: []
+boundary_cases: []
+uncertainty:
+  - >
+    This division currently has nine children, against a stated bound of seven.
+    Either the bound does not apply at L1, which needs an argument, or two of
+    these are not siblings of the rest.
+  - >
+    The endocrine system is excluded from the nervous system but does not appear
+    as a component here. It is either missing or absorbed into another component
+    without that being stated.
+
+children:
+
+  # ---------------------------------------------------------------- L1
+  - id: nervous-system
+    name: Nervous system
+    definition: >
+      The system responsible for information processing, signal transmission,
+      and coordination of body functions.
+    inclusion: []
+    exclusion:
+      - text: hormonal signalling
+        goes_to: endocrine-system
+      - text: structural support
+        goes_to: musculoskeletal-system
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+
+      - id: central-nervous-system
+        name: Central nervous system
+        definition: ""
+        inclusion: []
+        exclusion: []
+        sources: []
+        boundary_cases: []
+        uncertainty: []
+        children:
+
+          - id: brain
+            name: Brain
+            definition: ""
+            inclusion: []
+            exclusion: []
+            sources: []
+            boundary_cases: []
+            uncertainty: []
+            children:
+              - id: cerebrum
+                name: Cerebrum
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - id: left-cerebral-hemisphere
+                    name: Left cerebral hemisphere
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    children:
+                      - { id: left-frontal-lobe,   name: Frontal lobe,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: left-parietal-lobe,  name: Parietal lobe,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: left-temporal-lobe,  name: Temporal lobe,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: left-occipital-lobe, name: Occipital lobe, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: left-insula,         name: Insula,         definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - id: right-cerebral-hemisphere
+                    name: Right cerebral hemisphere
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    children:
+                      - { id: right-frontal-lobe,   name: Frontal lobe,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: right-parietal-lobe,  name: Parietal lobe,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: right-temporal-lobe,  name: Temporal lobe,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: right-occipital-lobe, name: Occipital lobe, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: right-insula,         name: Insula,         definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+              - id: diencephalon
+                name: Diencephalon
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - id: thalamus
+                    name: Thalamus
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    children:
+                      - { id: thalamus-anterior, name: Anterior part, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: thalamus-medial,   name: Medial part,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: thalamus-lateral,  name: Lateral part,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - id: hypothalamus
+                    name: Hypothalamus
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    children:
+                      - { id: hypothalamus-anterior,  name: Anterior region,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: hypothalamus-tuberal,   name: Tuberal region,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: hypothalamus-posterior, name: Posterior region, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - id: epithalamus
+                    name: Epithalamus
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    terminal: true
+                  - id: subthalamus
+                    name: Subthalamus
+                    definition: ""
+                    inclusion: []
+                    exclusion: []
+                    sources: []
+                    boundary_cases: []
+                    uncertainty: []
+                    children:
+                      - { id: subthalamic-grey-matter,  name: Subthalamic grey matter structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                      - { id: subthalamic-fibre-fields, name: Subthalamic fibre fields,           definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+              - id: brainstem
+                name: Brainstem
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: midbrain,          name: Midbrain,          definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: pons,              name: Pons,              definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: medulla-oblongata, name: Medulla oblongata, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+              - id: cerebellum
+                name: Cerebellum
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: cerebellar-vermis,      name: Vermis,                definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: cerebellar-hemispheres, name: Cerebellar hemispheres, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+          - id: spinal-cord
+            name: Spinal cord
+            definition: ""
+            inclusion: []
+            exclusion: []
+            sources: []
+            boundary_cases: []
+            uncertainty: []
+            children:
+              - id: spinal-grey-matter
+                name: Grey matter
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: anterior-horn,  name: Anterior horn,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: posterior-horn, name: Posterior horn, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: lateral-horn,   name: Lateral horn,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+              - id: spinal-white-matter
+                name: White matter
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                terminal: true
+
+          - id: ventricular-system
+            name: Ventricular system
+            definition: ""
+            inclusion: []
+            exclusion: []
+            sources: []
+            boundary_cases: []
+            uncertainty: []
+            children:
+              - id: ventricular-cavities
+                name: Ventricular cavities
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: lateral-ventricles, name: Lateral ventricles, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: third-ventricle,    name: Third ventricle,    definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: fourth-ventricle,   name: Fourth ventricle,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+              - id: ventricular-conduits
+                name: Ventricular conduits
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: interventricular-foramina, name: Interventricular foramina, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: cerebral-aqueduct,         name: Cerebral aqueduct,         definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: median-aperture,           name: Median aperture,           definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: lateral-aperture,          name: Lateral aperture,          definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+          - id: meninges
+            name: Meninges
+            definition: ""
+            inclusion: []
+            exclusion: []
+            sources: []
+            boundary_cases: []
+            uncertainty: []
+            children:
+              - id: dura-mater
+                name: Dura mater
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: cranial-dura-mater, name: Cranial dura mater, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: spinal-dura-mater,  name: Spinal dura mater,  definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+              - id: arachnoid-mater
+                name: Arachnoid mater
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: arachnoid-barrier-layer, name: Arachnoid barrier layer, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: arachnoid-trabeculae,    name: Arachnoid trabeculae,    definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+              - id: pia-mater
+                name: Pia mater
+                definition: ""
+                inclusion: []
+                exclusion: []
+                sources: []
+                boundary_cases: []
+                uncertainty: []
+                children:
+                  - { id: surface-pia-mater, name: Surface pia mater, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+                  - { id: pial-extensions,   name: Pial extensions,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+      - id: peripheral-nervous-system
+        name: Peripheral nervous system
+        definition: ""
+        inclusion: []
+        exclusion: []
+        sources: []
+        boundary_cases:
+          - >
+            Cranial nerves are placed here on anatomical grounds. For CN I and
+            CN II this is not histologically clean — both are central nervous
+            tissue — but anatomical placement is applied consistently across
+            the division rather than making an exception for two nerves.
+        uncertainty:
+          - >
+            Whether anatomical or histological criteria should govern this
+            division is unresolved. See diagnostics.
+        children:
+          - { id: cranial-nerves,    name: Cranial nerves,    definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+          - { id: spinal-nerves,     name: Spinal nerves,     definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+          - { id: peripheral-ganglia, name: Peripheral ganglia, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+
+  # ---------------------------------------------------------------- L1 stubs
+  - id: circulatory-system
+    name: Circulatory system
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - id: heart
+        name: Heart
+        definition: ""
+        inclusion: []
+        exclusion: []
+        sources: []
+        boundary_cases: []
+        uncertainty: []
+        children:
+          - { id: atria,          name: Atria,          definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: ventricles,     name: Ventricles,     definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: cardiac-valves, name: Cardiac valves, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+      - id: blood-vessels
+        name: Blood vessels
+        definition: ""
+        inclusion: []
+        exclusion: []
+        sources: []
+        boundary_cases: []
+        uncertainty: []
+        children:
+          - { id: arteries,    name: Arteries,    definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: veins,       name: Veins,       definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: capillaries, name: Capillaries, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+      - id: blood
+        name: Blood
+        definition: ""
+        inclusion: []
+        exclusion: []
+        sources: []
+        boundary_cases: []
+        uncertainty: []
+        children:
+          - { id: plasma,       name: Plasma,       definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: erythrocytes, name: Erythrocytes, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: leukocytes,   name: Leukocytes,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+          - { id: platelets,    name: Platelets,    definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+
+  - { id: respiratory-system,     name: Respiratory system,     definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: musculoskeletal-system, name: Musculoskeletal system, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: digestive-system,       name: Digestive system,       definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: integumentary-system,   name: Integumentary system,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: genitourinary-system,   name: Genitourinary system,   definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: lymphatic-system,       name: Lymphatic system,       definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: serous-membrane-system, name: Serous membrane system, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }

@@ -1,0 +1,92 @@
+id: academic
+name: Academic
+definition: >
+  Institutions, funding structures and communication systems that produce,
+  validate and transmit knowledge and credentials, including higher education
+  and research enterprises.
+inclusion:
+  - higher education institutions and credentialing systems
+  - research institutions and R&D governance
+  - academic labour structures
+  - scholarly communication infrastructure
+  - funding and evaluation systems
+exclusion:
+  - text: pure technical artefacts and infrastructures
+    goes_to: technological
+  - text: policy decisions about resource allocation
+    goes_to: political
+  - text: personal beliefs not embedded in academic institutions
+    goes_to: religious
+sources: []
+boundary_cases: []
+uncertainty:
+  - >
+    The definition is written with verbs (produce, validate, transmit), which
+    fails the stated structural test. Either the test is wrong or this domain
+    is not structural.
+children:
+  - id: higher-education-structures
+    name: Higher education structures
+    definition: >
+      Organised institutions that deliver accredited education and formal
+      qualifications.
+    inclusion:
+      - universities, colleges, degree-awarding bodies
+    exclusion:
+      - text: research-only institutes
+        goes_to: research-structures
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: degree-awarding-organisations, name: Degree-awarding organisations, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+      - { id: non-degree-organisations, name: Non-degree organisations, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+      - { id: collaborative-organisations, name: Collaborative organisations, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - id: research-structures
+    name: Research structures
+    definition: Institutions and organisational units that produce new knowledge.
+    inclusion:
+      - research institutes, laboratories, R&D centres
+    exclusion:
+      - text: dissemination platforms
+        goes_to: scholarly-communication-structures
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+  - id: credentialing-structures
+    name: Credentialing and evaluation structures
+    definition: >
+      Systems that assess, validate and formally recognise academic
+      achievement and research output.
+    inclusion:
+      - degree systems, accreditation bodies, peer review systems, rankings
+    exclusion:
+      - text: funding decisions
+        goes_to: funding-structures
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+  - id: scholarly-communication-structures
+    name: Scholarly communication structures
+    definition: Infrastructure that disseminates and archives academic knowledge.
+    inclusion:
+      - journals, conferences, repositories, publishing platforms
+    exclusion:
+      - text: the underlying technology
+        goes_to: technological
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+  - id: funding-structures
+    name: Funding and resource allocation structures
+    definition: >
+      Systems that distribute financial and material resources within
+      academia.
+    inclusion:
+      - grant agencies, funding councils, endowments
+    exclusion:
+      - text: macro policy decisions
+        goes_to: political
+    sources: []
+    boundary_cases: []
+    uncertainty: []

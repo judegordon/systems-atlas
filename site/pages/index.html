@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Systems Atlas Project — A map of how systems work</title>
+<meta name="description" content="Systems Atlas decomposes the systems that shape the world into their smallest defensible parts. Nine domains, a stated method, and a record of what is still unresolved.">
+<meta name="theme-color" content="#101820">
+<link rel="canonical" href="https://systemsatlasproject.com/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Systems Atlas Project">
+<meta property="og:description" content="A map of how systems work. Decomposition into the smallest defensible parts, with the uncertainty left visible.">
+<meta property="og:url" content="https://systemsatlasproject.com/">
+<meta property="og:image" content="https://systemsatlasproject.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- Masthead ================================================================ -->
+<header class="masthead">
+  <div class="wrap masthead__inner">
+    <a class="masthead__mark" href="/">
+      <img class="masthead__icon" src="/assets/icon-128.png" alt="" width="32" height="32">
+      Systems Atlas Project
+    </a>
+    <nav class="masthead__nav" aria-label="Sections">
+      <a href="#map">Map</a>
+      <a href="#method">Method</a>
+      <a href="#lenses">Lenses</a>
+      <a href="#tools">Tools</a>
+      <a href="#diagnostics">Diagnostics</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero ================================================================= -->
+  <section class="field--night hero">
+    <div class="wrap hero__grid">
+
+      <div>
+        <h1 class="title">A map of how systems work.</h1>
+        <p class="lede hero__lede">
+          Systems Atlas decomposes the systems that shape the world into their
+          smallest defensible parts. The next step is a model: change one part
+          and watch the consequences propagate.
+        </p>
+        <p class="data hero__state">
+          <span class="is-building">Under construction</span>
+          <span class="is-open">Nine domains open</span>
+          <span>Version 0.1</span>
+        </p>
+      </div>
+
+      <figure>
+        <svg class="fragment" viewBox="0 0 600 392" role="img"
+             aria-labelledby="frag-title frag-desc">
+          <title id="frag-title">A fragment of the human biological domain</title>
+          <desc id="frag-desc">Human biological at level zero divides into the nervous
+            system at level one, which divides into the central and peripheral nervous
+            systems at level two. The central nervous system is the selected node. The
+            division to the peripheral nervous system is drawn as an interrupted line
+            because the placement of the first two cranial nerves is unresolved.</desc>
+
+          <!-- Scope boundary: the L2 partition currently in view -->
+          <rect class="frag__boundary frag__appear d5" x="118" y="186" width="296" height="180"/>
+
+          <!-- Relations -->
+          <path class="frag__rel frag__draw d2 len--103" d="M40,70 V137 H76"/>
+          <path class="frag__rel frag__draw d3 len--103" d="M100,164 V231 H136"/>
+          <path class="frag__rel frag__rel--open frag__draw d4 len--197" d="M100,164 V325 H136"/>
+
+          <!-- Nodes -->
+          <g class="frag__appear d1">
+            <rect class="frag__node" x="16" y="16" width="236" height="54"/>
+            <text class="frag__label" x="32" y="39">Human biological</text>
+            <text class="frag__level" x="32" y="57">L0 · DOMAIN</text>
+          </g>
+
+          <g class="frag__appear d2">
+            <rect class="frag__node" x="76" y="110" width="236" height="54"/>
+            <text class="frag__label" x="92" y="133">Nervous system</text>
+            <text class="frag__level" x="92" y="151">L1 · SUBDOMAIN</text>
+          </g>
+
+          <g class="frag__appear d3">
+            <rect class="frag__node frag__node--selected" x="136" y="204" width="250" height="54"/>
+            <text class="frag__label" x="152" y="227">Central nervous system</text>
+            <text class="frag__level frag__level--selected" x="152" y="245">L2 · SELECTED</text>
+          </g>
+
+          <g class="frag__appear d4">
+            <rect class="frag__node" x="136" y="298" width="250" height="54"/>
+            <text class="frag__label" x="152" y="321">Peripheral nervous system</text>
+            <text class="frag__level" x="152" y="339">L2 · BOUNDARY CASE</text>
+          </g>
+
+          <text class="frag__level frag__appear d6" x="136" y="384">
+            Cranial nerves I and II are placed here anatomically, not histologically.
+          </text>
+        </svg>
+
+        <figcaption class="legend">
+          <span class="legend__item"><span class="legend__swatch legend__swatch--solid"></span>Stated structure</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--open"></span>Unresolved boundary</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--inferred"></span>Current scope</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--selected"></span>Selected node</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- Destination ========================================================== -->
+  <section class="field--night band" id="destination">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 02</span> Destination</p>
+      <h2 class="section-title">Structure, then function, then propagation.</h2>
+      <div class="prose">
+        <p>
+          A structural map is not the point on its own. It is the part that has to
+          be right first, because a model built on categories that overlap will
+          produce answers that cannot be traced back to anything.
+        </p>
+      </div>
+
+      <ol class="destination">
+        <li class="stage stage--now">
+          <span class="stage__state">In progress</span>
+          <h3 class="sub-title">Structure</h3>
+          <p>
+            Divide each domain into parts that do not overlap, at a consistent
+            level of abstraction, with the criteria for inclusion written down.
+          </p>
+        </li>
+        <li class="stage">
+          <span class="stage__state">Not started</span>
+          <h3 class="sub-title">Function</h3>
+          <p>
+            Connect the structural nodes into processes: what each part does, and
+            which other parts it acts on.
+          </p>
+        </li>
+        <li class="stage">
+          <span class="stage__state">Not started</span>
+          <h3 class="sub-title">Propagation</h3>
+          <p>
+            Change one node and trace the consequences through the connected
+            parts, with the strength of each link stated rather than assumed.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Current map ========================================================== -->
+  <section class="field--night band" id="map">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 03</span> Current map</p>
+      <h2 class="section-title">Nine domains. Most of them barely started.</h2>
+      <div class="prose">
+        <p>
+          Each row shows how far that domain has been decomposed and justified.
+          Depth is not a score. A domain divided to level seven is not further
+          along than one divided to level two — it is only more finely divided,
+          and every level still has to survive the same rules.
+        </p>
+      </div>
+
+      <div class="ladder">
+        <div class="ladder__scale" aria-hidden="true">
+          <span>Domain</span>
+          <ol><li>L0</li><li>L1</li><li>L2</li><li>L3</li><li>L4</li><li>L5</li><li>L6</li><li>L7</li></ol>
+          <span></span>
+        </div>
+
+        <!-- Human biological — L7 -->
+        <div class="domain">
+          <span class="domain__name">Human biological</span>
+          <div class="domain__track" role="img" aria-label="Decomposed to level seven of eight">
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+          </div>
+          <span class="domain__depth"><strong>L7</strong></span>
+        </div>
+
+        <!-- Academic — L2 -->
+        <div class="domain">
+          <span class="domain__name">Academic</span>
+          <div class="domain__track" role="img" aria-label="Decomposed to level two of eight">
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L2</strong></span>
+        </div>
+
+        <!-- Legal — L2 -->
+        <div class="domain">
+          <span class="domain__name">Legal</span>
+          <div class="domain__track" role="img" aria-label="Decomposed to level two of eight">
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L2</strong></span>
+        </div>
+
+        <!-- Political — L2 -->
+        <div class="domain">
+          <span class="domain__name">Political</span>
+          <div class="domain__track" role="img" aria-label="Decomposed to level two of eight">
+            <span class="domain__seg"></span><span class="domain__seg"></span>
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L2</strong></span>
+        </div>
+
+        <!-- Economic — L0 -->
+        <div class="domain">
+          <span class="domain__name">Economic</span>
+          <div class="domain__track" role="img" aria-label="Defined at level zero only">
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L0</strong></span>
+        </div>
+
+        <!-- Healthcare — L0 -->
+        <div class="domain">
+          <span class="domain__name">Healthcare</span>
+          <div class="domain__track" role="img" aria-label="Defined at level zero only">
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L0</strong></span>
+        </div>
+
+        <!-- Meta — L0 -->
+        <div class="domain">
+          <span class="domain__name">Meta</span>
+          <div class="domain__track" role="img" aria-label="Defined at level zero only">
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L0</strong></span>
+        </div>
+
+        <!-- Religious — L0 -->
+        <div class="domain">
+          <span class="domain__name">Religious</span>
+          <div class="domain__track" role="img" aria-label="Defined at level zero only">
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L0</strong></span>
+        </div>
+
+        <!-- Technological — L0 -->
+        <div class="domain">
+          <span class="domain__name">Technological</span>
+          <div class="domain__track" role="img" aria-label="Defined at level zero only">
+            <span class="domain__seg"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span><span class="domain__seg domain__seg--open"></span>
+            <span class="domain__seg domain__seg--open"></span>
+          </div>
+          <span class="domain__depth"><strong>L0</strong></span>
+        </div>
+      </div>
+
+      <p class="legend">
+        <span class="legend__item"><span class="legend__swatch legend__swatch--solid"></span>Level divided and justified</span>
+        <span class="legend__item"><span class="legend__swatch legend__swatch--open legend__swatch--faint"></span>Level not yet examined</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Method =============================================================== -->
+  <section class="field--paper band" id="method">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 04</span> Method</p>
+      <h2 class="section-title">Six rules a division has to survive.</h2>
+      <div class="prose">
+        <p>
+          The rules are deliberately restrictive. Most of the work is throwing out
+          divisions that felt right and then failed one of them.
+        </p>
+      </div>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="rule__no">RULE 01</span>
+          <h3 class="sub-title">Five parts, at most seven</h3>
+          <p>
+            A division holds about five components, and never more than seven, so
+            the whole set can be compared in one go. The bound comes from Miller
+            (1956) and is set at the cautious end of it.
+          </p>
+        </div>
+        <div class="rule">
+          <span class="rule__no">RULE 02</span>
+          <h3 class="sub-title">Mutually exclusive</h3>
+          <p>
+            No component may share elements with another, and anything derivable
+            from other components is not a component. Where assignment is
+            ambiguous, the definitions are wrong and get tightened.
+          </p>
+        </div>
+        <div class="rule">
+          <span class="rule__no">RULE 03</span>
+          <h3 class="sub-title">Collectively exhaustive</h3>
+          <p>
+            The components cover as much of the parent as five to seven of them
+            can. This is exhaustive within a cognitive limit, not in the absolute
+            sense, and the shortfall is recorded rather than hidden.
+          </p>
+        </div>
+        <div class="rule">
+          <span class="rule__no">RULE 04</span>
+          <h3 class="sub-title">Equal abstraction</h3>
+          <p>
+            Components at the same level answer the same type of question. The
+            level is argued from evidence where evidence exists, not settled by
+            preference.
+          </p>
+        </div>
+        <div class="rule">
+          <span class="rule__no">RULE 05</span>
+          <h3 class="sub-title">Decomposable or terminal</h3>
+          <p>
+            A component either splits into two or more non-overlapping parts, or
+            it is an endpoint node. Subcomponents inherit the parent definition
+            and add one of their own.
+          </p>
+        </div>
+        <div class="rule">
+          <span class="rule__no">RULE 06</span>
+          <h3 class="sub-title">Justified in writing</h3>
+          <p>
+            Every category carries a definition, inclusion criteria, exclusion
+            criteria, sources and boundary cases. A category without them is
+            unfinished, whatever it looks like on the map.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Lenses =============================================================== -->
+  <section class="field--paper band" id="lenses">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 05</span> Lenses</p>
+      <h2 class="section-title">Dividing a system is not the same as interrogating one.</h2>
+      <div class="prose">
+        <p>
+          The rules above govern how a system is <strong>cut into parts</strong>.
+          They say nothing about what you are then allowed to ask of a part once
+          it exists. Those are separate operations and conflating them is how
+          most system descriptions go wrong — a structural claim gets defended
+          with behavioural evidence, or a value judgement arrives dressed as a
+          description.
+        </p>
+        <p>
+          So every question put to a component is asked through exactly one of
+          eleven lenses, declared in advance. The lens fixes what kind of answer
+          counts and what kind of evidence can settle it. Asking how a system
+          behaves is a different act from asking who controls it, and neither is
+          the act of deciding where its boundary falls.
+        </p>
+      </div>
+
+      <div class="lenses">
+        <span class="lens">Mechanism</span>
+        <span class="lens">Measurement</span>
+        <span class="lens">Model</span>
+        <span class="lens">Incentives</span>
+        <span class="lens">Governance</span>
+        <span class="lens">Implementation</span>
+        <span class="lens">Failure analysis</span>
+        <span class="lens">Comparative</span>
+        <span class="lens">Ethics</span>
+        <span class="lens">Design</span>
+        <span class="lens lens--undefined">Behavioural — not yet defined</span>
+      </div>
+
+      <div class="prose mt-6">
+        <p>
+          Each lens carries its own exclusions. Mechanism describes cause and
+          effect and hands motivation to Incentives. Incentives explains why an
+          actor behaves as they do and hands formal authority to Governance.
+          Implementation describes what actually happens and hands the reasons it
+          fails to Failure analysis. The exclusions are the load-bearing part:
+          a lens is defined as much by what it refuses to answer as by what it
+          covers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools ================================================================ -->
+  <section class="field--paper band" id="tools">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 06</span> Tools</p>
+      <h2 class="section-title">Four apps that came before the map, not out of it.</h2>
+      <div class="prose">
+        <p>
+          These were not derived from the taxonomy. Each one came from noticing a
+          gap directly — something being measured badly, or not at all — and
+          building the thing that would measure it. That happened before the
+          decomposition was anywhere near able to point at it.
+        </p>
+        <p>
+          They also resist attribution by their nature. All four are about the
+          optimisation of learning and attention, which means each touches many
+          parts of many systems at once rather than sitting inside one of them.
+          The decomposition has not reached the node level in any domain, so any
+          attribution offered now would be invented.
+        </p>
+        <p>
+          The eventual aim is that it would not be. A complete breakdown to nodes
+          would let any tool be located precisely: these parts it addresses,
+          these parts it leaves alone, and these parts nothing addresses at all.
+          That last category is the interesting one, and it is the reason the
+          structural work comes first.
+        </p>
+        <p>
+          They are independent tools, not a suite. They share no data and no
+          account, and each keeps its own name, colour and identity.
+        </p>
+      </div>
+
+      <div class="tools">
+
+        <a class="tool" href="/tools/konki/">
+          <img class="tool__icon" src="/assets/tools/konki.png" alt="" width="56" height="56">
+          <div>
+            <div class="tool__head">
+              <span class="tool__name">Konki</span>
+              <span class="tool__status tool__status--live">Free on the App Store</span>
+            </div>
+            <p class="tool__what">
+              Training load cannot be counted honestly if the weight of your own
+              body is left out of it. Konki adapts targets from what you actually
+              logged rather than from a plan written in advance.
+            </p>
+            <span class="tool__link">Open Konki →</span>
+          </div>
+        </a>
+
+        <a class="tool" href="/tools/shutoku/">
+          <img class="tool__icon" src="/assets/tools/shutoku.png" alt="" width="56" height="56">
+          <div>
+            <div class="tool__head">
+              <span class="tool__name">Shutoku</span>
+              <span class="tool__status tool__status--live">Free on the App Store</span>
+            </div>
+            <p class="tool__what">
+              Retention decays on a schedule you cannot feel from the inside, so
+              it has to be scheduled from outside. A spaced-repetition system for
+              Japanese vocabulary, with conjugation and a usable dictionary.
+            </p>
+            <span class="tool__link">Open Shutoku →</span>
+          </div>
+        </a>
+
+        <a class="tool" href="/tools/kantetsu/">
+          <img class="tool__icon" src="/assets/tools/kantetsu.png" alt="" width="56" height="56">
+          <div>
+            <div class="tool__head">
+              <span class="tool__name">Kantetsu</span>
+              <span class="tool__status tool__status--live">Free on the App Store</span>
+            </div>
+            <p class="tool__what">
+              A record you can edit afterwards records nothing. You write your own
+              rules and mark once a day, honestly, whether you kept them. The
+              previous days stay as they were marked.
+            </p>
+            <span class="tool__link">Open Kantetsu →</span>
+          </div>
+        </a>
+
+        <a class="tool" href="/tools/bottou/">
+          <img class="tool__icon" src="/assets/tools/bottou.png" alt="" width="56" height="56">
+          <div>
+            <div class="tool__head">
+              <span class="tool__name">Bottou</span>
+              <span class="tool__status tool__status--live">Free on the App Store</span>
+            </div>
+            <p class="tool__what">
+              A pause button would let a break hide inside the measurement, so
+              there isn't one. Bottou measures unbroken attention and asks why it
+              broke.
+            </p>
+            <span class="tool__link">Open Bottou →</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Evidence and diagnostics ============================================= -->
+  <section class="field--night band" id="diagnostics">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 07</span> Evidence and diagnostics</p>
+      <h2 class="section-title">Every wrong turn is written down.</h2>
+      <div class="prose">
+        <p>
+          A map that only shows its finished parts cannot be checked. When a
+          division fails — because a case will not classify, because two
+          categories overlap, because a definition turned out to be circular — the
+          failure is recorded in the same structure every time.
+        </p>
+      </div>
+
+      <div class="record">
+        <div class="record__row">
+          <span class="record__key">Component type</span>
+          <span class="record__val">Domain, lens, article, evidence, dictionary, code or meta.</span>
+        </div>
+        <div class="record__row">
+          <span class="record__key">Paths</span>
+          <span class="record__val">The exact levels, sections or files the entry applies to.</span>
+        </div>
+        <div class="record__row">
+          <span class="record__key">Intent</span>
+          <span class="record__val">Application, stress test, differentiation, modification or verification.</span>
+        </div>
+        <div class="record__row">
+          <span class="record__key">Issue</span>
+          <span class="record__val">Written as prose until enough entries exist to name the pattern.</span>
+        </div>
+        <div class="record__row">
+          <span class="record__key">Outcome</span>
+          <span class="record__val">No issue, resolved, or unresolved and left standing.</span>
+        </div>
+      </div>
+
+      <div class="prose mt-6">
+        <p>
+          Two boundary problems are open at the top level. Courts sit in both the
+          legal and political domains, and are currently assigned by whether the
+          question is about rule validity or about the allocation of authority.
+          Religious law sits in both the religious and legal domains, and is split
+          by whether the state enforces it. Neither split is settled.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About ================================================================ -->
+  <section class="field--paper band" id="about">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 08</span> About</p>
+      <h2 class="section-title">One person, working slowly, in the open.</h2>
+      <div class="prose">
+        <p>
+          Systems Atlas is built and maintained by Jude Gordon. The apps are
+          SwiftUI, the backends are deliberately boring, and nothing is
+          outsourced.
+        </p>
+        <p>
+          The atlas is not finished and will not be finished soon. What is on this
+          page is what has survived the rules so far. If a division here is wrong,
+          the useful thing to send is the case that breaks it:
+          <a href="mailto:hello@systemsatlasproject.com">hello@systemsatlasproject.com</a>.
+        </p>
+      </div>
+      <div class="actions">
+        <a class="btn btn--primary" href="#map">Open the map</a>
+        <a class="btn btn--secondary" href="#method">Read the method</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer ================================================================= -->
+<footer class="field--night footer">
+  <div class="wrap footer__inner">
+    <div class="footer__grid">
+      <ul class="terms">
+        <li>Built by one person.</li>
+        <li>No advertising.</li>
+        <li>No attention farming.</li>
+      </ul>
+      <nav class="footer__nav" aria-label="Tools">
+        <a href="/tools/konki/">Konki</a>
+        <a href="/tools/shutoku/">Shutoku</a>
+        <a href="/tools/kantetsu/">Kantetsu</a>
+        <a href="/tools/bottou/">Bottou</a>
+      </nav>
+    </div>
+    <p class="colophon">
+      <a href="mailto:hello@systemsatlasproject.com">hello@systemsatlasproject.com</a>
+      · © 2026 Systems Atlas Project
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

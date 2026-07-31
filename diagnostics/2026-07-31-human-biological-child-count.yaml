@@ -1,0 +1,17 @@
+date: 2026-07-31
+component_type: domain
+paths:
+  - human-biological
+intent: verification
+issue: >
+  The human biological domain currently divides into nine components, against
+  a stated ceiling of seven. The bound was adopted so that a complete division
+  can be held in working memory at once, and nine defeats that. The division
+  also excludes hormonal signalling to an endocrine system that does not appear
+  among the nine, so the set is simultaneously over the ceiling and incomplete.
+outcome: unresolved
+resolution: >
+  No change yet. Three options are open: argue that the bound does not apply at
+  this level and say why; merge components that are not siblings of the rest;
+  or introduce an intermediate level so each division stays within bounds. The
+  third is most likely correct but has not been worked through.

@@ -1,0 +1,68 @@
+id: legal
+name: Legal
+definition: >
+  Institutionalised rule systems - sources of law, adjudication structures and
+  enforcement mechanisms - that define rights and obligations and create
+  binding decisions backed by legitimate authority.
+inclusion:
+  - lawmaking sources such as statutes, delegated regulation and jurisprudence
+  - adjudication institutions and compliance processes
+  - legal enforcement mechanisms including sanctions, penalties and remedies
+  - rights and obligations frameworks where legally constituted
+exclusion:
+  - text: ethical judgements about what should be the case
+    goes_to: ethics
+    kind: lens
+  - text: informal social norms without formal enforceability
+    goes_to: religious
+  - text: economic incentives absent a legal rule mechanism
+    goes_to: economic
+sources: []
+boundary_cases:
+  - >
+    Constitutional checks are simultaneously legal institutions and political
+    constraints. Currently assigned by whether the question is about rule
+    validity or about the allocation of authority.
+uncertainty:
+  - >
+    Resolving this boundary by the analyst's question makes placement depend on
+    who is asking rather than on the entity. That is what lenses are for, and
+    using them to settle structural placement may be a category error.
+children:
+  - id: legal-norm-structures
+    name: Legal norm structures
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: foundational-norms, name: Foundational norms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: allocative-norms, name: Allocative norms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: relational-norms, name: Relational norms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: prohibitive-norms, name: Prohibitive norms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: regulatory-norms, name: Regulatory norms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+  - id: adjudication-structures
+    name: Adjudication structures
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: first-instance-bodies, name: First-instance adjudication bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: appellate-bodies, name: Appellate adjudication bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: non-state-bodies, name: Non-state adjudication bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+  - id: enforcement-structures
+    name: Enforcement structures
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: adjudicated-enforcement, name: Adjudicated enforcement mechanisms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: non-adjudicated-enforcement, name: Non-adjudicated enforcement mechanisms, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }

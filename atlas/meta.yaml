@@ -1,0 +1,34 @@
+id: meta
+name: Meta
+definition: >
+  Formal organisation-of-knowledge structures - ontologies, top-level
+  categories, representation standards and metadata or provenance systems -
+  that define and relate concepts across domains to enable interoperability,
+  retrieval, integration and analysis.
+inclusion:
+  - ontologies, taxonomies and controlled vocabularies
+  - metadata and provenance schemes
+  - standards for semantic representation and exchange
+  - top-level categories and mapping frameworks that mediate across domains
+exclusion:
+  - text: causal mechanisms in real systems
+    goes_to: mechanism
+    kind: lens
+  - text: the empirical variables themselves
+    goes_to: measurement
+    kind: lens
+  - text: domain-specific institutional structures
+    goes_to: political
+sources:
+  - citation: >
+      ISO/IEC 21838-1, Information technology - Top-level ontologies.
+    where: Provides an institutional definition of meta-level artefacts as
+      domain-neutral ontologies enabling interoperability.
+boundary_cases: []
+uncertainty:
+  - >
+    This is a domain of representations rather than of the world, so every
+    other domain has a meta shadow. That may mean it does not belong among the
+    nine as a sibling. The atlas is itself a meta artefact, so this domain
+    contains the thing that contains it.
+children: []

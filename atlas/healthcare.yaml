@@ -1,0 +1,29 @@
+id: healthcare
+name: Healthcare
+definition: >
+  Organisations, people, infrastructures and governance arrangements whose
+  primary intent is to promote, restore or maintain health, including the core
+  system functions that deliver and finance care.
+inclusion:
+  - care delivery infrastructure and pathways
+  - workforce and professional regulation structures
+  - financing and purchasing structures
+  - governance and stewardship structures
+  - supply systems for medicines and technologies integral to care
+exclusion:
+  - text: biological mechanisms inside the human body
+    goes_to: human-biological
+  - text: general social determinants where the primary intent is not health
+    goes_to: political
+  - text: model abstractions
+    goes_to: model
+    kind: lens
+sources: []
+boundary_cases: []
+uncertainty:
+  - >
+    This domain is defined by primary intent, which is teleological rather than
+    structural and fails the stated structural test. Intent is the kind of
+    thing a lens asks about.
+  - The boundary with the technological domain is unexamined.
+children: []

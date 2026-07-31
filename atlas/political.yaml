@@ -1,0 +1,60 @@
+id: political
+name: Political
+definition: >
+  Institutions, authority relations and formal or informal decision structures
+  that determine collective choices and the allocation of public power in a
+  society.
+inclusion:
+  - entities that hold or compete for legitimate coercive authority
+  - entities that make or authorise binding collective decisions
+  - structures of representation and participation
+  - structures of accountability and oversight of state power
+exclusion:
+  - text: individual motivations
+    goes_to: incentives
+    kind: lens
+  - text: courts and legislation analysed as legal structures
+    goes_to: legal
+sources: []
+boundary_cases:
+  - >
+    Institutions that both constrain power and apply legal rules are classified
+    by primary analytic focus: political when analysing allocation, limitation
+    or competition of authority; legal when analysing rule validity,
+    interpretation or enforcement.
+uncertainty:
+  - >
+    Same objection as the legal domain. Classification by analytic focus makes
+    the same institution sit in two places depending on the question asked.
+children:
+  - id: executive-structures
+    name: Executive structures
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: executive-leadership-bodies, name: Executive leadership bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: executive-office-structures, name: Executive office structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: ministerial-structures, name: Ministerial structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: central-executive-committees, name: Central executive committees, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: executive-external-representation, name: Executive-linked external representation bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+  - { id: legislative-structures, name: Legislative structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: electoral-structures, name: Electoral structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - { id: political-organisation-structures, name: Political organisation structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [] }
+  - id: administrative-structures
+    name: Administrative structures
+    definition: ""
+    inclusion: []
+    exclusion: []
+    sources: []
+    boundary_cases: []
+    uncertainty: []
+    children:
+      - { id: departmental-structures, name: Departmental structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: agency-structures, name: Agency structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: local-administrative-bodies, name: Local administrative bodies, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: administrative-support-structures, name: Administrative support structures, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }
+      - { id: state-service-institutions, name: State service institutions, definition: "", inclusion: [], exclusion: [], sources: [], boundary_cases: [], uncertainty: [], terminal: true }

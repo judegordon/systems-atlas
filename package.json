@@ -1,0 +1,14 @@
+{
+  "name": "systems-atlas",
+  "version": "0.1.0",
+  "description": "A decomposition of the systems that shape the world into their smallest defensible parts.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

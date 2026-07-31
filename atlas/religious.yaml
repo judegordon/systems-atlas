@@ -1,0 +1,31 @@
+id: religious
+name: Religious
+definition: >
+  Shared belief and practice complexes organised around sacred or ultimate
+  concerns, including the institutions and community structures that maintain,
+  transmit and regulate those beliefs and practices.
+inclusion:
+  - belief and practice systems organised around sacred or ultimate concerns
+  - religious institutions and leadership structures
+  - ritual and community practices that reproduce the system
+  - membership and affiliation structures, including non-theistic groups
+exclusion:
+  - text: laws, rights and regulations governing religious practice
+    goes_to: legal
+  - text: individual moral philosophy not embedded in a belief-practice community
+    goes_to: ethics
+    kind: lens
+  - text: political movements merely using religious rhetoric
+    goes_to: political
+sources: []
+boundary_cases:
+  - >
+    Religious law such as canon law or sharia within a state system can be
+    both. The normative-religious system is treated as religious, and its
+    state-enforced codification as legal.
+uncertainty:
+  - >
+    Including non-theistic affiliation structures makes the inclusion criterion
+    hard to bound. If shared practice around ultimate concerns is sufficient,
+    it is not clear what excludes a sports team or a political movement.
+children: []

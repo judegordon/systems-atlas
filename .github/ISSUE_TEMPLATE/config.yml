@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Anything larger
+    url: mailto:hello@systemsatlasproject.com
+    about: Sustained collaboration, funding, or anything that does not fit an issue

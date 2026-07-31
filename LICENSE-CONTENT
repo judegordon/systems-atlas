@@ -1,0 +1,15 @@
+Systems Atlas Project — taxonomy, diagnostics and written content
+Copyright (c) 2026 Systems Atlas Project
+
+Licensed under the Creative Commons Attribution 4.0 International License
+(CC BY 4.0).
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, link to the licence, and
+indicate if changes were made.
+
+Full text: https://creativecommons.org/licenses/by/4.0/
+
+This licence covers everything in atlas/, diagnostics/, lenses/ and docs/,
+and the written content of the generated site. Code in scripts/ and site/ is
+licensed separately under the MIT License — see LICENSE.

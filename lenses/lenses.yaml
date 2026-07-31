@@ -1,0 +1,156 @@
+- id: mechanism
+  name: Mechanism
+  question: >
+    What are the components of the real system, and how do they causally
+    interact to produce outcomes?
+  indicators:
+    - You are naming real actors and components
+    - You are describing cause and effect chains
+    - You could ask "if X changes, what happens?"
+  excludes:
+    - { text: abstract equations or formal assumptions, goes_to: model }
+    - { text: motivations and strategic behaviour, goes_to: incentives }
+    - { text: real-world deviations, goes_to: implementation }
+  example: >
+    Patients seek care, GP triage, referral bottlenecks, specialist capacity
+    limits, waiting times increase
+  status: defined
+
+- id: measurement
+  name: Measurement
+  question: How are key variables defined and quantified in practice?
+  indicators:
+    - You are defining metrics, proxies or indicators
+    - You are discussing how something is counted or operationalised
+  excludes:
+    - { text: system behaviour, goes_to: mechanism }
+    - { text: whether measurement is used correctly in practice, goes_to: implementation }
+    - { text: abstract representations, goes_to: model }
+  example: >
+    Unemployment rate excludes discouraged workers and depends on survey
+    definitions
+  status: defined
+
+- id: model
+  name: Model
+  question: >
+    How is the system formally or computationally represented to enable
+    analysis or prediction?
+  indicators:
+    - You are using equations, simulations or formal assumptions
+    - You are simplifying reality intentionally
+  excludes:
+    - { text: the real-world system itself, goes_to: mechanism }
+    - { text: empirical measurement choices, goes_to: measurement }
+    - { text: practical rollout, goes_to: implementation }
+  example: SIR model with a transmission rate and a recovery rate
+  status: defined
+
+- id: incentives
+  name: Incentives
+  question: What payoff structures shape the behaviour of actors within the system?
+  indicators:
+    - You are explaining why actors behave as they do
+    - You refer to rewards, penalties, constraints
+  excludes:
+    - { text: formal authority structures, goes_to: governance }
+    - { text: system structure itself, goes_to: mechanism }
+    - { text: outcomes of poor execution, goes_to: implementation }
+  example: >
+    Hospitals are paid per procedure, creating an incentive to increase volume
+    over prevention
+  status: defined
+
+- id: governance
+  name: Governance
+  question: >
+    Who has decision-making authority, and how are those decisions structured
+    and enforced?
+  indicators:
+    - You identify who decides and who controls rules
+    - You describe hierarchies, institutions, authority flows
+  excludes:
+    - { text: why actors behave as they do, goes_to: incentives }
+    - { text: day-to-day execution, goes_to: implementation }
+    - { text: system processes, goes_to: mechanism }
+  example: >
+    An independent central bank sets interest rates separately from elected
+    government
+  status: defined
+
+- id: implementation
+  name: Implementation
+  question: How does the system operate in practice under real-world conditions?
+  indicators:
+    - You are describing what actually happens on the ground
+    - You include constraints, frictions, deviations
+  excludes:
+    - { text: intended structure, goes_to: mechanism }
+    - { text: root causes of failure, goes_to: failure-analysis }
+    - { text: formal abstractions, goes_to: model }
+  example: >
+    A digital health system exists, but clinicians bypass it due to poor
+    usability
+  status: defined
+
+- id: failure-analysis
+  name: Failure analysis
+  question: Where and why does the system break down or produce unintended consequences?
+  indicators:
+    - You identify specific breakdown points
+    - You explain causal reasons for failure
+  excludes:
+    - { text: general operation, goes_to: mechanism }
+    - { text: mere description of practice, goes_to: implementation }
+    - { text: normative judgement, goes_to: ethics }
+  example: Capital requirements pushed risk into unregulated shadow banking
+  status: defined
+
+- id: comparative
+  name: Comparative
+  question: >
+    How does this system differ from alternative systems in structure,
+    behaviour or outcomes?
+  indicators:
+    - You are comparing at least two systems
+    - You highlight differences and their implications
+  excludes:
+    - { text: normative judgement, goes_to: ethics }
+  example: A centralised health system versus a fragmented insurance-based one
+  status: defined
+
+- id: ethics
+  name: Ethics
+  question: What normative judgements arise from the system's design or outcomes?
+  indicators:
+    - You are making value-based evaluations
+    - You discuss fairness, rights, trade-offs
+  excludes:
+    - { text: efficiency claims without value judgement, goes_to: mechanism }
+  example: >
+    Is it acceptable for an algorithm to prioritise efficiency over equity in
+    care allocation?
+  status: defined
+
+- id: design
+  name: Design
+  question: >
+    How could the system be intentionally restructured to improve performance
+    or resolve problems?
+  indicators:
+    - You are proposing changes or interventions
+    - You are forward-looking
+  excludes:
+    - { text: diagnosing problems, goes_to: failure-analysis }
+    - { text: describing the current system, goes_to: mechanism }
+    - { text: pure comparison, goes_to: comparative }
+  example: Introduce congestion pricing to reduce urban traffic and emissions
+  status: defined
+
+- id: behavioural
+  name: Behavioural
+  question: ""
+  indicators: []
+  excludes: []
+  example: ""
+  status: undefined

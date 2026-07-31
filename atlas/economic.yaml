@@ -1,0 +1,27 @@
+id: economic
+name: Economic
+definition: >
+  Production, distribution, exchange and accumulation structures through which
+  scarce resources and goods and services are created and allocated across
+  institutional units.
+inclusion:
+  - production systems, and firms and households as producers within boundary
+  - market exchange and price formation structures
+  - distribution and redistribution mechanisms
+  - the monetary and financial system as allocation infrastructure
+  - accounting and measurement infrastructure representing economic activity
+exclusion:
+  - text: unpaid domestic services outside the SNA production boundary
+    goes_to: economic
+  - text: legal validity and rights
+    goes_to: legal
+  - text: technological capability absent allocation or scarcity structures
+    goes_to: technological
+sources: []
+boundary_cases: []
+uncertainty:
+  - >
+    The first exclusion points back at this domain, which is not an exclusion.
+    Either unpaid domestic work belongs somewhere specific or the boundary
+    needs restating.
+children: []
