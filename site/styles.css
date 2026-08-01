@@ -1478,3 +1478,58 @@ a.dcard:hover, a.dcard:focus-visible { border-color: var(--night-3); }
   letter-spacing: 0.1em;
   color: var(--structure-3);
 }
+
+/* A node that divides opens. <details> does the work, so this survives
+   script-src 'none'. */
+.branch { display: block; }
+
+.branch__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+  padding: var(--s2) var(--s2) var(--s2) 0;
+  border-bottom: 1px solid var(--rule-light);
+  cursor: pointer;
+  list-style: none;
+}
+
+/* Both spellings are needed: WebKit still wants the pseudo-element. */
+.branch__head::-webkit-details-marker { display: none; }
+
+/* The marker is drawn here rather than left to the browser, so it is the same
+   glyph everywhere and takes the palette. */
+.branch__head::before {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--structural);
+  width: 1ch;
+  flex: none;
+}
+
+.branch[open] > .branch__head::before { content: "\2212"; }
+
+.branch__head:hover, .branch__head:focus-visible { background: var(--rule-dark); }
+
+.branch__count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--structure-3);
+  margin-left: auto;
+}
+
+/* The link to the node's own page, kept out of the summary so that opening a
+   branch and going to it are two separate controls. */
+.branch__self {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: var(--s2) 0 var(--s2) var(--s4);
+}
+
+.branch__self a { color: var(--structure-2); text-decoration: none; border-bottom: 1px solid var(--rule-light); }
+.branch__self a:hover, .branch__self a:focus-visible { color: var(--structure); border-bottom-color: var(--structural); }
+
+/* A leaf sits where a branch's marker would be, so the two line up. */
+.twig__link { padding-left: calc(1ch + var(--s3)); }

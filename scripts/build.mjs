@@ -390,21 +390,40 @@ function renderBreadcrumb(trail) {
     `      </nav>`;
 }
 
-// The whole descent below a domain root, as one nested list. Only an L0 page
-// carries it: below that the list would be a fragment of a tree whose top is
-// off the page, which reads as the whole thing and is not.
+// The whole descent below a domain root. Only an L0 page carries it: below
+// that the same list would be a fragment of a tree whose top is off the page,
+// which reads as the whole thing and is not.
+//
+// Expanding is <details>, so it works under script-src 'none'. A node that
+// divides is a <summary> that opens; the link to its own page sits inside,
+// separate from the toggle, because one control doing two things with no
+// JavaScript to disambiguate them is a control that does neither reliably.
 function renderTree(root, sectionNo, count) {
+  const leaf = (node, path, depth) =>
+    `<li class="twig">` +
+    `<a class="twig__link" href="/atlas/${path}/">` +
+    `<span class="twig__name">${text(node.name)}</span>` +
+    `<span class="twig__level">L${depth}</span></a></li>`;
+
   const branch = (node, path, depth) => {
     const kids = node.children ?? [];
-    const link =
-      `<a class="twig__link" href="/atlas/${path}/">` +
-      `<span class="twig__name">${text(node.name)}</span>` +
-      `<span class="twig__level">L${depth}</span></a>`;
-    if (!kids.length) return `<li class="twig">${link}</li>`;
+    if (!kids.length) return leaf(node, path, depth);
     const inner = kids
       .map((k) => branch(k, `${path}/${k.id}`, depth + 1))
       .join("");
-    return `<li class="twig">${link}<ul class="twigs">${inner}</ul></li>`;
+    // The root opens by default. Everything below it starts closed, so the
+    // page arrives at one level rather than at all of them at once.
+    const open = depth === 0 ? " open" : "";
+    return `<li class="twig">` +
+      `<details class="branch"${open}>` +
+      `<summary class="branch__head">` +
+      `<span class="twig__name">${text(node.name)}</span>` +
+      `<span class="twig__level">L${depth}</span>` +
+      `<span class="branch__count">${kids.length} component${kids.length === 1 ? "" : "s"}</span>` +
+      `</summary>` +
+      `<p class="branch__self"><a href="/atlas/${path}/">Open ${text(node.name)} &rarr;</a></p>` +
+      `<ul class="twigs">${inner}</ul>` +
+      `</details></li>`;
   };
 
   return `
@@ -415,8 +434,10 @@ function renderTree(root, sectionNo, count) {
       <h2 class="section-title">${count} nodes, every level of the descent.</h2>
       <div class="prose">
         <p>
-          The full tree below this domain. Every entry is a page, and a page
-          existing says nothing about whether anything has been written on it.
+          The full descent below this domain. A node that divides opens to show
+          its parts; a node that does not is a link and nothing more. Every
+          entry is a page, and a page existing says nothing about whether
+          anything has been written on it.
         </p>
       </div>
       <ul class="twigs twigs--root">${branch(root, root.id, 0)}</ul>
@@ -569,11 +590,11 @@ console.log(`Built ${urls.length} pages into ${DIST}/`);
 // ---------------------------------------------------------------------------
 // TODO — the generated half
 //
-//   2. Emit a nested <details> tree per domain. No JavaScript, so it works
-//      under script-src 'none'.
-//   3. Emit an SVG dendrogram per domain for the whole-descent view.
-//   4. Emit diagnostics/ as pages, and cross-link them from the nodes their
+//   1. Emit diagnostics/ as pages, and cross-link them from the nodes their
 //      `paths` point at.
-//   5. Compute completeness per domain and inject it into the homepage
+//   2. Compute completeness per domain and inject it into the homepage
 //      ladder, so the bars cannot drift from what the atlas contains.
+//
+// Not started, and not to be started without asking first: an SVG dendrogram
+// per domain for the whole-descent view.
 // ---------------------------------------------------------------------------
