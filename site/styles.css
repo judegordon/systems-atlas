@@ -1533,3 +1533,70 @@ a.dcard:hover, a.dcard:focus-visible { border-color: var(--night-3); }
 
 /* A leaf sits where a branch's marker would be, so the two line up. */
 .twig__link { padding-left: calc(1ch + var(--s3)); }
+
+/* ==========================================================================
+   DIAGNOSTICS
+   One page per entry, plus the index. An outcome is stated in the palette's
+   own terms: resolved is Applied Green, unresolved is Revision Magenta, and
+   no-issue is neither.
+   ========================================================================== */
+
+.outcome {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.outcome--resolved   { color: var(--applied); }
+.outcome--unresolved { color: var(--revision); }
+.outcome--no-issue   { color: var(--night-3); }
+
+/* On a night field the neutral outcome needs the lighter of the two greys. */
+.field--night .outcome--no-issue { color: var(--structure-3); }
+
+.entries { margin-top: var(--s6); display: grid; gap: var(--s3); }
+
+.entry {
+  display: block;
+  padding: var(--s4);
+  border: 1px solid rgba(16, 24, 32, 0.16);
+  text-decoration: none;
+}
+
+a.entry:hover, a.entry:focus-visible { border-color: var(--night-3); }
+
+.entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2) var(--s3);
+}
+
+.entry__date {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--night-3);
+}
+
+.entry__name {
+  display: block;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--night);
+  margin-top: var(--s2);
+}
+
+.entry__issue { color: var(--night-2); font-size: 17px; margin-top: var(--s2); }
+
+.entry__meta {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--night-3);
+  margin-top: var(--s3);
+}

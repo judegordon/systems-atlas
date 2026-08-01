@@ -30,6 +30,7 @@ const PARTIALS = join(SITE, "templates", "partials");
 const TEMPLATES = join(SITE, "templates");
 const ATLAS = "atlas";
 const LENSES = join("lenses", "lenses.yaml");
+const DIAGNOSTICS = "diagnostics";
 const DIST = "dist";
 const ORIGIN = "https://systemsatlasproject.com";
 
@@ -215,6 +216,63 @@ if (existsSync(LENSES)) {
   for (const lens of yaml.load(readFileSync(LENSES, "utf8")) ?? []) {
     lensIds.add(lens.id);
   }
+}
+
+// --- diagnostics -----------------------------------------------------------
+//
+// Loaded before the node pages are written, because a node page carries the
+// entries that point at it. The link runs both ways: an entry names the nodes
+// it applies to, and those nodes name the entry. Neither side is the record
+// on its own.
+
+const OUTCOME_LABEL = {
+  "no-issue": "No issue",
+  resolved: "Resolved",
+  unresolved: "Unresolved, left standing",
+};
+
+// YAML reads an unquoted 2026-07-31 as a timestamp, so it arrives as a Date.
+// Put it back to the date that was written, in UTC — the entry records a day,
+// not a moment, and rendering it in the build machine's timezone would let
+// the same file publish two different dates.
+const isoDate = (d) =>
+  d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? "");
+
+const diagnostics = [];
+const byNode = new Map();   // node path -> [entry, ...]
+
+if (existsSync(DIAGNOSTICS)) {
+  const files = readdirSync(DIAGNOSTICS).filter((f) => f.endsWith(".yaml")).sort();
+  for (const f of files) {
+    const d = yaml.load(readFileSync(join(DIAGNOSTICS, f), "utf8"));
+    const slug = f.replace(/\.yaml$/, "");
+
+    // The heading comes off the filename with the date removed. Nothing is
+    // invented: the file is named by whoever wrote the entry, and the entry
+    // itself carries no title field.
+    const words = slug.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/-/g, " ");
+    const heading = words.charAt(0).toUpperCase() + words.slice(1);
+
+    // Resolve each path the way the validator does: a full slash path first,
+    // then a bare id. An entry pointing nowhere is a finding the validator
+    // reports, and it is shown here rather than dropped.
+    const targets = (d.paths ?? []).map((p) => {
+      const path = nodes.has(p) ? p : byId.get(String(p).split("/").pop());
+      return { given: p, path: path ?? null, node: path ? nodes.get(path).node : null };
+    });
+
+    const entry = { ...d, date: isoDate(d.date), slug, heading, targets };
+    diagnostics.push(entry);
+
+    for (const t of targets) {
+      if (!t.path) continue;
+      if (!byNode.has(t.path)) byNode.set(t.path, []);
+      byNode.get(t.path).push(entry);
+    }
+  }
+  // Newest first, and stable within a date by slug.
+  diagnostics.sort((a, b) =>
+    String(b.date).localeCompare(String(a.date)) || a.slug.localeCompare(b.slug));
 }
 
 // An exclusion names where the excluded thing goes. Link it when that place
@@ -446,6 +504,43 @@ function renderTree(root, sectionNo, count) {
 `;
 }
 
+// The entries that point at this node. Absent when there are none — a node
+// with no diagnostics has not been stress-tested, and an empty section
+// announcing that would read as a clean bill of health.
+function renderNodeDiagnostics(entries, sectionNo) {
+  if (!entries.length) return "";
+
+  const cards = entries.map((e) => `          <a class="kid" href="/diagnostics/${e.slug}/">
+            <span class="kid__head">
+              <span class="kid__name">${text(e.heading)}</span>
+              <span class="kid__level">${text(e.date)}</span>
+            </span>
+            <p class="kid__def">${text(e.issue ?? "")}</p>
+            <span class="kid__level"><span class="outcome outcome--${esc(e.outcome)}">${
+              text(OUTCOME_LABEL[e.outcome] ?? e.outcome)}</span></span>
+          </a>`).join("\n");
+
+  return `
+  <!-- Diagnostics ========================================================== -->
+  <section class="field--night band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ ${sectionNo}</span> Diagnostics</p>
+      <h2 class="section-title">${entries.length} entr${entries.length === 1 ? "y" : "ies"} against this node.</h2>
+      <div class="prose">
+        <p>
+          Where this division has been put under pressure and what happened.
+          An entry is not a task list — some record that the question is open
+          and that leaving it open was the decision.
+        </p>
+      </div>
+      <div class="kids">
+${cards}
+      </div>
+    </div>
+  </section>
+`;
+}
+
 function renderChildren(node, path, depth, sectionNo) {
   const kids = node.children ?? [];
   if (!kids.length) return "";
@@ -507,6 +602,7 @@ for (const [path, { node, depth, trail }] of nodes) {
   const nextNo = () => String(++section).padStart(2, "0");
   const childrenNo = kids.length ? nextNo() : null;
   const treeNo = depth === 0 && kids.length ? nextNo() : null;
+  const entries = byNode.get(path) ?? [];
 
   const html = expand(fill(nodeShell, {
     title: `${node.name} — Systems Atlas`,
@@ -520,6 +616,7 @@ for (const [path, { node, depth, trail }] of nodes) {
     tree: treeNo ? renderTree(node, treeNo, domainStats.get(node.id).count) : "",
     rulesNo: nextNo(),
     checks: renderChecks(node),
+    diagnostics: renderNodeDiagnostics(entries, entries.length ? nextNo() : null),
   }), `atlas/${path}`);
 
   const out = join(DIST, "atlas", ...path.split("/"), "index.html");
@@ -569,6 +666,99 @@ writeFileSync(
 );
 
 urls.push("/atlas/");
+
+// --- diagnostics pages -----------------------------------------------------
+
+if (diagnostics.length) {
+  const entryShell = readFileSync(join(TEMPLATES, "diagnostic.html"), "utf8");
+
+  for (const e of diagnostics) {
+    // Where an entry points nowhere, say so. The validator reports it as an
+    // error; hiding it on the page would leave the error visible only to
+    // whoever runs the build.
+    const targetCards = e.targets.map((t) => {
+      if (!t.path) {
+        return `        <div class="kid">
+          <span class="kid__head">
+            <span class="kid__name">${text(t.given)}</span>
+          </span>
+          <p class="kid__gap"><span class="gap__tag">Unresolved</span> This path does not resolve to a node in the atlas.</p>
+        </div>`;
+      }
+      const gloss = isEmpty(t.node.definition)
+        ? `<p class="kid__gap"><span class="gap__tag">Declared gap</span> No definition has been written.</p>`
+        : `<p class="kid__def">${text(t.node.definition)}</p>`;
+      return `        <a class="kid" href="/atlas/${t.path}/">
+          <span class="kid__head">
+            <span class="kid__name">${text(t.node.name)}</span>
+            <span class="kid__level">Level ${nodes.get(t.path).depth}</span>
+          </span>
+          ${gloss}
+          <span class="kid__level">${esc(t.path)}</span>
+        </a>`;
+    }).join("\n");
+
+    const n = e.targets.length;
+    const html = expand(fill(entryShell, {
+      title: `${e.heading} — Systems Atlas diagnostics`,
+      description: String(e.issue ?? "").trim().replace(/\s+/g, " ").slice(0, 180),
+      slug: e.slug,
+      heading: text(e.heading),
+      date: text(e.date ?? ""),
+      componentType: text(e.component_type ?? ""),
+      intent: text(e.intent ?? ""),
+      outcome: esc(e.outcome ?? ""),
+      outcomeLabel: text(OUTCOME_LABEL[e.outcome] ?? e.outcome ?? ""),
+      issue: text(e.issue ?? ""),
+      resolution: isEmpty(e.resolution)
+        ? `<p class="gap"><span class="gap__tag">Declared gap</span> No resolution has been written.</p>`
+        : `<p>${text(e.resolution)}</p>`,
+      pathCount: `${n} node${n === 1 ? "" : "s"}`,
+      paths: targetCards,
+    }), `diagnostics/${e.slug}`);
+
+    const out = join(DIST, "diagnostics", e.slug, "index.html");
+    mkdirSync(dirname(out), { recursive: true });
+    writeFileSync(out, html);
+    urls.push(`/diagnostics/${e.slug}/`);
+  }
+
+  const indexShell = readFileSync(join(TEMPLATES, "diagnostics-index.html"), "utf8");
+
+  // The nodes an entry applies to are named here but not linked: the row is
+  // itself a link, and an anchor inside an anchor is not allowed. The links
+  // are on the entry's own page, one click away.
+  const rows = diagnostics.map((e) => {
+    const where = e.targets
+      .map((t) => (t.path ? text(t.node.name) : `${text(t.given)} (does not resolve)`))
+      .join(", ");
+    return `        <a class="entry" href="/diagnostics/${e.slug}/">
+          <span class="entry__head">
+            <span class="entry__date">${text(e.date)}</span>
+            <span class="outcome outcome--${esc(e.outcome)}">${text(OUTCOME_LABEL[e.outcome] ?? e.outcome)}</span>
+          </span>
+          <span class="entry__name">${text(e.heading)}</span>
+          <p class="entry__issue">${text(e.issue ?? "")}</p>
+          <span class="entry__meta">${text(e.intent ?? "")} · ${text(e.component_type ?? "")} · ${where}</span>
+        </a>`;
+  }).join("\n");
+
+  const unresolvedCount = diagnostics.filter((e) => e.outcome === "unresolved").length;
+
+  writeFileSync(
+    join(DIST, "diagnostics", "index.html"),
+    expand(fill(indexShell, {
+      description:
+        `The Systems Atlas diagnostics record: ${diagnostics.length} entries, ` +
+        `${unresolvedCount} of them unresolved and left standing.`,
+      count: String(diagnostics.length),
+      unresolved: String(unresolvedCount),
+      entries: rows,
+    }), "diagnostics/index.html")
+  );
+
+  urls.push("/diagnostics/");
+}
 
 // --- sitemap ---------------------------------------------------------------
 

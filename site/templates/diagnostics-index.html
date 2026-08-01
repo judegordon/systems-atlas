@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnostics — Systems Atlas Project</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#101820">
+<link rel="canonical" href="https://systemsatlasproject.com/diagnostics/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Diagnostics — Systems Atlas Project">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="https://systemsatlasproject.com/diagnostics/">
+<meta property="og:image" content="https://systemsatlasproject.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main">
+
+  <!-- Header =============================================================== -->
+  <section class="field--night band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">DIAGNOSTICS</span> {{count}} entries</p>
+      <h1 class="title">Every wrong turn, written down.</h1>
+      <p class="lede">
+        A map that only shows its finished parts cannot be checked. When a
+        division fails — because a case will not classify, because two
+        categories overlap, because a definition turned out to be circular —
+        the failure is recorded in the same structure every time.
+      </p>
+      <div class="prose">
+        <p>
+          {{unresolved}} of these are unresolved and left standing. An entry
+          being written does not mean the problem behind it is fixed, and an
+          entry left open is not a backlog item — some of them record that the
+          method itself has not settled the question.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Entries ============================================================== -->
+  <section class="field--paper band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 01</span> Entries</p>
+      <h2 class="section-title">Newest first.</h2>
+
+      <div class="entries">
+{{entries}}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!--#include footer-->
+
+</body>
+</html>

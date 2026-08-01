@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#101820">
+<link rel="canonical" href="https://systemsatlasproject.com/diagnostics/{{slug}}/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="https://systemsatlasproject.com/diagnostics/{{slug}}/">
+<meta property="og:image" content="https://systemsatlasproject.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main">
+
+  <!-- Identity ============================================================= -->
+  <section class="field--night node-head">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <a href="/diagnostics/">Diagnostics</a>
+      </nav>
+      <p class="node-level">{{date}} · {{intent}}</p>
+      <h1 class="title node-title">{{heading}}</h1>
+      <p class="node-path">diagnostics/{{slug}}</p>
+    </div>
+  </section>
+
+  <!-- The entry ============================================================ -->
+  <section class="field--paper band">
+    <div class="wrap">
+      <div class="reading">
+        <p class="eyebrow"><span class="eyebrow__no">§ 01</span> The entry</p>
+        <h2 class="section-title">What went wrong, and what was done about it.</h2>
+
+        <div class="record">
+          <div class="record__row">
+            <span class="record__key">Date</span>
+            <span class="record__val">{{date}}</span>
+          </div>
+          <div class="record__row">
+            <span class="record__key">Component type</span>
+            <span class="record__val">{{componentType}}</span>
+          </div>
+          <div class="record__row">
+            <span class="record__key">Intent</span>
+            <span class="record__val">{{intent}}</span>
+          </div>
+          <div class="record__row">
+            <span class="record__key">Outcome</span>
+            <span class="record__val"><span class="outcome outcome--{{outcome}}">{{outcomeLabel}}</span></span>
+          </div>
+        </div>
+
+        <div class="node-field">
+          <h3 class="node-field__label">Issue</h3>
+          <p>{{issue}}</p>
+        </div>
+
+        <div class="node-field">
+          <h3 class="node-field__label">Resolution</h3>
+          {{resolution}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Applies to =========================================================== -->
+  <section class="field--night band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 02</span> Applies to</p>
+      <h2 class="section-title">{{pathCount}} in the atlas.</h2>
+      <div class="kids">
+{{paths}}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!--#include footer-->
+
+</body>
+</html>
