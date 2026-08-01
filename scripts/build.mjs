@@ -390,7 +390,42 @@ function renderBreadcrumb(trail) {
     `      </nav>`;
 }
 
-function renderChildren(node, path, depth) {
+// The whole descent below a domain root, as one nested list. Only an L0 page
+// carries it: below that the list would be a fragment of a tree whose top is
+// off the page, which reads as the whole thing and is not.
+function renderTree(root, sectionNo, count) {
+  const branch = (node, path, depth) => {
+    const kids = node.children ?? [];
+    const link =
+      `<a class="twig__link" href="/atlas/${path}/">` +
+      `<span class="twig__name">${text(node.name)}</span>` +
+      `<span class="twig__level">L${depth}</span></a>`;
+    if (!kids.length) return `<li class="twig">${link}</li>`;
+    const inner = kids
+      .map((k) => branch(k, `${path}/${k.id}`, depth + 1))
+      .join("");
+    return `<li class="twig">${link}<ul class="twigs">${inner}</ul></li>`;
+  };
+
+  return `
+  <!-- The whole domain ===================================================== -->
+  <section class="field--night band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ ${sectionNo}</span> The whole domain</p>
+      <h2 class="section-title">${count} nodes, every level of the descent.</h2>
+      <div class="prose">
+        <p>
+          The full tree below this domain. Every entry is a page, and a page
+          existing says nothing about whether anything has been written on it.
+        </p>
+      </div>
+      <ul class="twigs twigs--root">${branch(root, root.id, 0)}</ul>
+    </div>
+  </section>
+`;
+}
+
+function renderChildren(node, path, depth, sectionNo) {
   const kids = node.children ?? [];
   if (!kids.length) return "";
 
@@ -411,7 +446,7 @@ function renderChildren(node, path, depth) {
   <!-- Divides into ========================================================= -->
   <section class="field--night band">
     <div class="wrap">
-      <p class="eyebrow"><span class="eyebrow__no">§ 02</span> Divides into</p>
+      <p class="eyebrow"><span class="eyebrow__no">§ ${sectionNo}</span> Divides into</p>
       <h2 class="section-title">${kids.length} component${kids.length === 1 ? "" : "s"} at level ${depth + 1}.</h2>
       <div class="kids">
 ${cards}
@@ -423,11 +458,34 @@ ${cards}
 
 const nodeShell = readFileSync(join(TEMPLATES, "node.html"), "utf8");
 
+// How big a domain is and how deep it goes. Walked, never written down.
+function measure(root) {
+  let count = 0, maxDepth = 0, defined = 0, sourced = 0;
+  (function walk(node, depth) {
+    count++;
+    maxDepth = Math.max(maxDepth, depth);
+    if (!isEmpty(node.definition)) defined++;
+    if (!isEmpty(node.sources)) sourced++;
+    for (const child of node.children ?? []) walk(child, depth + 1);
+  })(root, 0);
+  return { count, maxDepth, defined, sourced };
+}
+
+const domainStats = new Map(domains.map((d) => [d.id, measure(d)]));
+
 for (const [path, { node, depth, trail }] of nodes) {
   const kids = node.children ?? [];
   const description = isEmpty(node.definition)
     ? `${node.name} — a level ${depth} node in the Systems Atlas taxonomy. No definition has been written yet.`
     : String(node.definition).trim().replace(/\s+/g, " ").slice(0, 180);
+
+  // Sections are numbered in the order they appear, and which ones appear
+  // depends on the node: a leaf has no "Divides into", and only a domain root
+  // carries the whole-domain tree.
+  let section = 1;
+  const nextNo = () => String(++section).padStart(2, "0");
+  const childrenNo = kids.length ? nextNo() : null;
+  const treeNo = depth === 0 && kids.length ? nextNo() : null;
 
   const html = expand(fill(nodeShell, {
     title: `${node.name} — Systems Atlas`,
@@ -435,10 +493,11 @@ for (const [path, { node, depth, trail }] of nodes) {
     name: text(node.name),
     path,
     level: String(depth),
-    rulesNo: kids.length ? "03" : "02",
     breadcrumb: renderBreadcrumb(trail),
     fields: FIELDS.map((f) => renderField(node, f)).join("\n"),
-    children: renderChildren(node, path, depth),
+    children: renderChildren(node, path, depth, childrenNo),
+    tree: treeNo ? renderTree(node, treeNo, domainStats.get(node.id).count) : "",
+    rulesNo: nextNo(),
     checks: renderChecks(node),
   }), `atlas/${path}`);
 
@@ -447,6 +506,48 @@ for (const [path, { node, depth, trail }] of nodes) {
   writeFileSync(out, html);
   urls.push(`/atlas/${path}/`);
 }
+
+// --- atlas index -----------------------------------------------------------
+//
+// /atlas/ lists the nine domains. It is not a node page, because the nine
+// have no parent — that is one of the atlas's open problems — and a page
+// standing above them would quietly invent one.
+
+const atlasShell = readFileSync(join(TEMPLATES, "atlas-index.html"), "utf8");
+
+const domainCards = domains.map((d) => {
+  const { count, maxDepth } = domainStats.get(d.id);
+  const gloss = isEmpty(d.definition)
+    ? `<p class="dcard__gap"><span class="gap__tag">Declared gap</span> No definition has been written.</p>`
+    : `<p class="dcard__def">${text(d.definition)}</p>`;
+  const divided = maxDepth === 0
+    ? "Not divided"
+    : `Divided to level ${maxDepth}`;
+  return `        <a class="dcard" href="/atlas/${d.id}/">
+          <span class="dcard__head">
+            <span class="dcard__name">${text(d.name)}</span>
+            <span class="dcard__level">L${maxDepth}</span>
+          </span>
+          ${gloss}
+          <span class="dcard__meta">${divided} · ${count} node${count === 1 ? "" : "s"}</span>
+        </a>`;
+}).join("\n");
+
+const totalNodes = [...domainStats.values()].reduce((n, s) => n + s.count, 0);
+
+writeFileSync(
+  join(DIST, "atlas", "index.html"),
+  expand(fill(atlasShell, {
+    description:
+      `The Systems Atlas taxonomy: ${domains.length} domains and ${totalNodes} nodes, ` +
+      `with empty fields shown as declared gaps rather than hidden.`,
+    domainCount: String(domains.length),
+    nodeCount: String(totalNodes),
+    cards: domainCards,
+  }), "atlas/index.html")
+);
+
+urls.push("/atlas/");
 
 // --- sitemap ---------------------------------------------------------------
 
