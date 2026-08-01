@@ -1266,14 +1266,6 @@ a.tool:hover .tool__link { color: var(--night); text-decoration: underline; text
   color: var(--revision);
 }
 
-/* A destination that exists but has no page yet. Not a finding — the atlas
-   is being published a domain at a time — so it is stated, not flagged. */
-.pending {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--night-3);
-}
-
 .relation {
   font-family: var(--mono);
   font-size: 12px;

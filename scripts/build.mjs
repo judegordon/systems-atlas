@@ -33,11 +33,6 @@ const LENSES = join("lenses", "lenses.yaml");
 const DIST = "dist";
 const ORIGIN = "https://systemsatlasproject.com";
 
-// Domains whose node pages are generated. One domain was built and reviewed
-// first; the rest join this list as each is looked at. Adding a name here is
-// the whole of it — nothing else is per-domain.
-const PUBLISHED_DOMAINS = ["human-biological"];
-
 // --- validate first --------------------------------------------------------
 
 const strict = process.argv.includes("--strict");
@@ -188,67 +183,54 @@ const FIELDS = [
   ["uncertainty",    "Uncertainty",    "No uncertainty has been recorded."],
 ];
 
-// Two indexes, and the difference between them matters.
-//
-//   nodes / byPublishedId  — nodes that get a page in this build. These are
-//                            what an exclusion can be linked to.
-//   knownIds               — every id anywhere in the atlas, plus the lens
-//                            ids, whether or not a page exists yet.
-//
-// An exclusion pointing at a real domain that has no page yet is not a
-// finding, and must not be marked as one. An exclusion pointing at something
-// that exists nowhere is the finding the validator reports, and is marked.
+// Every domain in atlas/ is rendered. The set is read off the directory
+// rather than listed here, because a list you type is a list that can
+// disagree with the directory it describes — the same reason no level number
+// is written into the data.
 
-const nodes = new Map();            // "a/b/c" -> { node, depth, trail }
-const byPublishedId = new Map();    // "c"     -> "a/b/c"
-const knownIds = new Set();
+const nodes = new Map();     // "a/b/c" -> { node, depth, trail }
+const byId = new Map();      // "c"     -> "a/b/c"
 const lensIds = new Set();
 
 const domainFiles = existsSync(ATLAS)
   ? readdirSync(ATLAS).filter((f) => f.endsWith(".yaml"))
   : [];
 
+const domains = [];
+
 for (const f of domainFiles) {
   const root = yaml.load(readFileSync(join(ATLAS, f), "utf8"));
-  const published = PUBLISHED_DOMAINS.includes(root.id);
+  domains.push(root);
   (function index(node, trail) {
     const path = [...trail, node.id].join("/");
-    knownIds.add(node.id);
-    if (published) {
-      nodes.set(path, { node, depth: trail.length, trail });
-      byPublishedId.set(node.id, path);
-    }
+    nodes.set(path, { node, depth: trail.length, trail });
+    byId.set(node.id, path);
     for (const child of node.children ?? []) index(child, [...trail, node.id]);
   })(root, []);
 }
 
-for (const name of PUBLISHED_DOMAINS) {
-  if (!knownIds.has(name)) {
-    throw new Error(`PUBLISHED_DOMAINS names "${name}", which is not a domain in ${ATLAS}/`);
-  }
-}
+domains.sort((a, b) => String(a.name).localeCompare(String(b.name)));
 
 if (existsSync(LENSES)) {
   for (const lens of yaml.load(readFileSync(LENSES, "utf8")) ?? []) {
-    knownIds.add(lens.id);
     lensIds.add(lens.id);
   }
 }
 
 // An exclusion names where the excluded thing goes. Link it when that place
-// has a page, name it plainly when it exists but has no page yet, and mark it
-// when it exists nowhere — that last case is a finding about the atlas, not a
-// formatting problem, so it is shown rather than smoothed over.
+// is in the atlas, and mark it when it exists nowhere — that second case is a
+// finding about the atlas, not a formatting problem, so it is shown rather
+// than smoothed over. Every domain is rendered now, so a destination inside
+// the atlas always has a page to point at.
 function destination(goesTo, isLens) {
   const id = String(goesTo).split("/").pop();
-  const path = byPublishedId.get(id);
+  const path = byId.get(id);
   if (path) return `<a href="/atlas/${path}/">${text(goesTo)}</a>`;
   // A lens is not part of the atlas tree and never gets a node page, so it is
   // named plainly. The "lens" label in front of it already says what it is.
   if (isLens) return lensIds.has(id)
     ? text(goesTo)
     : `${text(goesTo)} <span class="unresolved">is not one of the eleven lenses</span>`;
-  if (knownIds.has(id)) return `${text(goesTo)} <span class="pending">no page yet</span>`;
   return `${text(goesTo)} <span class="unresolved">does not exist in the atlas</span>`;
 }
 
