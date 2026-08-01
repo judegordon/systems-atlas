@@ -5,10 +5,10 @@
  *   node scripts/build.mjs            report validation, build anyway
  *   node scripts/build.mjs --strict   refuse to build if the atlas has errors
  *
- * Right now this copies the hand-written pages and static files, substitutes
- * the shared partials into them, emits a page per atlas node, and generates
- * the sitemap. The tree and the completeness figures on the homepage are not
- * generated yet — see the TODO at the bottom.
+ * This copies the hand-written pages and static files, substitutes the shared
+ * partials and the generated figures into them, emits a page per atlas node,
+ * the atlas index, a page per diagnostics entry with its index, and the
+ * sitemap.
  *
  * Validation always runs and always reports. It does not block the build by
  * default, because the atlas has real unresolved problems and publishing them
@@ -111,17 +111,37 @@ function fill(template, args) {
     });
 }
 
+// A second directive, for fragments this script computes rather than reads
+// off disk:
+//
+//     <!--#generated ladder-->
+//
+// It exists so a hand-written page can carry a figure that is measured from
+// the atlas. Anything a page states about the atlas should be counted, not
+// typed, or the page and the atlas drift apart and only one of them is right.
+const generated = new Map();
+
 function expand(html, where) {
-  return html.replace(
-    /^[ \t]*<!--#include\s+([\w-]+)([^>]*?)-->[ \t]*$/gm,
-    (_, name, rest) => {
-      try {
-        return fill(partial(name), parseArgs(rest));
-      } catch (err) {
-        throw new Error(`${where}: ${err.message}`);
+  return html
+    .replace(
+      /^[ \t]*<!--#include\s+([\w-]+)([^>]*?)-->[ \t]*$/gm,
+      (_, name, rest) => {
+        try {
+          return fill(partial(name), parseArgs(rest));
+        } catch (err) {
+          throw new Error(`${where}: ${err.message}`);
+        }
       }
-    }
-  );
+    )
+    .replace(
+      /^[ \t]*<!--#generated\s+([\w-]+)-->[ \t]*$/gm,
+      (_, name) => {
+        if (!generated.has(name)) {
+          throw new Error(`${where}: nothing generated is named "${name}"`);
+        }
+        return generated.get(name);
+      }
+    );
 }
 
 // --- pages -----------------------------------------------------------------
@@ -149,7 +169,9 @@ function copyPages(dir) {
   }
 }
 
-if (existsSync(PAGES)) copyPages(PAGES);
+// The hand-written pages are copied further down, after the atlas has been
+// read — some of them carry generated figures, and those have to be measured
+// before a page can be filled with them.
 
 // --- atlas node pages ------------------------------------------------------
 //
@@ -589,6 +611,64 @@ function measure(root) {
 
 const domainStats = new Map(domains.map((d) => [d.id, measure(d)]));
 
+// --- homepage figures ------------------------------------------------------
+//
+// The domain ladder in § 03 was hand-written and had already drifted: it
+// showed human biological at L7 when the deepest node in it is L6. It is
+// measured now, so it cannot say anything the atlas does not.
+
+const LADDER_LEVELS = 8;   // L0 to L7, matching the grid in styles.css
+
+const deepest = Math.max(...[...domainStats.values()].map((s) => s.maxDepth));
+if (deepest >= LADDER_LEVELS) {
+  throw new Error(
+    `The atlas now reaches L${deepest}, past the ${LADDER_LEVELS}-column ladder. ` +
+    `Widen LADDER_LEVELS here and the two repeat(8, 1fr) grids in styles.css, ` +
+    `rather than letting the ladder show a depth the atlas has passed.`
+  );
+}
+
+const ladder = [...domains]
+  .sort((a, b) => {
+    const d = domainStats.get(b.id).maxDepth - domainStats.get(a.id).maxDepth;
+    return d || String(a.name).localeCompare(String(b.name));
+  })
+  .map((d) => {
+    const { maxDepth, count, defined } = domainStats.get(d.id);
+    const segs = Array.from({ length: LADDER_LEVELS }, (_, i) =>
+      i <= maxDepth
+        ? `<span class="domain__seg"></span>`
+        : `<span class="domain__seg domain__seg--open"></span>`
+    ).join("");
+    // Counted, not given as a percentage. A domain of one node that carries a
+    // definition is 100% defined, which reads as finished and is not what it
+    // means; "1/1" cannot be mistaken for that.
+    const label = maxDepth === 0
+      ? `Defined at level zero only`
+      : `Divided to level ${maxDepth} of ${LADDER_LEVELS - 1}`;
+    return `        <div class="domain">
+          <span class="domain__name"><a href="/atlas/${d.id}/">${text(d.name)}</a></span>
+          <div class="domain__track" role="img" aria-label="${label}">${segs}</div>
+          <span class="domain__depth"><strong>L${maxDepth}</strong></span>
+          <span class="domain__pct">${defined}/${count} defined</span>
+        </div>`;
+  }).join("\n");
+
+generated.set("ladder", `      <div class="ladder">
+        <div class="ladder__scale" aria-hidden="true">
+          <span>Domain</span>
+          <ol>${Array.from({ length: LADDER_LEVELS }, (_, i) => `<li>L${i}</li>`).join("")}</ol>
+          <span></span>
+          <span>Defined</span>
+        </div>
+
+${ladder}
+      </div>`);
+
+// --- hand-written pages ----------------------------------------------------
+
+if (existsSync(PAGES)) copyPages(PAGES);
+
 for (const [path, { node, depth, trail }] of nodes) {
   const kids = node.children ?? [];
   const description = isEmpty(node.definition)
@@ -778,13 +858,7 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
 console.log(`Built ${urls.length} pages into ${DIST}/`);
 
 // ---------------------------------------------------------------------------
-// TODO — the generated half
-//
-//   1. Emit diagnostics/ as pages, and cross-link them from the nodes their
-//      `paths` point at.
-//   2. Compute completeness per domain and inject it into the homepage
-//      ladder, so the bars cannot drift from what the atlas contains.
-//
-// Not started, and not to be started without asking first: an SVG dendrogram
-// per domain for the whole-descent view.
+// Not started, and not to be started without asking first: an SVG view of a
+// whole domain, and a click-to-expand graph showing what a node connects to.
+// Both need a decision from Jude before anyone begins — see TASKS.md.
 // ---------------------------------------------------------------------------
