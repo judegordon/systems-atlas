@@ -42,18 +42,22 @@ from the same source contributors edit.
     │   │   ├── og.png
     │   │   ├── fonts/            ← .woff2 files go here
     │   │   └── tools/            ← konki.png shutoku.png kantetsu.png bottou.png
-    │   ├── pages/                Hand-written pages, copied as-is.
-    │   │   ├── index.html            homepage
+    │   ├── pages/                Hand-written pages, with partials
+    │   │   ├── index.html            substituted in at build time.
     │   │   ├── 404.html
-    │   │   ├── contribute/           ← empty, next to build
+    │   │   ├── contribute/index.html
     │   │   └── tools/
-    │   │       ├── index.html        ← empty, the Tools landing page
+    │   │       ├── index.html        the Tools landing page
     │   │       ├── konki/{index,privacy,support,terms}
     │   │       ├── shutoku/{index,privacy,support}
     │   │       ├── kantetsu/{index,privacy,support}
     │   │       └── bottou/{index,privacy,support}
-    │   └── templates/            For generated pages. Empty until build.mjs
-    │       └── partials/         grows the atlas half.
+    │   └── templates/
+    │       └── partials/         masthead.html, footer.html,
+    │                             footer-tool.html — pulled in with
+    │                             <!--#include name-->. Templates for
+    │                             generated pages join them when
+    │                             build.mjs grows the atlas half.
     │
     ├── dist/                     BUILD OUTPUT. Gitignored. Never edit.
     │
@@ -86,11 +90,8 @@ push that merges a contributor's definition publishes it.
 
 ## What is missing
 
-    site/pages/tools/index.html       the Tools landing page
-    site/pages/contribute/index.html  the collaboration page
-    site/assets/fonts/*.woff2         optional, falls back without them
-    site/assets/tools/*.png           needed, or tool cards show broken images
+The generated half, in `scripts/build.mjs`: atlas node pages, the expandable
+tree, diagnostics pages, and the homepage completeness figures. The TODO at
+the bottom of that file lists them.
 
-And in `scripts/build.mjs`, the generated half: atlas node pages, the
-expandable tree, diagnostics pages, and the homepage completeness figures.
-The TODO at the bottom of that file lists them.
+Until those land, the nav points at `/atlas/`, which does not resolve yet.
