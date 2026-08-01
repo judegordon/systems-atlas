@@ -145,8 +145,13 @@ function expand(html, where) {
 }
 
 // --- pages -----------------------------------------------------------------
+//
+// Every page records its own sitemap priority as it is written, because at
+// that point its place in the structure is known. Counting slashes in the URL
+// afterwards is guessing at something the build already knew and threw away.
 
 const urls = [];
+const page = (loc, priority) => urls.push({ loc, priority });
 
 function copyPages(dir) {
   for (const entry of readdirSync(dir)) {
@@ -163,8 +168,11 @@ function copyPages(dir) {
     writeFileSync(out, expand(readFileSync(full, "utf8"), rel));
 
     if (entry === "index.html") {
-      const urlPath = dirname(rel) === "." ? "/" : `/${dirname(rel)}/`;
-      urls.push(urlPath);
+      const dir = dirname(rel);
+      // The homepage, then the hand-written sections, then the pages beneath
+      // them — a tool's privacy page is not the tool's page.
+      const urlPath = dir === "." ? "/" : `/${dir}/`;
+      page(urlPath, dir === "." ? "1.0" : dir.includes("/") ? "0.5" : "0.8");
     }
   }
 }
@@ -702,7 +710,10 @@ for (const [path, { node, depth, trail }] of nodes) {
   const out = join(DIST, "atlas", ...path.split("/"), "index.html");
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, html);
-  urls.push(`/atlas/${path}/`);
+  // A node's priority is its depth: a domain root ranks with the site's
+  // sections, and each level below it is worth a little less. Levelling off
+  // at 0.3 rather than running to zero — an L6 node is still a page.
+  page(`/atlas/${path}/`, (depth === 0 ? 0.8 : Math.max(0.3, 0.7 - depth * 0.1)).toFixed(1));
 }
 
 // --- atlas index -----------------------------------------------------------
@@ -745,7 +756,7 @@ writeFileSync(
   }), "atlas/index.html")
 );
 
-urls.push("/atlas/");
+page("/atlas/", "0.9");
 
 // --- diagnostics pages -----------------------------------------------------
 
@@ -800,7 +811,7 @@ if (diagnostics.length) {
     const out = join(DIST, "diagnostics", e.slug, "index.html");
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, html);
-    urls.push(`/diagnostics/${e.slug}/`);
+    page(`/diagnostics/${e.slug}/`, "0.6");
   }
 
   const indexShell = readFileSync(join(TEMPLATES, "diagnostics-index.html"), "utf8");
@@ -837,23 +848,52 @@ if (diagnostics.length) {
     }), "diagnostics/index.html")
   );
 
-  urls.push("/diagnostics/");
+  page("/diagnostics/", "0.9");
 }
 
 // --- sitemap ---------------------------------------------------------------
+//
+// No <lastmod>. The only dates available here are file modification times,
+// which reset on a fresh checkout, so every page would claim to have changed
+// on the day the site was built. An absent date is better than a wrong one.
 
-const priority = (u) =>
-  u === "/" ? "1.0" : u.split("/").filter(Boolean).length <= 2 ? "0.8" : "0.4";
+urls.sort((a, b) => a.loc.localeCompare(b.loc));
 
 const sitemap =
   `<?xml version="1.0" encoding="UTF-8"?>\n` +
   `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-  urls.sort().map((u) =>
-    `  <url><loc>${ORIGIN}${u}</loc><priority>${priority(u)}</priority></url>`
+  urls.map(({ loc, priority }) =>
+    `  <url><loc>${ORIGIN}${loc}</loc><priority>${priority}</priority></url>`
   ).join("\n") +
   `\n</urlset>\n`;
 
 writeFileSync(join(DIST, "sitemap.xml"), sitemap);
+
+// Every page written must be in the sitemap. The atlas and diagnostics pages
+// are generated, so a page can now appear without anyone remembering to list
+// it, and a sitemap that quietly omits a third of the site looks exactly like
+// one that does not. 404.html is deliberately absent: it has no URL to offer.
+{
+  const listed = new Set(urls.map((u) => u.loc));
+  const missing = [];
+  (function scan(dir, base) {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) {
+        scan(full, `${base}${entry}/`);
+      } else if (entry === "index.html" && !listed.has(base || "/")) {
+        missing.push(base || "/");
+      }
+    }
+  })(DIST, "/");
+
+  if (missing.length) {
+    throw new Error(
+      `${missing.length} page${missing.length === 1 ? "" : "s"} written but not in the sitemap:\n  ` +
+      missing.sort().join("\n  ")
+    );
+  }
+}
 
 console.log(`Built ${urls.length} pages into ${DIST}/`);
 
