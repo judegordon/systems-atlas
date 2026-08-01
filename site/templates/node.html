@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#101820">
+<link rel="canonical" href="https://systemsatlasproject.com/atlas/{{path}}/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="https://systemsatlasproject.com/atlas/{{path}}/">
+<meta property="og:image" content="https://systemsatlasproject.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main">
+
+  <!-- Identity ============================================================= -->
+  <section class="field--night node-head">
+    <div class="wrap">
+{{breadcrumb}}
+      <p class="node-level">Level {{level}}</p>
+      <h1 class="title node-title">{{name}}</h1>
+      <p class="node-path">{{path}}</p>
+    </div>
+  </section>
+
+  <!-- Justification ======================================================== -->
+  <section class="field--paper band">
+    <div class="wrap">
+      <div class="reading">
+        <p class="eyebrow"><span class="eyebrow__no">§ 01</span> Justification</p>
+        <h2 class="section-title">What has been written down.</h2>
+        <div class="prose">
+          <p>
+            Six fields are required of every node. Empty ones are shown as
+            declared gaps rather than hidden — a gap means nothing has been
+            written, not that there is nothing to write.
+          </p>
+        </div>
+{{fields}}
+      </div>
+    </div>
+  </section>
+{{children}}
+  <!-- Rules ================================================================ -->
+  <section class="field--paper band">
+    <div class="wrap">
+      <div class="reading">
+        <p class="eyebrow"><span class="eyebrow__no">§ {{rulesNo}}</span> Rules</p>
+        <h2 class="section-title">Whether this division survives the six rules.</h2>
+        <div class="prose">
+          <p>
+            Rules 1, 5 and 6 are checked by the validator and reported here.
+            Rules 2, 3 and 4 are judgements about meaning and cannot be
+            automated — no state is claimed for them.
+          </p>
+        </div>
+{{checks}}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!--#include footer-->
+
+</body>
+</html>

@@ -6,9 +6,9 @@
  *   node scripts/build.mjs --strict   refuse to build if the atlas has errors
  *
  * Right now this copies the hand-written pages and static files, substitutes
- * the shared partials into them, and generates the sitemap. Atlas node pages,
- * the tree, and the completeness figures on the homepage are not generated
- * yet — see the TODO at the bottom.
+ * the shared partials into them, emits a page per atlas node, and generates
+ * the sitemap. The tree and the completeness figures on the homepage are not
+ * generated yet — see the TODO at the bottom.
  *
  * Validation always runs and always reports. It does not block the build by
  * default, because the atlas has real unresolved problems and publishing them
@@ -22,12 +22,21 @@ import {
 } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { execFileSync } from "node:child_process";
+import yaml from "js-yaml";
 
 const SITE = "site";
 const PAGES = join(SITE, "pages");
 const PARTIALS = join(SITE, "templates", "partials");
+const TEMPLATES = join(SITE, "templates");
+const ATLAS = "atlas";
+const LENSES = join("lenses", "lenses.yaml");
 const DIST = "dist";
 const ORIGIN = "https://systemsatlasproject.com";
+
+// Domains whose node pages are generated. One domain was built and reviewed
+// first; the rest join this list as each is looked at. Adding a name here is
+// the whole of it — nothing else is per-domain.
+const PUBLISHED_DOMAINS = ["human-biological"];
 
 // --- validate first --------------------------------------------------------
 
@@ -146,6 +155,317 @@ function copyPages(dir) {
 
 if (existsSync(PAGES)) copyPages(PAGES);
 
+// --- atlas node pages ------------------------------------------------------
+//
+// One page per node at /atlas/<path>/. Level is the node's depth in the tree
+// and is computed here every time; the atlas never writes a level down,
+// because a number you type is a number that can disagree with the structure
+// it describes.
+//
+// The six required fields are rendered whether or not they hold anything. An
+// empty field is a declared gap and is shown as one. Nothing is inferred to
+// fill it.
+
+const esc = (s) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+           .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// A field is empty when it holds no content — not when the key is absent.
+// A missing key is a different failure, and validate.mjs reports it.
+const isEmpty = (v) =>
+  v == null ||
+  (typeof v === "string" && !v.trim()) ||
+  (Array.isArray(v) && v.length === 0);
+
+const text = (s) => esc(String(s).trim().replace(/\s+/g, " "));
+
+const FIELDS = [
+  ["definition",     "Definition",     "No definition has been written."],
+  ["inclusion",      "Inclusion",      "No inclusion criteria have been written."],
+  ["exclusion",      "Exclusion",      "No exclusions have been recorded."],
+  ["sources",        "Sources",        "No sources have been cited."],
+  ["boundary_cases", "Boundary cases", "No boundary cases have been recorded."],
+  ["uncertainty",    "Uncertainty",    "No uncertainty has been recorded."],
+];
+
+// Two indexes, and the difference between them matters.
+//
+//   nodes / byPublishedId  — nodes that get a page in this build. These are
+//                            what an exclusion can be linked to.
+//   knownIds               — every id anywhere in the atlas, plus the lens
+//                            ids, whether or not a page exists yet.
+//
+// An exclusion pointing at a real domain that has no page yet is not a
+// finding, and must not be marked as one. An exclusion pointing at something
+// that exists nowhere is the finding the validator reports, and is marked.
+
+const nodes = new Map();            // "a/b/c" -> { node, depth, trail }
+const byPublishedId = new Map();    // "c"     -> "a/b/c"
+const knownIds = new Set();
+const lensIds = new Set();
+
+const domainFiles = existsSync(ATLAS)
+  ? readdirSync(ATLAS).filter((f) => f.endsWith(".yaml"))
+  : [];
+
+for (const f of domainFiles) {
+  const root = yaml.load(readFileSync(join(ATLAS, f), "utf8"));
+  const published = PUBLISHED_DOMAINS.includes(root.id);
+  (function index(node, trail) {
+    const path = [...trail, node.id].join("/");
+    knownIds.add(node.id);
+    if (published) {
+      nodes.set(path, { node, depth: trail.length, trail });
+      byPublishedId.set(node.id, path);
+    }
+    for (const child of node.children ?? []) index(child, [...trail, node.id]);
+  })(root, []);
+}
+
+for (const name of PUBLISHED_DOMAINS) {
+  if (!knownIds.has(name)) {
+    throw new Error(`PUBLISHED_DOMAINS names "${name}", which is not a domain in ${ATLAS}/`);
+  }
+}
+
+if (existsSync(LENSES)) {
+  for (const lens of yaml.load(readFileSync(LENSES, "utf8")) ?? []) {
+    knownIds.add(lens.id);
+    lensIds.add(lens.id);
+  }
+}
+
+// An exclusion names where the excluded thing goes. Link it when that place
+// has a page, name it plainly when it exists but has no page yet, and mark it
+// when it exists nowhere — that last case is a finding about the atlas, not a
+// formatting problem, so it is shown rather than smoothed over.
+function destination(goesTo, isLens) {
+  const id = String(goesTo).split("/").pop();
+  const path = byPublishedId.get(id);
+  if (path) return `<a href="/atlas/${path}/">${text(goesTo)}</a>`;
+  // A lens is not part of the atlas tree and never gets a node page, so it is
+  // named plainly. The "lens" label in front of it already says what it is.
+  if (isLens) return lensIds.has(id)
+    ? text(goesTo)
+    : `${text(goesTo)} <span class="unresolved">is not one of the eleven lenses</span>`;
+  if (knownIds.has(id)) return `${text(goesTo)} <span class="pending">no page yet</span>`;
+  return `${text(goesTo)} <span class="unresolved">does not exist in the atlas</span>`;
+}
+
+function renderList(items, render) {
+  return `<ul>\n${items.map((i) => `            <li><span>${render(i)}</span></li>`).join("\n")}\n          </ul>`;
+}
+
+function renderSource(s) {
+  if (typeof s === "string") return text(s);
+  const bits = [`<strong>${text(s.citation ?? "")}</strong>`];
+  if (s.where) bits.push(text(s.where));
+  if (s.doi) bits.push(`doi:${text(s.doi)}`);
+  if (s.url) bits.push(`<a href="${esc(s.url)}">${text(s.url)}</a>`);
+  return bits.join(" · ");
+}
+
+function renderExclusion(ex) {
+  if (typeof ex === "string") {
+    return `${text(ex)} <span class="unresolved">no destination given</span>`;
+  }
+  const label = ex.kind === "lens" ? "lens" : "goes to";
+  const extra = ex.relation
+    ? ` <span class="relation">relation: ${text(ex.relation)}</span>`
+    : "";
+  if (!ex.goes_to) {
+    return `${text(ex.text ?? "?")} <span class="unresolved">no destination given</span>${extra}`;
+  }
+  return `${text(ex.text ?? "?")} — ${label} ${destination(ex.goes_to, ex.kind === "lens")}${extra}`;
+}
+
+function renderField(node, [key, label, gapNote]) {
+  const value = node[key];
+
+  if (isEmpty(value)) {
+    return `        <div class="node-field">
+          <h3 class="node-field__label">${label}</h3>
+          <p class="gap"><span class="gap__tag">Declared gap</span> ${gapNote}</p>
+        </div>`;
+  }
+
+  let body;
+  if (key === "definition") {
+    body = `<p>${text(value)}</p>`;
+  } else if (key === "exclusion") {
+    body = renderList(value, renderExclusion);
+  } else if (key === "sources") {
+    body = renderList(value, renderSource);
+  } else {
+    body = renderList(value, text);
+  }
+
+  return `        <div class="node-field">
+          <h3 class="node-field__label">${label}</h3>
+          ${body}
+        </div>`;
+}
+
+// Rules 1, 5 and 6 are what validate.mjs can check. Rules 2, 3 and 4 are
+// judgements about meaning; no state is claimed for them here.
+function checkRules(node) {
+  const kids = node.children ?? [];
+  const n = kids.length;
+  const rules = [];
+
+  if (n === 0) {
+    rules.push(["01", "Five parts, at most seven", "na",
+      "Not applicable. This node is not a division."]);
+  } else if (n > 7) {
+    rules.push(["01", "Five parts, at most seven", "fail",
+      `Divides into ${n} components, above the stated ceiling of seven.`]);
+  } else if (n > 5) {
+    rules.push(["01", "Five parts, at most seven", "warning",
+      `Divides into ${n} components, above the target of five and within the ceiling of seven.`]);
+  } else {
+    rules.push(["01", "Five parts, at most seven", "pass",
+      `Divides into ${n} component${n === 1 ? "" : "s"}.`]);
+  }
+
+  rules.push(["02", "Mutually exclusive", "none",
+    "A judgement about whether the parts overlap. Not automated."]);
+  rules.push(["03", "Collectively exhaustive", "none",
+    "A judgement about what the parts leave out. Not automated."]);
+  rules.push(["04", "Equal abstraction", "none",
+    "A judgement about whether the parts answer the same question type. Not automated."]);
+
+  if (n === 1) {
+    rules.push(["05", "Decomposable or terminal", "fail",
+      "Has exactly one child — a division that divides nothing."]);
+  } else if (n === 0 && node.terminal === true) {
+    rules.push(["05", "Decomposable or terminal", "pass",
+      "A declared endpoint."]);
+  } else if (n === 0) {
+    rules.push(["05", "Decomposable or terminal", "warning",
+      "No children and not marked terminal — unfinished, rather than an endpoint."]);
+  } else {
+    rules.push(["05", "Decomposable or terminal", "pass",
+      `Divides into ${n} parts.`]);
+  }
+
+  // The rule is that a category carries its justification, not merely that
+  // the keys exist. A node with six empty fields is unfinished, whatever the
+  // file looks like, so an empty field is not reported as a pass.
+  const missing = FIELDS.map(([k]) => k).filter((k) => !(k in node));
+  const filled = FIELDS.filter(([k]) => !isEmpty(node[k])).length;
+
+  if (missing.length) {
+    rules.push(["06", "Justified in writing", "fail",
+      `Missing required field${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}. ` +
+      `A missing key is a silent gap rather than a declared one.`]);
+  } else if (filled === 0) {
+    rules.push(["06", "Justified in writing", "fail",
+      "All six fields are present and all six are empty. Nothing has been written down."]);
+  } else if (filled < FIELDS.length) {
+    rules.push(["06", "Justified in writing", "warning",
+      `${filled} of the six fields carry content. The rest are declared gaps.`]);
+  } else {
+    rules.push(["06", "Justified in writing", "pass",
+      "All six fields carry content."]);
+  }
+
+  return rules;
+}
+
+const STATE_LABEL = {
+  pass: "Passes",
+  warning: "Warning",
+  fail: "Fails",
+  na: "Not applicable",
+  none: "Not checked",
+};
+
+function renderChecks(node) {
+  return checkRules(node).map(([no, name, state, detail]) =>
+    `        <div class="check">
+          <span class="check__no">Rule ${no}</span>
+          <div>
+            <h3 class="check__name">${name}</h3>
+            <p class="check__detail">${detail}</p>
+          </div>
+          <span class="check__state check__state--${state}">${STATE_LABEL[state]}</span>
+        </div>`
+  ).join("\n");
+}
+
+// Ancestors only, and nothing at all for a domain root. The parent of the
+// nine domains is undefined — it is one of the atlas's open problems — so the
+// breadcrumb must not invent one by putting "Atlas" above an L0 node.
+function renderBreadcrumb(trail) {
+  if (!trail.length) return "";
+  const links = trail.map((_, i) => {
+    const path = trail.slice(0, i + 1).join("/");
+    const name = nodes.get(path)?.node.name ?? path;
+    return `<a href="/atlas/${path}/">${text(name)}</a>`;
+  });
+  return `      <nav class="crumb" aria-label="Breadcrumb">\n` +
+    `        ${links.join('\n        <span class="crumb__sep" aria-hidden="true">/</span>\n        ')}\n` +
+    `      </nav>`;
+}
+
+function renderChildren(node, path, depth) {
+  const kids = node.children ?? [];
+  if (!kids.length) return "";
+
+  const cards = kids.map((kid) => {
+    const gloss = isEmpty(kid.definition)
+      ? `<p class="kid__gap"><span class="gap__tag">Declared gap</span> No definition has been written.</p>`
+      : `<p class="kid__def">${text(kid.definition)}</p>`;
+    return `          <a class="kid" href="/atlas/${path}/${kid.id}/">
+            <span class="kid__head">
+              <span class="kid__name">${text(kid.name)}</span>
+              <span class="kid__level">Level ${depth + 1}</span>
+            </span>
+            ${gloss}
+          </a>`;
+  }).join("\n");
+
+  return `
+  <!-- Divides into ========================================================= -->
+  <section class="field--night band">
+    <div class="wrap">
+      <p class="eyebrow"><span class="eyebrow__no">§ 02</span> Divides into</p>
+      <h2 class="section-title">${kids.length} component${kids.length === 1 ? "" : "s"} at level ${depth + 1}.</h2>
+      <div class="kids">
+${cards}
+      </div>
+    </div>
+  </section>
+`;
+}
+
+const nodeShell = readFileSync(join(TEMPLATES, "node.html"), "utf8");
+
+for (const [path, { node, depth, trail }] of nodes) {
+  const kids = node.children ?? [];
+  const description = isEmpty(node.definition)
+    ? `${node.name} — a level ${depth} node in the Systems Atlas taxonomy. No definition has been written yet.`
+    : String(node.definition).trim().replace(/\s+/g, " ").slice(0, 180);
+
+  const html = expand(fill(nodeShell, {
+    title: `${node.name} — Systems Atlas`,
+    description,
+    name: text(node.name),
+    path,
+    level: String(depth),
+    rulesNo: kids.length ? "03" : "02",
+    breadcrumb: renderBreadcrumb(trail),
+    fields: FIELDS.map((f) => renderField(node, f)).join("\n"),
+    children: renderChildren(node, path, depth),
+    checks: renderChecks(node),
+  }), `atlas/${path}`);
+
+  const out = join(DIST, "atlas", ...path.split("/"), "index.html");
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, html);
+  urls.push(`/atlas/${path}/`);
+}
+
 // --- sitemap ---------------------------------------------------------------
 
 const priority = (u) =>
@@ -166,9 +486,6 @@ console.log(`Built ${urls.length} pages into ${DIST}/`);
 // ---------------------------------------------------------------------------
 // TODO — the generated half
 //
-//   1. Read atlas/*.yaml and emit one page per node at /atlas/<path>/
-//      carrying its justification, the rules governing its division, and its
-//      children with one-line definitions.
 //   2. Emit a nested <details> tree per domain. No JavaScript, so it works
 //      under script-src 'none'.
 //   3. Emit an SVG dendrogram per domain for the whole-descent view.

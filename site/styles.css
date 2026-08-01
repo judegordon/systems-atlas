@@ -1014,14 +1014,16 @@ a.tool:hover .tool__link { color: var(--night); text-decoration: underline; text
 
 .doc ul { margin: 0 0 var(--s4); }
 
-.doc ul li {
+.doc ul li,
+.node-field ul li {
   color: var(--night-2);
   display: flex;
   gap: var(--s3);
   margin-bottom: var(--s2);
 }
 
-.doc ul li::before {
+.doc ul li::before,
+.node-field ul li::before {
   content: "";
   width: 12px;
   height: 2px;
@@ -1157,3 +1159,217 @@ a.tool:hover .tool__link { color: var(--night); text-decoration: underline; text
 }
 
 .thr__cap--rev { fill: var(--revision); }
+
+/* ==========================================================================
+   ATLAS NODE PAGES
+   One page per node. Level is the node's depth, computed at build time, so
+   nothing here can disagree with the structure it describes.
+   ========================================================================== */
+
+.node-head { padding-block: clamp(var(--s6), 5vw, var(--s7)) clamp(var(--s6), 5vw, var(--s7)); }
+
+/* Breadcrumb -------------------------------------------------------------- */
+
+.crumb {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+  margin-bottom: var(--s5);
+}
+
+.crumb a {
+  color: var(--structure-2);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.crumb a:hover,
+.crumb a:focus-visible { color: var(--structure); border-bottom-color: var(--structural); }
+
+.crumb__sep { color: var(--structure-3); }
+
+/* Identity ---------------------------------------------------------------- */
+
+.node-level {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--structural);
+  margin-bottom: var(--s3);
+}
+
+.node-title { max-width: 20ch; }
+
+.node-path {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--structure-3);
+  margin-top: var(--s5);
+  overflow-wrap: anywhere;
+}
+
+/* The six fields ---------------------------------------------------------- */
+
+.node-field {
+  border-top: 1px solid rgba(16, 24, 32, 0.16);
+  padding-top: var(--s4);
+  margin-top: var(--s5);
+}
+
+.node-field__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--night-3);
+  margin-bottom: var(--s3);
+}
+
+.node-field p { color: var(--night-2); }
+.node-field ul { margin: 0; }
+.node-field ul li:last-child { margin-bottom: 0; }
+.node-field a { text-decoration: underline; text-underline-offset: 3px; }
+.node-field strong { color: var(--night); font-weight: 700; }
+
+/* A declared gap. Shown, never hidden and never filled with plausible text. */
+.gap {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+}
+
+.gap__tag {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--structural);
+  border: 1px solid var(--structural);
+  padding: 1px 6px;
+  flex: none;
+}
+
+/* An exclusion whose destination exists nowhere in the atlas. That is a
+   finding, so it is marked rather than quietly rendered as prose. */
+.unresolved {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--revision);
+}
+
+/* A destination that exists but has no page yet. Not a finding — the atlas
+   is being published a domain at a time — so it is stated, not flagged. */
+.pending {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-3);
+}
+
+.relation {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--night-3);
+}
+
+/* Children ---------------------------------------------------------------- */
+
+.kids { margin-top: var(--s6); display: grid; gap: var(--s3); }
+
+@media (min-width: 52rem) { .kids { grid-template-columns: 1fr 1fr; gap: var(--s4); } }
+
+.kid {
+  display: block;
+  padding: var(--s4);
+  border: 1px solid var(--rule-light);
+  text-decoration: none;
+}
+
+a.kid:hover, a.kid:focus-visible { border-color: var(--structure-3); }
+
+.kid__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+}
+
+.kid__name {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--structure);
+}
+
+.kid__level {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--structure-3);
+}
+
+.kid__def { color: var(--structure-2); font-size: 17px; margin-top: var(--s2); }
+
+.kid__gap {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--structure-3);
+  margin-top: var(--s3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+}
+
+/* Rule check -------------------------------------------------------------- */
+
+.checks { margin-top: var(--s6); border-top: 1px solid rgba(16, 24, 32, 0.16); }
+
+.check {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s2);
+  padding: var(--s4) 0;
+  border-bottom: 1px solid rgba(16, 24, 32, 0.16);
+}
+
+@media (min-width: 44rem) {
+  .check {
+    grid-template-columns: 84px minmax(0, 1fr) 8ch;
+    gap: var(--s4);
+    align-items: baseline;
+  }
+}
+
+.check__no {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--night-3);
+}
+
+.check__name { font-family: var(--display); font-size: 19px; font-weight: 600; }
+.check__detail { color: var(--night-2); font-size: 17px; margin-top: var(--s1); }
+
+.check__state {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.check__state--pass    { color: var(--applied); }
+.check__state--warning { color: var(--structural); }
+.check__state--fail    { color: var(--revision); }
+.check__state--na      { color: var(--night-3); }
+.check__state--none    { color: var(--night-3); }
