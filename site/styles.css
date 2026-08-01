@@ -210,6 +210,11 @@ a { color: inherit; }
 .field--night .lede { color: var(--structure-2); }
 .field--paper .lede { color: var(--night-2); }
 
+/* A lede set straight after a title otherwise butts into its descenders.
+   Same value as .hero__lede, which is where this spacing was first set. */
+.title + .lede,
+.doc h1 + .lede { margin-top: var(--s4); }
+
 .prose { max-width: var(--reading); }
 .prose p + p { margin-top: var(--s3); }
 .field--paper .prose { color: var(--night-2); }
@@ -1023,6 +1028,28 @@ a.tool:hover .tool__link { color: var(--night); text-decoration: underline; text
   flex: none;
   background: var(--accent, var(--night));
   transform: translateY(-6px);
+}
+
+/* The reset strips list markers, so an ordered list has to restate them. Mono
+   numerals, because a step number is a label rather than prose. */
+.doc ol { margin: 0 0 var(--s4); counter-reset: step; }
+
+.doc ol li {
+  color: var(--night-2);
+  display: flex;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
+  counter-increment: step;
+}
+
+.doc ol li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--accent, var(--night));
+  flex: none;
+  transform: translateY(3px);
 }
 
 .doc a { text-decoration: underline; text-underline-offset: 3px; }

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contribute — Systems Atlas Project</title>
+<meta name="description" content="How to contribute to Systems Atlas. The most useful contribution is a case that breaks a division. Open an issue, then a pull request against the YAML.">
+<meta name="theme-color" content="#101820">
+<link rel="canonical" href="https://systemsatlasproject.com/contribute/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contribute — Systems Atlas Project">
+<meta property="og:description" content="The most useful contribution is a case that breaks a division.">
+<meta property="og:url" content="https://systemsatlasproject.com/contribute/">
+<meta property="og:image" content="https://systemsatlasproject.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+
+      <p class="eyebrow"><span class="eyebrow__no">CONTRIBUTE</span> Open project</p>
+      <h1>The most useful thing you can send is a case that breaks a division.</h1>
+      <p class="lede">
+        This is an open project currently led by one person. That is a
+        description of where it is, not of how it should stay.
+      </p>
+
+      <div class="notice">
+        <p><strong>The repository</strong> <a href="https://github.com/judegordon/systems-atlas">github.com/judegordon/systems-atlas</a></p>
+        <p>The taxonomy is YAML under <strong>atlas/</strong>, one file per domain. That is the thing to edit. The site is generated from it.</p>
+      </div>
+
+      <h2>A case that breaks a division</h2>
+      <p>If you can name something that will not classify cleanly, or that fits in two places at once, that is worth more than a new category. A division that survives contact with an awkward case is worth something. One that has never met one is only untested.</p>
+      <p>Say which node it breaks and what you were trying to classify. A source helps. What you would do instead is optional — the case alone is useful.</p>
+      <p><a href="https://github.com/judegordon/systems-atlas/issues/new?template=break-a-division.md">Open a “break a division” issue</a></p>
+
+      <h2>Everything else</h2>
+      <p>Also welcome, and needed: definitions, sources, boundary cases, code, design, and corrections to anything. The atlas has more declared gaps than filled fields, and every empty one is an invitation.</p>
+      <p>Two things about filling a gap. Every exclusion has to say where the excluded thing goes, because excluding something without a destination leaves it nowhere. And a definition without a source is an opinion with formatting.</p>
+      <p>If you are unsure, put it in <strong>uncertainty</strong> rather than resolving it confidently. Recorded uncertainty is worth more than false confidence.</p>
+      <p><a href="https://github.com/judegordon/systems-atlas/issues/new?template=add-justification.md">Open an “add a definition or source” issue</a></p>
+
+      <h2>How it works</h2>
+      <ol>
+        <li><span><strong>Open an issue first</strong>, for anything beyond a typo. It saves you writing something that turns out to conflict with a decision made elsewhere.</span></li>
+        <li><span><strong>Fork, edit the YAML, run the validator.</strong> Read <strong>docs/SCHEMA.md</strong> before touching a file — it is the field reference.</span></li>
+        <li><span><strong>Open a pull request</strong> against the YAML. It will be reviewed on content, not markup.</span></li>
+      </ol>
+      <p class="data">npm run validate</p>
+      <p>A pull request that fails validation will say exactly why. Validation reports but does not block: the atlas has real unresolved errors, and publishing them is the point. Do not edit the taxonomy to silence one — those are findings, and they belong in <strong>diagnostics/</strong>.</p>
+
+      <h2>Review</h2>
+      <p>Pull requests are reviewed against the six rules, and against whether the justification actually supports the division. Expect to be asked for a source. Expect disagreement to be recorded rather than settled quietly.</p>
+      <p>When a division fails — a case will not classify, two categories overlap, a definition turns out circular — it gets a file in <strong>diagnostics/</strong>. Including when the outcome is unresolved. Especially then.</p>
+
+      <h2>Credit and licences</h2>
+      <p>Anything merged keeps your attribution in the git history, which is the real credit record.</p>
+      <ul>
+        <li><span>Content — the taxonomy, the lenses, the diagnostics — is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span></li>
+        <li><span>Code is <a href="https://github.com/judegordon/systems-atlas/blob/main/LICENSE">MIT</a>.</span></li>
+      </ul>
+
+      <h2>Funding</h2>
+      <p>The project is self-funded and carries no advertising, now or later. There is no donate button and there is not going to be one. Conversations about funding are welcome — they are just not being solicited from this page.</p>
+
+      <h2>Getting in touch</h2>
+      <p>An issue is usually the right place. For anything larger than a pull request, including working on this in a sustained way: <a href="mailto:hello@systemsatlasproject.com">hello@systemsatlasproject.com</a>.</p>
+
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+</body>
+</html>
