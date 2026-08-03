@@ -1618,3 +1618,107 @@ a.entry:hover, a.entry:focus-visible { border-color: var(--night-3); }
   color: var(--night-3);
   margin-top: var(--s3);
 }
+
+/* Account forms ------------------------------------------------------------
+   The only pages on the site that take input. No rounded corners, no
+   elevation, no gradient — a field is a rule and a box, like everything else.
+   -------------------------------------------------------------------------- */
+
+.form { max-width: 26rem; margin-top: var(--s5); }
+
+.form__row { margin-bottom: var(--s4); }
+
+.form__label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-2);
+  margin-bottom: var(--s2);
+}
+
+.form__input {
+  width: 100%;
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--night);
+  background: var(--structure);
+  border: 2px solid var(--night);
+  border-radius: 0;
+  padding: var(--s3);
+}
+
+.form__input:focus-visible {
+  outline: 2px solid var(--evidence);
+  outline-offset: 2px;
+}
+
+.form__input:disabled { color: var(--night-3); }
+
+/* Said under the field it constrains, not after the form has been rejected. */
+.form__hint {
+  font-size: 15px;
+  color: var(--night-2);
+  margin-top: var(--s2);
+}
+
+.form__button {
+  font-family: var(--display);
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: var(--s3) var(--s4);
+  border: 2px solid var(--night);
+  border-radius: 0;
+  background: var(--night);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.form__button:hover { background: transparent; color: var(--night); }
+.form__button:disabled { opacity: 0.45; cursor: default; }
+.form__button:disabled:hover { background: var(--night); color: var(--paper); }
+
+.form__button--quiet { background: transparent; color: var(--night); }
+.form__button--quiet:hover { background: var(--night); color: var(--paper); }
+
+/* A single line of state, in the colour that names the kind of work it is:
+   Revision Magenta when something must be changed, Applied Green when it
+   worked. Empty until there is something true to put in it. */
+.form__message {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: var(--s4);
+  padding-left: var(--s3);
+  border-left: 2px solid transparent;
+}
+
+.form__message:empty { display: none; }
+.form__message--error { border-left-color: var(--revision); color: var(--night); }
+.form__message--ok { border-left-color: var(--applied); color: var(--night); }
+.form__message--working { border-left-color: var(--night-3); color: var(--night-2); }
+
+/* Shown only once the page knows which of the two states it is in, so that a
+   signed-out visitor never sees a flash of the signed-in page. */
+.js-hidden { display: none; }
+
+.account-section {
+  border-top: 1px solid var(--rule-dark);
+  padding-top: var(--s5);
+  margin-top: var(--s7);
+}
+
+.account-section--grave { border-top-color: var(--revision); }
+
+.account-facts {
+  font-family: var(--mono);
+  font-size: 14px;
+  margin-top: var(--s4);
+}
+
+.account-facts div { display: flex; gap: var(--s3); padding: var(--s2) 0; }
+.account-facts dt { color: var(--night-3); min-width: 8rem; }
+.account-facts dd { margin: 0; color: var(--night); }

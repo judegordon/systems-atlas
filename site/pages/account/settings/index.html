@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your account — Systems Atlas Project</title>
+<meta name="description" content="Your Systems Atlas account: display name, bio, password, sessions and withdrawal.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/account/settings/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+
+      <p class="eyebrow"><span class="eyebrow__no">ACCOUNT</span> Settings</p>
+      <h1>Your account.</h1>
+
+      <p class="form__message form__message--working" id="loading" role="status">Loading…</p>
+
+      <div class="js-hidden" id="signed-out">
+        <p class="lede">You are not signed in.</p>
+        <p><a class="btn btn--primary" href="/account/">Sign in</a></p>
+      </div>
+
+      <div class="js-hidden" id="signed-in">
+
+        <dl class="account-facts">
+          <div><dt>Email</dt><dd id="fact-email"></dd></div>
+          <div><dt>Joined</dt><dd id="fact-joined"></dd></div>
+          <div><dt>Status</dt><dd id="fact-verified"></dd></div>
+        </dl>
+
+        <div class="notice js-hidden" id="unverified-note">
+          <p>This address has not been verified yet. Check for the link that was sent when the account was created — it expires after 24 hours.</p>
+        </div>
+
+        <div class="notice js-hidden" id="admin-note">
+          <p>This account has administrator rights.</p>
+        </div>
+
+        <div class="account-section">
+          <h2>Name and bio</h2>
+          <p>The display name is what appears next to anything you publish. Choosing to be anonymous is decided per submission, not here.</p>
+
+          <form class="form" id="profile-form" novalidate>
+            <div class="form__row">
+              <label class="form__label" for="displayName">Display name</label>
+              <input class="form__input" type="text" id="displayName" name="displayName" autocomplete="nickname" minlength="2" maxlength="40" required>
+            </div>
+            <div class="form__row">
+              <label class="form__label" for="bio">Bio</label>
+              <input class="form__input" type="text" id="bio" name="bio" maxlength="160">
+              <p class="form__hint">Optional, up to 160 characters. Leave it empty to remove it.</p>
+            </div>
+            <button class="form__button" type="submit">Save</button>
+            <p class="form__message" id="profile-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="account-section">
+          <h2>Password</h2>
+
+          <form class="form" id="password-form" novalidate>
+            <div class="form__row">
+              <label class="form__label" for="currentPassword">Current password</label>
+              <input class="form__input" type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
+            </div>
+            <div class="form__row">
+              <label class="form__label" for="newPassword">New password</label>
+              <input class="form__input" type="password" id="newPassword" name="newPassword" autocomplete="new-password" minlength="10" required>
+              <p class="form__hint">At least 10 characters.</p>
+            </div>
+            <div class="form__row">
+              <label class="form__label" for="confirm">Confirm new password</label>
+              <input class="form__input" type="password" id="confirm" name="confirm" autocomplete="new-password" minlength="10" required>
+            </div>
+            <button class="form__button" type="submit">Change password</button>
+            <p class="form__message" id="password-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <p class="form__hint">Changing it signs out every other session. This one stays open.</p>
+        </div>
+
+        <div class="account-section">
+          <h2>Sessions</h2>
+          <p>Signing out ends this session only. Signing out everywhere ends every session on the account, on every device — including this one.</p>
+          <div class="actions">
+            <button class="form__button form__button--quiet" type="button" id="signout">Sign out</button>
+            <button class="form__button form__button--quiet" type="button" id="signout-all">Sign out everywhere</button>
+          </div>
+          <p class="form__message" id="sessions-message" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="account-section account-section--grave">
+          <h2>Withdraw this account</h2>
+          <p>Your email address, password and bio are removed, and you are signed out everywhere. The account cannot be recovered afterwards.</p>
+          <p><strong>Anything you have published stays published, attributed to <em>Withdrawn</em>.</strong> Your name is removed from it; the argument is not. A public record that can be retracted afterwards is not a record.</p>
+
+          <form class="form" id="withdraw-form" novalidate>
+            <div class="form__row">
+              <label class="form__label" for="withdraw-password">Your password</label>
+              <input class="form__input" type="password" id="withdraw-password" name="password" autocomplete="current-password" required>
+            </div>
+            <div class="form__row">
+              <label class="form__label" for="withdraw-confirm">Type WITHDRAW to confirm</label>
+              <input class="form__input" type="text" id="withdraw-confirm" name="confirm" autocomplete="off" required>
+            </div>
+            <button class="form__button" type="submit">Withdraw account</button>
+            <p class="form__message" id="withdraw-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/settings.js"></script>
+</body>
+</html>

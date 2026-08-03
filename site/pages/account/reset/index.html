@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set a new password — Systems Atlas Project</title>
+<meta name="description" content="Set a new password on your Systems Atlas account.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/account/reset/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">ACCOUNT</span> Reset</p>
+      <h1>Set a new password.</h1>
+
+      <form class="form" id="reset-form" novalidate>
+        <div class="form__row">
+          <label class="form__label" for="password">New password</label>
+          <input class="form__input" type="password" id="password" name="password" autocomplete="new-password" minlength="10" required>
+          <p class="form__hint">At least 10 characters.</p>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="confirm">Confirm new password</label>
+          <input class="form__input" type="password" id="confirm" name="confirm" autocomplete="new-password" minlength="10" required>
+        </div>
+        <button class="form__button" type="submit">Set password</button>
+        <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="account-section js-hidden" id="after-reset">
+        <p>Every session on this account has been signed out, including any still open elsewhere.</p>
+        <p><a class="btn btn--primary" href="/account/">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/reset.js"></script>
+</body>
+</html>

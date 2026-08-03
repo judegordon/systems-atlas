@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reset your password — Systems Atlas Project</title>
+<meta name="description" content="Ask for a link to set a new Systems Atlas password.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/account/forgot/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">ACCOUNT</span> Reset</p>
+      <h1>Reset your password.</h1>
+      <p class="lede">Give the address on the account and a link to set a new password will be sent to it. The link works once and expires in an hour.</p>
+
+      <form class="form" id="forgot-form" novalidate>
+        <div class="form__row">
+          <label class="form__label" for="email">Email</label>
+          <input class="form__input" type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <button class="form__button" type="submit">Send a reset link</button>
+        <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="account-section">
+        <p>This page gives the same answer whether or not the address has an account. That is deliberate: contributions here are public, and an address that could be confirmed from this form would be a way to attach a real identity to a pseudonymous one.</p>
+        <p><a href="/account/">Back to sign in</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/forgot.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "systems-atlas-api",
+  "version": "0.1.0",
+  "description": "Accounts for the Systems Atlas. Separate from the app accounts.",
+  "main": "server.js",
+  "type": "commonjs",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "migrate": "node scripts/migrate.js",
+    "migrate:status": "node scripts/migrate.js --status",
+    "test": "node --test --test-concurrency=1 test/*.test.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "pg": "^8.22.0",
+    "resend": "^6.16.0"
+  }
+}

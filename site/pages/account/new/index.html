@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create an account — Systems Atlas Project</title>
+<meta name="description" content="Create a Systems Atlas account to propose changes to the taxonomy.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/account/new/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">ACCOUNT</span> Create</p>
+      <h1>Create an account.</h1>
+      <p class="lede">Only needed to propose a change or join a discussion. Reading the atlas needs nothing.</p>
+
+      <div class="notice">
+        <p><strong>Before you create it, one thing that cannot be undone later.</strong></p>
+        <p>Anything you publish here stays published if you delete your account. Your name is removed from it; the argument is not. A public record that can be retracted afterwards is not a record.</p>
+      </div>
+
+      <p>Your display name is what appears next to anything you publish. Choosing to be anonymous is decided per submission, not here — and an anonymous submission is still visible to an administrator.</p>
+
+      <form class="form" id="signup-form" novalidate>
+        <div class="form__row">
+          <label class="form__label" for="displayName">Display name</label>
+          <input class="form__input" type="text" id="displayName" name="displayName" autocomplete="nickname" minlength="2" maxlength="40" required>
+          <p class="form__hint">Between 2 and 40 characters. It appears on the public site.</p>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="email">Email</label>
+          <input class="form__input" type="email" id="email" name="email" autocomplete="email" required>
+          <p class="form__hint">Used to verify the account and to reset the password. Nothing else is ever sent to it.</p>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="password">Password</label>
+          <input class="form__input" type="password" id="password" name="password" autocomplete="new-password" minlength="10" required>
+          <p class="form__hint">At least 10 characters. No composition rules — length is what matters.</p>
+        </div>
+        <button class="form__button" type="submit">Create account</button>
+        <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="account-section">
+        <p>Already have one? <a href="/account/">Sign in</a>.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/signup.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — Systems Atlas Project</title>
+<meta name="description" content="Sign in to your Systems Atlas account.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/account/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">ACCOUNT</span> Sign in</p>
+      <h1>Sign in.</h1>
+      <p class="lede">This account is for proposing changes to the atlas and arguing about them. It is separate from any account you have in Konki, Shutoku, Kantetsu or Bottou.</p>
+
+      <form class="form" id="signin-form" novalidate>
+        <div class="form__row">
+          <label class="form__label" for="email">Email</label>
+          <input class="form__input" type="email" id="email" name="email" autocomplete="username" required>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="password">Password</label>
+          <input class="form__input" type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button class="form__button" type="submit">Sign in</button>
+        <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="account-section">
+        <p><a href="/account/new/">Create an account</a> · <a href="/account/forgot/">Forgotten your password?</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/signin.js"></script>
+</body>
+</html>

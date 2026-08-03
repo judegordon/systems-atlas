@@ -33,6 +33,12 @@ const LENSES = join("lenses", "lenses.yaml");
 const DIAGNOSTICS = "diagnostics";
 const DIST = "dist";
 const ORIGIN = "https://systemsatlasproject.com";
+const API_ORIGIN = "https://api.systemsatlasproject.com";
+
+// The only three prefixes on the site that may run a script. Everything else
+// is served with `script-src 'none'`, and the build proves it below rather
+// than trusting that the rule was written down somewhere.
+const SCRIPTED_PREFIXES = ["/account/", "/propose/", "/discuss/"];
 
 // --- validate first --------------------------------------------------------
 
@@ -169,10 +175,15 @@ function copyPages(dir) {
 
     if (entry === "index.html") {
       const dir = dirname(rel);
-      // The homepage, then the hand-written sections, then the pages beneath
-      // them — a tool's privacy page is not the tool's page.
       const urlPath = dir === "." ? "/" : `/${dir}/`;
-      page(urlPath, dir === "." ? "1.0" : dir.includes("/") ? "0.5" : "0.8");
+      // A sitemap is a list of pages asking to be indexed. The account pages
+      // carry noindex and are of no use to anyone who is not already holding
+      // a session, so they are written but not offered.
+      if (!SCRIPTED_PREFIXES.some((p) => urlPath.startsWith(p))) {
+        // The homepage, then the hand-written sections, then the pages beneath
+        // them — a tool's privacy page is not the tool's page.
+        page(urlPath, dir === "." ? "1.0" : dir.includes("/") ? "0.5" : "0.8");
+      }
     }
   }
 }
@@ -872,7 +883,10 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
 // Every page written must be in the sitemap. The atlas and diagnostics pages
 // are generated, so a page can now appear without anyone remembering to list
 // it, and a sitemap that quietly omits a third of the site looks exactly like
-// one that does not. 404.html is deliberately absent: it has no URL to offer.
+// one that does not. 404.html is deliberately absent: it has no URL to offer,
+// and so are the account pages, which carry noindex and are nothing to anyone
+// without a session. Those are named here so that leaving a page out of the
+// sitemap stays a decision rather than an oversight.
 {
   const listed = new Set(urls.map((u) => u.loc));
   const missing = [];
@@ -881,7 +895,11 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
       const full = join(dir, entry);
       if (statSync(full).isDirectory()) {
         scan(full, `${base}${entry}/`);
-      } else if (entry === "index.html" && !listed.has(base || "/")) {
+      } else if (
+        entry === "index.html"
+        && !listed.has(base || "/")
+        && !SCRIPTED_PREFIXES.some((p) => (base || "/").startsWith(p))
+      ) {
         missing.push(base || "/");
       }
     }
@@ -893,6 +911,118 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
       missing.sort().join("\n  ")
     );
   }
+}
+
+// --- Content-Security-Policy ------------------------------------------------
+//
+// Cloudflare Pages applies every matching rule and joins a repeated header with
+// a comma. Two CSP values on one response are two policies, and a browser
+// enforces the intersection of them — so a `/*` rule saying `script-src 'none'`
+// cannot be relaxed afterwards by a narrower rule. It wins wherever it matches.
+//
+// The policy is therefore attached section by section, and the sections are
+// read off the pages that were just written rather than kept in a list. A new
+// top-level section gets a policy by existing; it cannot be forgotten.
+
+{
+  const policy = (scripted) => [
+    "default-src 'self'",
+    "img-src 'self' data:",
+    "style-src 'self'",
+    "font-src 'self'",
+    scripted ? "script-src 'self'" : "script-src 'none'",
+    scripted ? `connect-src ${API_ORIGIN}` : "connect-src 'none'",
+    "base-uri 'self'",
+    scripted ? "form-action 'self'" : "form-action 'none'",
+    "frame-ancestors 'none'",
+  ].join("; ");
+
+  // Every HTML page in dist, as the path a browser would ask for.
+  const documents = [];
+  (function scan(dir, base) {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) scan(full, `${base}${entry}/`);
+      else if (entry.endsWith(".html")) {
+        documents.push(entry === "index.html" ? base || "/" : `${base}${entry}`);
+      }
+    }
+  })(DIST, "/");
+
+  // One rule per top-level section, plus the root and 404.html, which are files
+  // rather than sections and match nothing wider than themselves.
+  const sections = new Set();
+  const exact = new Set();
+  for (const path of documents) {
+    if (SCRIPTED_PREFIXES.some((p) => path.startsWith(p))) continue;
+    const segment = path.slice(1).split("/")[0];
+    if (segment === "" || !path.endsWith("/")) exact.add(path);
+    else sections.add(`/${segment}/*`);
+  }
+
+  const rules = [
+    ...[...exact].sort(),
+    ...[...sections].sort(),
+  ].map((pattern) => `${pattern}\n  Content-Security-Policy: ${policy(false)}\n`);
+
+  const scripted = SCRIPTED_PREFIXES
+    .map((prefix) => `${prefix}*\n  Content-Security-Policy: ${policy(true)}\n`);
+
+  const generated =
+    "\n# Generated by scripts/build.mjs — do not edit here, edit the build.\n" +
+    "# One rule per section, because a `/*` policy would intersect with these\n" +
+    "# and the strictest value would win. See site/_headers for why.\n\n" +
+    rules.join("\n") + "\n" + scripted.join("\n");
+
+  const headersPath = join(DIST, "_headers");
+  writeFileSync(headersPath, readFileSync(headersPath, "utf8") + generated);
+
+  // The proof, rather than the intention: every page written is covered by
+  // exactly one of the rules above, and the ones that may run a script are
+  // exactly the three prefixes.
+  const covered = (path) =>
+    exact.has(path)
+    || [...sections].some((s) => path.startsWith(s.slice(0, -1)))
+    || SCRIPTED_PREFIXES.some((p) => path.startsWith(p));
+
+  const uncovered = documents.filter((d) => !covered(d));
+  if (uncovered.length) {
+    throw new Error(
+      `${uncovered.length} page(s) written with no Content-Security-Policy rule:\n  ` +
+      uncovered.sort().join("\n  ")
+    );
+  }
+
+  // A rule saying `script-src 'none'` and a page carrying a <script> tag is a
+  // page that is broken rather than a page that is safe. Checking the output
+  // catches the case the header cannot: a script added to the wrong section.
+  const wrongPlace = [];
+  (function scan(dir, base) {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) scan(full, `${base}${entry}/`);
+      else if (entry.endsWith(".html")) {
+        const path = entry === "index.html" ? base || "/" : `${base}${entry}`;
+        if (SCRIPTED_PREFIXES.some((p) => path.startsWith(p))) continue;
+        if (/<script[\s>]/i.test(readFileSync(full, "utf8"))) wrongPlace.push(path);
+      }
+    }
+  })(DIST, "/");
+
+  if (wrongPlace.length) {
+    throw new Error(
+      `${wrongPlace.length} page(s) carry a <script> tag but are served with ` +
+      `script-src 'none':\n  ` + wrongPlace.sort().join("\n  ")
+    );
+  }
+
+  const scriptedCount = documents.filter((d) =>
+    SCRIPTED_PREFIXES.some((p) => d.startsWith(p))).length;
+
+  console.log(
+    `CSP: ${documents.length - scriptedCount} page(s) at script-src 'none', ` +
+    `${scriptedCount} at script-src 'self' under ${SCRIPTED_PREFIXES.join(" ")}`
+  );
 }
 
 console.log(`Built ${urls.length} pages into ${DIST}/`);

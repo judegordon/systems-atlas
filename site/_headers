@@ -1,9 +1,20 @@
+# Cloudflare Pages applies every rule whose pattern matches, and joins repeated
+# header names with a comma. Two Content-Security-Policy values on one response
+# are two policies, and a browser enforces the intersection — so a `/*` block
+# carrying `script-src 'none'` cannot be overridden by a later, narrower rule.
+# It would silently win, and the three script-bearing prefixes would break.
+#
+# So CSP is not set here. `scripts/build.mjs` writes one Content-Security-Policy
+# rule per top-level section into dist/_headers, reading the sections off the
+# pages it has just written, and fails the build if any page is left uncovered.
+# Everything below applies everywhere and is set once, because a header repeated
+# across two matching rules arrives doubled.
+
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
 
 # Fonts are effectively versioned by filename and never change under a given
 # name, so immutable is safe here and nowhere else.
