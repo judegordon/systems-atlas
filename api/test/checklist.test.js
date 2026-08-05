@@ -377,21 +377,39 @@ describe('Sign-up with an existing address returns exactly what sign-up with a n
             email: 'timing@example.com', password: 'correct horse battery', displayName: 'Timed',
         });
 
+        // The response only. Issuing the verification token and sending the
+        // mail happen after it has been flushed, precisely so that they cannot
+        // be timed — see src/deferred.js.
+        // Sign-up is limited to three an hour per IP, and this test needs more
+        // than three. The counter is cleared before each one so that a 429 —
+        // which is fast, and identical for both addresses — cannot stand in for
+        // the measurement being taken.
         const time = async (email) => {
-            const started = process.hrtime.bigint();
-            await c.post('/atlas/accounts', {
+            await h.pool.query('TRUNCATE atlas.auth_attempts');
+            const { status, elapsedMs } = await c.post('/atlas/accounts', {
                 email, password: 'correct horse battery', displayName: 'Timed',
             });
-            return Number(process.hrtime.bigint() - started) / 1e6;
+            assert.equal(status, 202, 'expected the sign-up to be accepted, not rate limited');
+            return elapsedMs;
         };
+
+        // Three of each, alternating, and compared on the median. A single pair
+        // is at the mercy of whichever request happened to wait on the pool.
+        const taken = [];
+        const free = [];
+        for (let i = 0; i < 3; i += 1) {
+            taken.push(await time('timing@example.com'));
+            free.push(await time(`free-${i}-${process.pid}@example.com`));
+        }
+
+        const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+        const t = median(taken);
+        const f = median(free);
 
         // bcrypt at cost 12 dominates both paths, which is the point: the
         // existing-address branch hashes a password it then throws away.
-        const taken = await time('timing@example.com');
-        const free = await time(`free-${Date.now()}@example.com`);
-
-        const ratio = Math.max(taken, free) / Math.min(taken, free);
-        assert.ok(ratio < 2, `sign-up timing differs by ${ratio.toFixed(2)}x (taken ${taken.toFixed(0)}ms, new ${free.toFixed(0)}ms)`);
+        const ratio = Math.max(t, f) / Math.min(t, f);
+        assert.ok(ratio < 2, `sign-up timing differs by ${ratio.toFixed(2)}x (taken ${t.toFixed(0)}ms, new ${f.toFixed(0)}ms)`);
     });
 
     test('password reset gives the same answer for a known and an unknown address', async () => {

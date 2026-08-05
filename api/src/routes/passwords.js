@@ -8,6 +8,7 @@ const accounts = require('../accounts');
 const limits = require('../rateLimit');
 const mail = require('../mail');
 const session = require('../middleware/session');
+const deferred = require('../deferred');
 
 const router = express.Router();
 
@@ -36,11 +37,17 @@ router.post('/reset', async (req, res, next) => {
         // No account, or already three emails in a day: nothing is sent, and
         // the response is the same 202. The per-account limit is invisible for
         // the same reason the unknown-address case is.
-        let sent = false;
-        if (account && !(await limits.accountLimited('reset', account.id))) {
-            const token = await accounts.issueToken(account.id, 'reset');
-            await mail.sendPasswordReset(account.email, token);
-            sent = true;
+        const sent = Boolean(account && !(await limits.accountLimited('reset', account.id)));
+
+        // Off the request's clock, as with sign-up. An address with an account
+        // behind it costs a transaction and a call to Resend; one without costs
+        // neither, and the difference is plainly visible in the response time
+        // unless it is moved after the response. See src/deferred.js.
+        if (sent) {
+            deferred.after(res, async () => {
+                const token = await accounts.issueToken(account.id, 'reset');
+                await mail.sendPasswordReset(account.email, token);
+            });
         }
 
         // Exactly one row per request, whatever happened. The IP limit counts

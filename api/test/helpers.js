@@ -16,6 +16,7 @@ const path = require('path');
 const app = require('../server');
 const pool = require('../src/db');
 const mail = require('../src/mail');
+const deferred = require('../src/deferred');
 
 let server;
 let base;
@@ -61,11 +62,16 @@ function client() {
         if (csrf && method !== 'GET' && !options.noCsrf) headers['X-CSRF-Token'] = csrf;
         if (options.headers) Object.assign(headers, options.headers);
 
+        // Timed around the fetch alone. What an attacker with a stopwatch can
+        // measure is the response, not what the server does afterwards, so this
+        // is the number the enumeration test has to assert on.
+        const startedAt = process.hrtime.bigint();
         const response = await fetch(base + path, {
             method,
             headers,
             body: body === undefined ? undefined : JSON.stringify(body),
         });
+        const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1e6;
 
         for (const raw of response.headers.getSetCookie()) {
             const [pair] = raw.split(';');
@@ -88,7 +94,14 @@ function client() {
         }
         if (data && data.csrfToken) csrf = data.csrfToken;
 
-        return { status: response.status, data, headers: response.headers };
+        // Sign-up and password reset send their mail after the response, so
+        // that the response time does not disclose whether the address exists.
+        // A test reading the outbox would otherwise race the send. Waiting here
+        // rather than in each test keeps that detail out of the assertions;
+        // `elapsedMs` was taken before it and is unaffected.
+        await deferred.settled();
+
+        return { status: response.status, data, headers: response.headers, elapsedMs };
     }
 
     return {

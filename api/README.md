@@ -17,6 +17,8 @@ four backends rather than one.
     src/accounts.js passwords, single-use tokens, the one public shape
     src/rateLimit.js
     src/mail.js     two templates, and no third
+    src/deferred.js work moved off the request's clock, so that how long an
+                    answer takes does not disclose whether an address exists
     src/middleware/session.js
     src/routes/
     test/
@@ -57,13 +59,33 @@ limit, and 127.0.0.1 is the same address in both. `npm test` sets
 
 ## Deploying
 
-Not yet provisioned. What it needs:
+The database exists; the service does not yet.
 
-1. A Railway project with a Postgres and a service rooted at `api/`.
-2. `RESEND_API_KEY`, and `DATABASE_URL` referenced from the Postgres service.
-3. `npm run migrate` once against the production database.
+Railway project `systems-atlas-backend`, its own Postgres, in the same
+workspace as the four app backends and sharing nothing with them. ACCOUNTS.md
+was written expecting one shared Postgres with an `atlas` schema beside the app
+tables in `public`. There is no shared Postgres — the apps have four, one each
+— so the atlas has its own, and the `atlas` schema is now a namespace within a
+database it does not share rather than a fence inside one it does. The
+reasoning in ACCOUNTS.md wanted the smaller blast radius and gets it either
+way; `public` is empty and every query still names its schema.
+
+Done:
+
+1. Postgres provisioned, with a volume and a public TCP proxy.
+2. `001_atlas_accounts.sql` applied to the production database.
+
+Still to do:
+
+3. A service in that project rooted at `api/`, with `RESEND_API_KEY` set and
+   `DATABASE_URL` referenced from the Postgres service.
 4. The custom domain `api.systemsatlasproject.com` on the service, and the
    CNAME for it at the registrar.
+
+`atlas_test` on the same instance is what the suite runs against. It is on the
+production Postgres because there was nowhere else to put it, and the suite
+truncates every table it finds — so once production holds anything, the test
+database belongs somewhere production is not reachable from.
 
 The cookie is host-only and set by `api.systemsatlasproject.com`. Because
 SameSite is judged on the registrable domain, the site's fetches from

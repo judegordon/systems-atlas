@@ -8,6 +8,7 @@ const pool = require('../db');
 const accounts = require('../accounts');
 const limits = require('../rateLimit');
 const mail = require('../mail');
+const deferred = require('../deferred');
 
 const router = express.Router();
 
@@ -63,8 +64,13 @@ router.post('/', async (req, res, next) => {
             return res.status(202).json(ACCEPTED);
         }
 
-        const token = await accounts.issueToken(created.id, 'verify');
-        await mail.sendVerification(created.email, token);
+        // Off the request's clock. Issuing the token and sending the mail is
+        // work the taken-address branch above never does, and doing it here
+        // would time the difference for anyone asking. See src/deferred.js.
+        deferred.after(res, async () => {
+            const token = await accounts.issueToken(created.id, 'verify');
+            await mail.sendVerification(created.email, token);
+        });
 
         return res.status(202).json(ACCEPTED);
     } catch (err) {
@@ -126,14 +132,21 @@ router.post('/verify/resend', async (req, res, next) => {
         // Nothing to send to: no such account, already verified, or suspended.
         // Over the limit, the answer is also 202 and also says a link is on its
         // way — a visible 429 here would confirm the address is registered.
-        let sent = false;
-        if (account
+        const sent = Boolean(
+            account
             && !account.verified_at
             && !account.suspended_at
-            && !(await limits.accountLimited('verify_resend', account.id))) {
-            const token = await accounts.issueToken(account.id, 'verify');
-            await mail.sendVerification(account.email, token);
-            sent = true;
+            && !(await limits.accountLimited('verify_resend', account.id))
+        );
+
+        // Deferred for the same reason as sign-up: whether an email goes out is
+        // exactly the fact this endpoint must not disclose, and it is the
+        // slowest thing on the path.
+        if (sent) {
+            deferred.after(res, async () => {
+                const token = await accounts.issueToken(account.id, 'verify');
+                await mail.sendVerification(account.email, token);
+            });
         }
 
         // The account limit counts rows marked succeeded, so it counts emails
