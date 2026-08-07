@@ -55,6 +55,8 @@ conflate them in copy or in structure.
     atlas/          taxonomy, one YAML per L0 domain — the source of truth
     diagnostics/    one file per entry, every wrong turn
     lenses/         the eleven lenses
+    cache/          last successful fetch of decided proposals, committed so a
+                    build without the API still renders them
     docs/           SCHEMA.md is the field reference — read it before touching YAML
     scripts/        validate.mjs, build.mjs
     site/pages/     hand-written pages, copied to dist as-is

@@ -1,4 +1,5 @@
 //
+// GET  /atlas/proposals       decided proposals, public — what the build reads
 // GET  /atlas/proposals/new   issue a form token
 // POST /atlas/proposals       submit a proposal — `break` only, for now
 //
@@ -14,9 +15,76 @@ const session = require('../middleware/session');
 
 const router = express.Router();
 
-// §4: "Account verified and not suspended". session.require covers suspension
-// — attach refuses a suspended account on every request — and verification is
-// checked below, because an unverified account is signed in but may not submit.
+// GET /atlas/proposals
+//
+// Step 4: scripts/build.mjs reads this at build time and writes the result into
+// the static node pages. Public and unauthenticated, because everything it
+// returns is already published — §7: accepted and rejected proposals appear on
+// the node page they target, with their reasons.
+//
+// Declared before session.require below, so it is the one route here that does
+// not need a session. Pending proposals are never included: §7 says so, and a
+// pending proposal is an argument nobody has answered yet.
+router.get('/', async (req, res, next) => {
+    try {
+        const { rows } = await pool.query(
+            `SELECT p.id, p.node_path, p.type, p.body, p.payload, p.sources,
+                    p.status, p.decision_reason, p.decision_rule, p.decided_at,
+                    p.created_at, p.display_as,
+                    a.display_name, a.withdrawn_at
+               FROM atlas.proposals p
+               JOIN atlas.accounts a ON a.id = p.account_id
+              WHERE p.status IN ('accepted', 'rejected')
+              ORDER BY p.decided_at ASC, p.id ASC`
+        );
+
+        // No paging. One person moderates this queue by hand and every row here
+        // was read and decided individually, so the count is bounded by that
+        // rather than by anything technical. If it ever needs paging it will
+        // need it visibly, and this is the comment that says so.
+        res.set('Cache-Control', 'public, max-age=300');
+
+        return res.json({
+            generatedAt: new Date().toISOString(),
+            proposals: rows.map(publicDecided),
+        });
+    } catch (err) {
+        return next(err);
+    }
+});
+
+// The public shape. Nothing here identifies an account.
+//
+// §3 gives two ways a name is not shown, and the order matters: anonymous wins
+// over withdrawn. Someone who chose anonymity and later deleted their account
+// must not become "Withdrawn" on a page where they used to be "Anonymous" —
+// the change itself would be the disclosure, to anyone who had read both.
+function publicDecided(row) {
+    let author;
+    if (row.display_as === 'anonymous') author = 'Anonymous';
+    else if (row.withdrawn_at) author = 'Withdrawn';
+    else author = row.display_name;
+
+    return {
+        id: String(row.id),
+        nodePath: row.node_path,
+        type: row.type,
+        status: row.status,
+        author,
+        case: row.payload && row.payload.case ? row.payload.case : null,
+        body: row.body,
+        sources: row.sources || [],
+        decisionReason: row.decision_reason,
+        decisionRule: row.decision_rule,
+        decidedAt: row.decided_at,
+        createdAt: row.created_at,
+    };
+}
+
+// Everything below needs a session. §4: "Account verified and not suspended".
+// session.require covers suspension — attach refuses a suspended account on
+// every request — and verification is checked in the handler, because an
+// unverified account is signed in but may not submit.
 router.use(session.require);
 
 const BUILT = new Set(['break']);

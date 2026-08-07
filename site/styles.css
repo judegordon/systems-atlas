@@ -1862,6 +1862,93 @@ textarea.form__input--tall { min-height: 13rem; }
   gap: var(--s3);
 }
 
+/* Decided proposals on a node page ------------------------------------------
+   Applied Green for accepted and Revision Magenta for rejected, which is what
+   those two colours already name elsewhere: work that landed, and work that
+   changed something. A rejection is not a failure state and is not greyed. */
+
+.proposals {
+  max-width: var(--reading);
+  margin: var(--s6) auto 0;
+}
+
+.proposal {
+  border-top: 1px solid var(--rule-dark);
+  padding: var(--s5) 0 var(--s5) var(--s4);
+  border-left: 3px solid var(--night-3);
+}
+
+.proposal--accepted { border-left-color: var(--applied); }
+.proposal--rejected { border-left-color: var(--revision); }
+
+.proposal__meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--night-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin-bottom: var(--s3);
+}
+
+.proposal__status { text-transform: uppercase; color: var(--night-2); }
+
+.proposal__case {
+  font-size: 19px;
+  line-height: 1.5;
+  margin-bottom: var(--s3);
+}
+
+.proposal__rule {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-2);
+  border: 1px solid var(--rule-dark);
+  padding: var(--s1) var(--s2);
+  margin-bottom: var(--s3);
+}
+
+/* <details>, so the full argument is on the page without a script and without
+   a second page to maintain. */
+.proposal__more summary {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-2);
+  cursor: pointer;
+  padding: var(--s2) 0;
+}
+
+.proposal__more[open] summary { margin-bottom: var(--s3); }
+
+.proposal__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-3);
+  margin: var(--s4) 0 var(--s2);
+}
+
+.proposal__body {
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.proposal__sources {
+  font-size: 15px;
+  margin: 0 0 0 var(--s4);
+  color: var(--night-2);
+}
+
+.proposal__invite {
+  margin-top: var(--s6);
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

@@ -558,6 +558,94 @@ function renderTree(root, sectionNo, count) {
 `;
 }
 
+// docs/PROPOSALS.md §7. Unlike diagnostics this section is always rendered,
+// including when it is empty: it carries the link to the form, and a link that
+// only appears on nodes somebody has already argued with is a door that opens
+// once you are inside. "Below its justification" is read as further down the
+// page rather than immediately after it — the section is last, where a reader
+// who has been through the definition, the parts, the rules and the
+// diagnostics is in a position to disagree with something specific.
+//
+// Pending proposals are never here. §7 says so, and a pending proposal is an
+// argument nobody has answered yet.
+function renderProposals(entries, path, sectionNo) {
+  const RULE_NAMES = {
+    "01": "Five parts, at most seven", "02": "Mutually exclusive",
+    "03": "Collectively exhaustive", "04": "Equal abstraction",
+    "05": "Decomposable or terminal", "06": "Justified in writing",
+  };
+
+  const accepted = entries.filter((e) => e.status === "accepted");
+  const rejected = entries.filter((e) => e.status === "rejected");
+
+  // The argument and the reason are behind <details> rather than a link to a
+  // page per proposal. §7 asks for "a link to the full text"; the full text is
+  // short enough to carry here, and <details> is how this site expands things
+  // under script-src 'none'.
+  const card = (e) => {
+    const rule = e.decisionRule
+      ? `<span class="proposal__rule">Rule ${esc(e.decisionRule)} — ${
+          text(RULE_NAMES[e.decisionRule] ?? "")}</span>`
+      : "";
+
+    const sources = e.sources && e.sources.length
+      ? `            <p class="proposal__label">Sources</p>
+            <ul class="proposal__sources">${
+              e.sources.map((s) => `<li>${text(s)}</li>`).join("")}</ul>\n`
+      : "";
+
+    return `        <article class="proposal proposal--${esc(e.status)}">
+          <p class="proposal__meta">
+            <span class="proposal__status">${esc(e.status)}</span>
+            <span>${text(e.type)}</span>
+            <span>${text(String(e.decidedAt ?? "").slice(0, 10))}</span>
+            <span>${text(e.author)}</span>
+          </p>
+          <p class="proposal__case">${text(e.case ?? "")}</p>
+          ${rule}
+          <details class="proposal__more">
+            <summary>The argument, and the decision in full</summary>
+            <p class="proposal__label">Why the division cannot take it</p>
+            <p class="proposal__body">${esc(String(e.body ?? "").trim())}</p>
+${sources}            <p class="proposal__label">Decision</p>
+            <p class="proposal__body">${esc(String(e.decisionReason ?? "").trim())}</p>
+          </details>
+        </article>`;
+  };
+
+  const lead = entries.length === 0
+    ? `Nothing has been decided against this node. That is not the same as
+          nothing being wrong with it.`
+    : `${accepted.length} accepted, ${rejected.length} rejected. Rejections are
+          published with their reasons because a record of what was rejected and
+          why is worth more than a record of what was accepted.`;
+
+  const body = entries.length
+    ? `      <div class="proposals">\n${entries.map(card).join("\n")}\n      </div>`
+    : "";
+
+  return `
+  <!-- Proposals ============================================================ -->
+  <section class="field--paper band">
+    <div class="wrap">
+      <div class="reading">
+        <p class="eyebrow"><span class="eyebrow__no">§ ${sectionNo}</span> Proposals</p>
+        <h2 class="section-title">What has been argued about this node.</h2>
+        <div class="prose">
+          <p>${lead}</p>
+        </div>
+      </div>
+${body}
+      <div class="reading">
+        <p class="proposal__invite">
+          <a href="/propose/?node=${esc(path)}">Propose a break against this node &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+`;
+}
+
 // The entries that point at this node. Absent when there are none — a node
 // with no diagnostics has not been stress-tested, and an empty section
 // announcing that would read as a clean bill of health.
@@ -697,6 +785,71 @@ generated.set("ladder", `      <div class="ladder">
 ${ladder}
       </div>`);
 
+// --- decided proposals -----------------------------------------------------
+//
+// docs/PROPOSALS.md §7: the build "fetches accepted and rejected proposals ...
+// from the API and writes them into the static pages", and "if the API is
+// unreachable at build time, the build uses the last successful fetch, cached
+// in the repo, and warns. It never fails and never silently drops
+// contributions."
+//
+// So the cache is committed, and the two failures are told apart out loud: a
+// build that fell back to the cache says which fetch it is showing, and a build
+// with neither says it has nothing rather than rendering an empty section that
+// looks like a node nobody has argued with.
+
+const PROPOSALS_CACHE = join("cache", "proposals.json");
+
+async function readProposals() {
+  if (process.argv.includes("--no-fetch")) {
+    if (!existsSync(PROPOSALS_CACHE)) return { proposals: [], source: "none" };
+    const cached = JSON.parse(readFileSync(PROPOSALS_CACHE, "utf8"));
+    return { ...cached, source: "cache" };
+  }
+
+  try {
+    const response = await fetch(`${API_ORIGIN}/atlas/proposals`, {
+      signal: AbortSignal.timeout(20000),
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
+    if (!Array.isArray(data.proposals)) throw new Error("no proposals array");
+
+    mkdirSync(dirname(PROPOSALS_CACHE), { recursive: true });
+    writeFileSync(PROPOSALS_CACHE, JSON.stringify(data, null, 2) + "\n");
+    return { ...data, source: "api" };
+  } catch (err) {
+    if (existsSync(PROPOSALS_CACHE)) {
+      const cached = JSON.parse(readFileSync(PROPOSALS_CACHE, "utf8"));
+      console.warn(
+        `\nThe API was unreachable (${err.message}). Using the cache from ` +
+        `${cached.generatedAt ?? "an earlier build"} — proposals decided since ` +
+        `then are not on this build.\n`
+      );
+      return { ...cached, source: "cache" };
+    }
+    console.warn(
+      `\nThe API was unreachable (${err.message}) and there is no cache. ` +
+      `Node pages will say no proposals have been decided, which may be wrong.\n`
+    );
+    return { proposals: [], source: "none" };
+  }
+}
+
+const decided = await readProposals();
+
+// Grouped by the node they target. A proposal whose node has left the atlas is
+// dropped from the pages and counted here, rather than disappearing quietly.
+const proposalsByNode = new Map();
+let orphanedProposals = 0;
+for (const p of decided.proposals) {
+  if (!nodes.has(p.nodePath)) { orphanedProposals += 1; continue; }
+  if (!proposalsByNode.has(p.nodePath)) proposalsByNode.set(p.nodePath, []);
+  proposalsByNode.get(p.nodePath).push(p);
+}
+
 // --- hand-written pages ----------------------------------------------------
 
 if (existsSync(PAGES)) copyPages(PAGES);
@@ -729,6 +882,7 @@ for (const [path, { node, depth, trail }] of nodes) {
     rulesNo: nextNo(),
     checks: renderChecks(node),
     diagnostics: renderNodeDiagnostics(entries, entries.length ? nextNo() : null),
+    proposals: renderProposals(proposalsByNode.get(path) ?? [], path, nextNo()),
   }), `atlas/${path}`);
 
   const out = join(DIST, "atlas", ...path.split("/"), "index.html");
