@@ -35,10 +35,16 @@ const DIST = "dist";
 const ORIGIN = "https://systemsatlasproject.com";
 const API_ORIGIN = "https://api.systemsatlasproject.com";
 
-// The only three prefixes on the site that may run a script. Everything else
-// is served with `script-src 'none'`, and the build proves it below rather
-// than trusting that the rule was written down somewhere.
-const SCRIPTED_PREFIXES = ["/account/", "/propose/", "/discuss/"];
+// The only prefixes on the site that may run a script. Everything else is
+// served with `script-src 'none'`, and the build proves it below rather than
+// trusting that the rule was written down somewhere.
+//
+// docs/PROPOSALS.md §2 names three. /admin/ is a fourth, and the same document
+// is why: §6 puts the review queue at /admin/queue, which cannot be a static
+// page — it reads a queue and writes decisions. The list is the enforcement
+// point, so a fourth prefix has to be admitted here deliberately rather than
+// arrived at by a page happening to carry a <script>.
+const SCRIPTED_PREFIXES = ["/account/", "/propose/", "/discuss/", "/admin/"];
 
 // --- validate first --------------------------------------------------------
 

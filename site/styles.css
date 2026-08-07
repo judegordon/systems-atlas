@@ -1759,6 +1759,109 @@ textarea.form__input--tall { min-height: 13rem; }
 
 .form__count--over { color: var(--revision); }
 
+/* Review queue --------------------------------------------------------------
+   One card per pending proposal. Structural Orange on the left edge, because
+   the queue is structural work — deciding what the atlas is, not applying it.
+   Nothing here is a rounded card and nothing has a shadow. */
+
+.queue-item {
+  border: 1px solid var(--rule-dark);
+  border-left: 3px solid var(--structural);
+  padding: var(--s5);
+  margin-bottom: var(--s6);
+}
+
+.queue-item__head { margin-bottom: var(--s5); }
+
+.queue-item__meta {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-3);
+  margin-bottom: var(--s2);
+}
+
+.queue-item__node {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+.queue-panel {
+  border-top: 1px solid var(--rule-dark);
+  padding-top: var(--s4);
+  margin-top: var(--s4);
+}
+
+.queue-panel__title {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-2);
+  margin-bottom: var(--s3);
+}
+
+.queue-panel__name { font-weight: 600; margin-bottom: var(--s2); }
+
+/* An empty field is a declared gap and is shown as one, never hidden. */
+.queue-panel__gap { color: var(--night-3); font-style: italic; }
+
+.queue-field { margin-top: var(--s4); }
+
+.queue-field__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-3);
+  margin-bottom: var(--s2);
+}
+
+.queue-field__list { margin: 0 0 0 var(--s4); }
+.queue-field__list li { margin-bottom: var(--s2); }
+
+.queue-case { font-size: 18px; }
+
+/* The argument as written. Markdown is not rendered here — turning contributor
+   text into markup on the page that decides its fate is not worth the tidiness. */
+.queue-body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--structure);
+  border-left: 2px solid var(--rule-dark);
+  padding: var(--s3) var(--s4);
+  margin: 0;
+}
+
+.queue-facts {
+  font-family: var(--mono);
+  font-size: 14px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--s2) var(--s4);
+  margin: 0;
+}
+
+.queue-facts dt { color: var(--night-3); }
+.queue-facts dd { margin: 0; word-break: break-word; }
+
+.queue-decision {
+  max-width: 100%;
+  border-top: 1px solid var(--rule-dark);
+  padding-top: var(--s4);
+  margin-top: var(--s5);
+}
+
+.queue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

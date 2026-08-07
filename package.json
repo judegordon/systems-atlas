@@ -7,8 +7,8 @@
   "scripts": {
     "validate": "node scripts/validate.mjs",
     "build": "node scripts/build.mjs",
-    "atlas:paths": "node scripts/atlas-paths.mjs",
-    "atlas:paths:check": "node scripts/atlas-paths.mjs --check"
+    "atlas:manifest": "node scripts/atlas-manifest.mjs",
+    "atlas:manifest:check": "node scripts/atlas-manifest.mjs --check"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

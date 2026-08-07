@@ -1,0 +1,1927 @@
+{
+  "paths": [
+    "academic",
+    "academic/credentialing-structures",
+    "academic/funding-structures",
+    "academic/higher-education-structures",
+    "academic/higher-education-structures/collaborative-organisations",
+    "academic/higher-education-structures/degree-awarding-organisations",
+    "academic/higher-education-structures/non-degree-organisations",
+    "academic/research-structures",
+    "academic/scholarly-communication-structures",
+    "economic",
+    "healthcare",
+    "human-biological",
+    "human-biological/circulatory-system",
+    "human-biological/circulatory-system/blood",
+    "human-biological/circulatory-system/blood-vessels",
+    "human-biological/circulatory-system/blood-vessels/arteries",
+    "human-biological/circulatory-system/blood-vessels/capillaries",
+    "human-biological/circulatory-system/blood-vessels/veins",
+    "human-biological/circulatory-system/blood/erythrocytes",
+    "human-biological/circulatory-system/blood/leukocytes",
+    "human-biological/circulatory-system/blood/plasma",
+    "human-biological/circulatory-system/blood/platelets",
+    "human-biological/circulatory-system/heart",
+    "human-biological/circulatory-system/heart/atria",
+    "human-biological/circulatory-system/heart/cardiac-valves",
+    "human-biological/circulatory-system/heart/ventricles",
+    "human-biological/digestive-system",
+    "human-biological/genitourinary-system",
+    "human-biological/integumentary-system",
+    "human-biological/lymphatic-system",
+    "human-biological/musculoskeletal-system",
+    "human-biological/nervous-system",
+    "human-biological/nervous-system/central-nervous-system",
+    "human-biological/nervous-system/central-nervous-system/brain",
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem",
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/medulla-oblongata",
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/midbrain",
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/pons",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum/cerebellar-hemispheres",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum/cerebellar-vermis",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-frontal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-insula",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-occipital-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-parietal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-temporal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-frontal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-insula",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-occipital-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-parietal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-temporal-lobe",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/epithalamus",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-anterior",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-posterior",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-tuberal",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus/subthalamic-fibre-fields",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus/subthalamic-grey-matter",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-anterior",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-lateral",
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-medial",
+    "human-biological/nervous-system/central-nervous-system/meninges",
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater",
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater/arachnoid-barrier-layer",
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater/arachnoid-trabeculae",
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater",
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater/cranial-dura-mater",
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater/spinal-dura-mater",
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater",
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater/pial-extensions",
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater/surface-pia-mater",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/anterior-horn",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/lateral-horn",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/posterior-horn",
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-white-matter",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/fourth-ventricle",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/lateral-ventricles",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/third-ventricle",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/cerebral-aqueduct",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/interventricular-foramina",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/lateral-aperture",
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/median-aperture",
+    "human-biological/nervous-system/peripheral-nervous-system",
+    "human-biological/nervous-system/peripheral-nervous-system/cranial-nerves",
+    "human-biological/nervous-system/peripheral-nervous-system/peripheral-ganglia",
+    "human-biological/nervous-system/peripheral-nervous-system/spinal-nerves",
+    "human-biological/respiratory-system",
+    "human-biological/serous-membrane-system",
+    "legal",
+    "legal/adjudication-structures",
+    "legal/adjudication-structures/appellate-bodies",
+    "legal/adjudication-structures/first-instance-bodies",
+    "legal/adjudication-structures/non-state-bodies",
+    "legal/enforcement-structures",
+    "legal/enforcement-structures/adjudicated-enforcement",
+    "legal/enforcement-structures/non-adjudicated-enforcement",
+    "legal/legal-norm-structures",
+    "legal/legal-norm-structures/allocative-norms",
+    "legal/legal-norm-structures/foundational-norms",
+    "legal/legal-norm-structures/prohibitive-norms",
+    "legal/legal-norm-structures/regulatory-norms",
+    "legal/legal-norm-structures/relational-norms",
+    "meta",
+    "political",
+    "political/administrative-structures",
+    "political/administrative-structures/administrative-support-structures",
+    "political/administrative-structures/agency-structures",
+    "political/administrative-structures/departmental-structures",
+    "political/administrative-structures/local-administrative-bodies",
+    "political/administrative-structures/state-service-institutions",
+    "political/electoral-structures",
+    "political/executive-structures",
+    "political/executive-structures/central-executive-committees",
+    "political/executive-structures/executive-external-representation",
+    "political/executive-structures/executive-leadership-bodies",
+    "political/executive-structures/executive-office-structures",
+    "political/executive-structures/ministerial-structures",
+    "political/legislative-structures",
+    "political/political-organisation-structures",
+    "religious",
+    "technological"
+  ],
+  "nodes": {
+    "academic": {
+      "name": "Academic",
+      "definition": "Institutions, funding structures and communication systems that produce, validate and transmit knowledge and credentials, including higher education and research enterprises.",
+      "inclusion": [
+        "higher education institutions and credentialing systems",
+        "research institutions and R&D governance",
+        "academic labour structures",
+        "scholarly communication infrastructure",
+        "funding and evaluation systems"
+      ],
+      "exclusion": [
+        {
+          "text": "pure technical artefacts and infrastructures",
+          "goesTo": "technological"
+        },
+        {
+          "text": "policy decisions about resource allocation",
+          "goesTo": "political"
+        },
+        {
+          "text": "personal beliefs not embedded in academic institutions",
+          "goesTo": "religious"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "higher-education-structures",
+          "name": "Higher education structures"
+        },
+        {
+          "id": "research-structures",
+          "name": "Research structures"
+        },
+        {
+          "id": "credentialing-structures",
+          "name": "Credentialing and evaluation structures"
+        },
+        {
+          "id": "scholarly-communication-structures",
+          "name": "Scholarly communication structures"
+        },
+        {
+          "id": "funding-structures",
+          "name": "Funding and resource allocation structures"
+        }
+      ]
+    },
+    "academic/credentialing-structures": {
+      "name": "Credentialing and evaluation structures",
+      "definition": "Systems that assess, validate and formally recognise academic achievement and research output.",
+      "inclusion": [
+        "degree systems, accreditation bodies, peer review systems, rankings"
+      ],
+      "exclusion": [
+        {
+          "text": "funding decisions",
+          "goesTo": "funding-structures"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "academic/funding-structures": {
+      "name": "Funding and resource allocation structures",
+      "definition": "Systems that distribute financial and material resources within academia.",
+      "inclusion": [
+        "grant agencies, funding councils, endowments"
+      ],
+      "exclusion": [
+        {
+          "text": "macro policy decisions",
+          "goesTo": "political"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "academic/higher-education-structures": {
+      "name": "Higher education structures",
+      "definition": "Organised institutions that deliver accredited education and formal qualifications.",
+      "inclusion": [
+        "universities, colleges, degree-awarding bodies"
+      ],
+      "exclusion": [
+        {
+          "text": "research-only institutes",
+          "goesTo": "research-structures"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "degree-awarding-organisations",
+          "name": "Degree-awarding organisations"
+        },
+        {
+          "id": "non-degree-organisations",
+          "name": "Non-degree organisations"
+        },
+        {
+          "id": "collaborative-organisations",
+          "name": "Collaborative organisations"
+        }
+      ]
+    },
+    "academic/higher-education-structures/collaborative-organisations": {
+      "name": "Collaborative organisations",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "academic/higher-education-structures/degree-awarding-organisations": {
+      "name": "Degree-awarding organisations",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "academic/higher-education-structures/non-degree-organisations": {
+      "name": "Non-degree organisations",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "academic/research-structures": {
+      "name": "Research structures",
+      "definition": "Institutions and organisational units that produce new knowledge.",
+      "inclusion": [
+        "research institutes, laboratories, R&D centres"
+      ],
+      "exclusion": [
+        {
+          "text": "dissemination platforms",
+          "goesTo": "scholarly-communication-structures"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "academic/scholarly-communication-structures": {
+      "name": "Scholarly communication structures",
+      "definition": "Infrastructure that disseminates and archives academic knowledge.",
+      "inclusion": [
+        "journals, conferences, repositories, publishing platforms"
+      ],
+      "exclusion": [
+        {
+          "text": "the underlying technology",
+          "goesTo": "technological"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "economic": {
+      "name": "Economic",
+      "definition": "Production, distribution, exchange and accumulation structures through which scarce resources and goods and services are created and allocated across institutional units.",
+      "inclusion": [
+        "production systems, and firms and households as producers within boundary",
+        "market exchange and price formation structures",
+        "distribution and redistribution mechanisms",
+        "the monetary and financial system as allocation infrastructure",
+        "accounting and measurement infrastructure representing economic activity"
+      ],
+      "exclusion": [
+        {
+          "text": "unpaid domestic services outside the SNA production boundary",
+          "goesTo": "economic"
+        },
+        {
+          "text": "legal validity and rights",
+          "goesTo": "legal"
+        },
+        {
+          "text": "technological capability absent allocation or scarcity structures",
+          "goesTo": "technological"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "healthcare": {
+      "name": "Healthcare",
+      "definition": "Organisations, people, infrastructures and governance arrangements whose primary intent is to promote, restore or maintain health, including the core system functions that deliver and finance care.",
+      "inclusion": [
+        "care delivery infrastructure and pathways",
+        "workforce and professional regulation structures",
+        "financing and purchasing structures",
+        "governance and stewardship structures",
+        "supply systems for medicines and technologies integral to care"
+      ],
+      "exclusion": [
+        {
+          "text": "biological mechanisms inside the human body",
+          "goesTo": "human-biological"
+        },
+        {
+          "text": "general social determinants where the primary intent is not health",
+          "goesTo": "political"
+        },
+        {
+          "text": "model abstractions",
+          "goesTo": "model"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological": {
+      "name": "Human biological",
+      "definition": "The organised structures of the human organism, from cells to organ systems, and the stable functional organisation those structures enable, including the agreed terminologies that describe them.",
+      "inclusion": [
+        "anatomical structures and their standardised nomenclature",
+        "cellular and molecular organisation directly constituting tissues and organs",
+        "organ-system architecture",
+        "reference-atlas representations of the body that preserve structural mapping"
+      ],
+      "exclusion": [
+        {
+          "text": "institutions delivering healthcare",
+          "goesTo": "healthcare"
+        },
+        {
+          "text": "technological tools used to measure or operate on biology",
+          "goesTo": "technological"
+        },
+        {
+          "text": "normative judgements about life and health",
+          "goesTo": "ethics"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "nervous-system",
+          "name": "Nervous system"
+        },
+        {
+          "id": "circulatory-system",
+          "name": "Circulatory system"
+        },
+        {
+          "id": "respiratory-system",
+          "name": "Respiratory system"
+        },
+        {
+          "id": "musculoskeletal-system",
+          "name": "Musculoskeletal system"
+        },
+        {
+          "id": "digestive-system",
+          "name": "Digestive system"
+        },
+        {
+          "id": "integumentary-system",
+          "name": "Integumentary system"
+        },
+        {
+          "id": "genitourinary-system",
+          "name": "Genitourinary system"
+        },
+        {
+          "id": "lymphatic-system",
+          "name": "Lymphatic system"
+        },
+        {
+          "id": "serous-membrane-system",
+          "name": "Serous membrane system"
+        }
+      ]
+    },
+    "human-biological/circulatory-system": {
+      "name": "Circulatory system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "heart",
+          "name": "Heart"
+        },
+        {
+          "id": "blood-vessels",
+          "name": "Blood vessels"
+        },
+        {
+          "id": "blood",
+          "name": "Blood"
+        }
+      ]
+    },
+    "human-biological/circulatory-system/blood": {
+      "name": "Blood",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "plasma",
+          "name": "Plasma"
+        },
+        {
+          "id": "erythrocytes",
+          "name": "Erythrocytes"
+        },
+        {
+          "id": "leukocytes",
+          "name": "Leukocytes"
+        },
+        {
+          "id": "platelets",
+          "name": "Platelets"
+        }
+      ]
+    },
+    "human-biological/circulatory-system/blood-vessels": {
+      "name": "Blood vessels",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "arteries",
+          "name": "Arteries"
+        },
+        {
+          "id": "veins",
+          "name": "Veins"
+        },
+        {
+          "id": "capillaries",
+          "name": "Capillaries"
+        }
+      ]
+    },
+    "human-biological/circulatory-system/blood-vessels/arteries": {
+      "name": "Arteries",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood-vessels/capillaries": {
+      "name": "Capillaries",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood-vessels/veins": {
+      "name": "Veins",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood/erythrocytes": {
+      "name": "Erythrocytes",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood/leukocytes": {
+      "name": "Leukocytes",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood/plasma": {
+      "name": "Plasma",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/blood/platelets": {
+      "name": "Platelets",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/heart": {
+      "name": "Heart",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "atria",
+          "name": "Atria"
+        },
+        {
+          "id": "ventricles",
+          "name": "Ventricles"
+        },
+        {
+          "id": "cardiac-valves",
+          "name": "Cardiac valves"
+        }
+      ]
+    },
+    "human-biological/circulatory-system/heart/atria": {
+      "name": "Atria",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/heart/cardiac-valves": {
+      "name": "Cardiac valves",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/circulatory-system/heart/ventricles": {
+      "name": "Ventricles",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/digestive-system": {
+      "name": "Digestive system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/genitourinary-system": {
+      "name": "Genitourinary system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/integumentary-system": {
+      "name": "Integumentary system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/lymphatic-system": {
+      "name": "Lymphatic system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/musculoskeletal-system": {
+      "name": "Musculoskeletal system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/nervous-system": {
+      "name": "Nervous system",
+      "definition": "The system responsible for information processing, signal transmission, and coordination of body functions.",
+      "inclusion": [],
+      "exclusion": [
+        {
+          "text": "hormonal signalling",
+          "goesTo": "endocrine-system"
+        },
+        {
+          "text": "structural support",
+          "goesTo": "musculoskeletal-system"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "central-nervous-system",
+          "name": "Central nervous system"
+        },
+        {
+          "id": "peripheral-nervous-system",
+          "name": "Peripheral nervous system"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system": {
+      "name": "Central nervous system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "brain",
+          "name": "Brain"
+        },
+        {
+          "id": "spinal-cord",
+          "name": "Spinal cord"
+        },
+        {
+          "id": "ventricular-system",
+          "name": "Ventricular system"
+        },
+        {
+          "id": "meninges",
+          "name": "Meninges"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain": {
+      "name": "Brain",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "cerebrum",
+          "name": "Cerebrum"
+        },
+        {
+          "id": "diencephalon",
+          "name": "Diencephalon"
+        },
+        {
+          "id": "brainstem",
+          "name": "Brainstem"
+        },
+        {
+          "id": "cerebellum",
+          "name": "Cerebellum"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem": {
+      "name": "Brainstem",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "midbrain",
+          "name": "Midbrain"
+        },
+        {
+          "id": "pons",
+          "name": "Pons"
+        },
+        {
+          "id": "medulla-oblongata",
+          "name": "Medulla oblongata"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/medulla-oblongata": {
+      "name": "Medulla oblongata",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/midbrain": {
+      "name": "Midbrain",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/brainstem/pons": {
+      "name": "Pons",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum": {
+      "name": "Cerebellum",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "cerebellar-vermis",
+          "name": "Vermis"
+        },
+        {
+          "id": "cerebellar-hemispheres",
+          "name": "Cerebellar hemispheres"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum/cerebellar-hemispheres": {
+      "name": "Cerebellar hemispheres",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebellum/cerebellar-vermis": {
+      "name": "Vermis",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum": {
+      "name": "Cerebrum",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "left-cerebral-hemisphere",
+          "name": "Left cerebral hemisphere"
+        },
+        {
+          "id": "right-cerebral-hemisphere",
+          "name": "Right cerebral hemisphere"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere": {
+      "name": "Left cerebral hemisphere",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "left-frontal-lobe",
+          "name": "Frontal lobe"
+        },
+        {
+          "id": "left-parietal-lobe",
+          "name": "Parietal lobe"
+        },
+        {
+          "id": "left-temporal-lobe",
+          "name": "Temporal lobe"
+        },
+        {
+          "id": "left-occipital-lobe",
+          "name": "Occipital lobe"
+        },
+        {
+          "id": "left-insula",
+          "name": "Insula"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-frontal-lobe": {
+      "name": "Frontal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-insula": {
+      "name": "Insula",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-occipital-lobe": {
+      "name": "Occipital lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-parietal-lobe": {
+      "name": "Parietal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/left-cerebral-hemisphere/left-temporal-lobe": {
+      "name": "Temporal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere": {
+      "name": "Right cerebral hemisphere",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "right-frontal-lobe",
+          "name": "Frontal lobe"
+        },
+        {
+          "id": "right-parietal-lobe",
+          "name": "Parietal lobe"
+        },
+        {
+          "id": "right-temporal-lobe",
+          "name": "Temporal lobe"
+        },
+        {
+          "id": "right-occipital-lobe",
+          "name": "Occipital lobe"
+        },
+        {
+          "id": "right-insula",
+          "name": "Insula"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-frontal-lobe": {
+      "name": "Frontal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-insula": {
+      "name": "Insula",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-occipital-lobe": {
+      "name": "Occipital lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-parietal-lobe": {
+      "name": "Parietal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/cerebrum/right-cerebral-hemisphere/right-temporal-lobe": {
+      "name": "Temporal lobe",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon": {
+      "name": "Diencephalon",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "thalamus",
+          "name": "Thalamus"
+        },
+        {
+          "id": "hypothalamus",
+          "name": "Hypothalamus"
+        },
+        {
+          "id": "epithalamus",
+          "name": "Epithalamus"
+        },
+        {
+          "id": "subthalamus",
+          "name": "Subthalamus"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/epithalamus": {
+      "name": "Epithalamus",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus": {
+      "name": "Hypothalamus",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "hypothalamus-anterior",
+          "name": "Anterior region"
+        },
+        {
+          "id": "hypothalamus-tuberal",
+          "name": "Tuberal region"
+        },
+        {
+          "id": "hypothalamus-posterior",
+          "name": "Posterior region"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-anterior": {
+      "name": "Anterior region",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-posterior": {
+      "name": "Posterior region",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/hypothalamus/hypothalamus-tuberal": {
+      "name": "Tuberal region",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus": {
+      "name": "Subthalamus",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "subthalamic-grey-matter",
+          "name": "Subthalamic grey matter structures"
+        },
+        {
+          "id": "subthalamic-fibre-fields",
+          "name": "Subthalamic fibre fields"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus/subthalamic-fibre-fields": {
+      "name": "Subthalamic fibre fields",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/subthalamus/subthalamic-grey-matter": {
+      "name": "Subthalamic grey matter structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus": {
+      "name": "Thalamus",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "thalamus-anterior",
+          "name": "Anterior part"
+        },
+        {
+          "id": "thalamus-medial",
+          "name": "Medial part"
+        },
+        {
+          "id": "thalamus-lateral",
+          "name": "Lateral part"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-anterior": {
+      "name": "Anterior part",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-lateral": {
+      "name": "Lateral part",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/brain/diencephalon/thalamus/thalamus-medial": {
+      "name": "Medial part",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges": {
+      "name": "Meninges",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "dura-mater",
+          "name": "Dura mater"
+        },
+        {
+          "id": "arachnoid-mater",
+          "name": "Arachnoid mater"
+        },
+        {
+          "id": "pia-mater",
+          "name": "Pia mater"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater": {
+      "name": "Arachnoid mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "arachnoid-barrier-layer",
+          "name": "Arachnoid barrier layer"
+        },
+        {
+          "id": "arachnoid-trabeculae",
+          "name": "Arachnoid trabeculae"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater/arachnoid-barrier-layer": {
+      "name": "Arachnoid barrier layer",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/arachnoid-mater/arachnoid-trabeculae": {
+      "name": "Arachnoid trabeculae",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater": {
+      "name": "Dura mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "cranial-dura-mater",
+          "name": "Cranial dura mater"
+        },
+        {
+          "id": "spinal-dura-mater",
+          "name": "Spinal dura mater"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater/cranial-dura-mater": {
+      "name": "Cranial dura mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/dura-mater/spinal-dura-mater": {
+      "name": "Spinal dura mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater": {
+      "name": "Pia mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "surface-pia-mater",
+          "name": "Surface pia mater"
+        },
+        {
+          "id": "pial-extensions",
+          "name": "Pial extensions"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater/pial-extensions": {
+      "name": "Pial extensions",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/meninges/pia-mater/surface-pia-mater": {
+      "name": "Surface pia mater",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord": {
+      "name": "Spinal cord",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "spinal-grey-matter",
+          "name": "Grey matter"
+        },
+        {
+          "id": "spinal-white-matter",
+          "name": "White matter"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter": {
+      "name": "Grey matter",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "anterior-horn",
+          "name": "Anterior horn"
+        },
+        {
+          "id": "posterior-horn",
+          "name": "Posterior horn"
+        },
+        {
+          "id": "lateral-horn",
+          "name": "Lateral horn"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/anterior-horn": {
+      "name": "Anterior horn",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/lateral-horn": {
+      "name": "Lateral horn",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-grey-matter/posterior-horn": {
+      "name": "Posterior horn",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/spinal-cord/spinal-white-matter": {
+      "name": "White matter",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system": {
+      "name": "Ventricular system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "ventricular-cavities",
+          "name": "Ventricular cavities"
+        },
+        {
+          "id": "ventricular-conduits",
+          "name": "Ventricular conduits"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities": {
+      "name": "Ventricular cavities",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "lateral-ventricles",
+          "name": "Lateral ventricles"
+        },
+        {
+          "id": "third-ventricle",
+          "name": "Third ventricle"
+        },
+        {
+          "id": "fourth-ventricle",
+          "name": "Fourth ventricle"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/fourth-ventricle": {
+      "name": "Fourth ventricle",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/lateral-ventricles": {
+      "name": "Lateral ventricles",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-cavities/third-ventricle": {
+      "name": "Third ventricle",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits": {
+      "name": "Ventricular conduits",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "interventricular-foramina",
+          "name": "Interventricular foramina"
+        },
+        {
+          "id": "cerebral-aqueduct",
+          "name": "Cerebral aqueduct"
+        },
+        {
+          "id": "median-aperture",
+          "name": "Median aperture"
+        },
+        {
+          "id": "lateral-aperture",
+          "name": "Lateral aperture"
+        }
+      ]
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/cerebral-aqueduct": {
+      "name": "Cerebral aqueduct",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/interventricular-foramina": {
+      "name": "Interventricular foramina",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/lateral-aperture": {
+      "name": "Lateral aperture",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/central-nervous-system/ventricular-system/ventricular-conduits/median-aperture": {
+      "name": "Median aperture",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/peripheral-nervous-system": {
+      "name": "Peripheral nervous system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "cranial-nerves",
+          "name": "Cranial nerves"
+        },
+        {
+          "id": "spinal-nerves",
+          "name": "Spinal nerves"
+        },
+        {
+          "id": "peripheral-ganglia",
+          "name": "Peripheral ganglia"
+        }
+      ]
+    },
+    "human-biological/nervous-system/peripheral-nervous-system/cranial-nerves": {
+      "name": "Cranial nerves",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/peripheral-nervous-system/peripheral-ganglia": {
+      "name": "Peripheral ganglia",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/nervous-system/peripheral-nervous-system/spinal-nerves": {
+      "name": "Spinal nerves",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "human-biological/respiratory-system": {
+      "name": "Respiratory system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "human-biological/serous-membrane-system": {
+      "name": "Serous membrane system",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "legal": {
+      "name": "Legal",
+      "definition": "Institutionalised rule systems - sources of law, adjudication structures and enforcement mechanisms - that define rights and obligations and create binding decisions backed by legitimate authority.",
+      "inclusion": [
+        "lawmaking sources such as statutes, delegated regulation and jurisprudence",
+        "adjudication institutions and compliance processes",
+        "legal enforcement mechanisms including sanctions, penalties and remedies",
+        "rights and obligations frameworks where legally constituted"
+      ],
+      "exclusion": [
+        {
+          "text": "ethical judgements about what should be the case",
+          "goesTo": "ethics"
+        },
+        {
+          "text": "informal social norms without formal enforceability",
+          "goesTo": "religious"
+        },
+        {
+          "text": "economic incentives absent a legal rule mechanism",
+          "goesTo": "economic"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "legal-norm-structures",
+          "name": "Legal norm structures"
+        },
+        {
+          "id": "adjudication-structures",
+          "name": "Adjudication structures"
+        },
+        {
+          "id": "enforcement-structures",
+          "name": "Enforcement structures"
+        }
+      ]
+    },
+    "legal/adjudication-structures": {
+      "name": "Adjudication structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "first-instance-bodies",
+          "name": "First-instance adjudication bodies"
+        },
+        {
+          "id": "appellate-bodies",
+          "name": "Appellate adjudication bodies"
+        },
+        {
+          "id": "non-state-bodies",
+          "name": "Non-state adjudication bodies"
+        }
+      ]
+    },
+    "legal/adjudication-structures/appellate-bodies": {
+      "name": "Appellate adjudication bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/adjudication-structures/first-instance-bodies": {
+      "name": "First-instance adjudication bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/adjudication-structures/non-state-bodies": {
+      "name": "Non-state adjudication bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/enforcement-structures": {
+      "name": "Enforcement structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "adjudicated-enforcement",
+          "name": "Adjudicated enforcement mechanisms"
+        },
+        {
+          "id": "non-adjudicated-enforcement",
+          "name": "Non-adjudicated enforcement mechanisms"
+        }
+      ]
+    },
+    "legal/enforcement-structures/adjudicated-enforcement": {
+      "name": "Adjudicated enforcement mechanisms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/enforcement-structures/non-adjudicated-enforcement": {
+      "name": "Non-adjudicated enforcement mechanisms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/legal-norm-structures": {
+      "name": "Legal norm structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "foundational-norms",
+          "name": "Foundational norms"
+        },
+        {
+          "id": "allocative-norms",
+          "name": "Allocative norms"
+        },
+        {
+          "id": "relational-norms",
+          "name": "Relational norms"
+        },
+        {
+          "id": "prohibitive-norms",
+          "name": "Prohibitive norms"
+        },
+        {
+          "id": "regulatory-norms",
+          "name": "Regulatory norms"
+        }
+      ]
+    },
+    "legal/legal-norm-structures/allocative-norms": {
+      "name": "Allocative norms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/legal-norm-structures/foundational-norms": {
+      "name": "Foundational norms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/legal-norm-structures/prohibitive-norms": {
+      "name": "Prohibitive norms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/legal-norm-structures/regulatory-norms": {
+      "name": "Regulatory norms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "legal/legal-norm-structures/relational-norms": {
+      "name": "Relational norms",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "meta": {
+      "name": "Meta",
+      "definition": "Formal organisation-of-knowledge structures - ontologies, top-level categories, representation standards and metadata or provenance systems - that define and relate concepts across domains to enable interoperability, retrieval, integration and analysis.",
+      "inclusion": [
+        "ontologies, taxonomies and controlled vocabularies",
+        "metadata and provenance schemes",
+        "standards for semantic representation and exchange",
+        "top-level categories and mapping frameworks that mediate across domains"
+      ],
+      "exclusion": [
+        {
+          "text": "causal mechanisms in real systems",
+          "goesTo": "mechanism"
+        },
+        {
+          "text": "the empirical variables themselves",
+          "goesTo": "measurement"
+        },
+        {
+          "text": "domain-specific institutional structures",
+          "goesTo": "political"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "political": {
+      "name": "Political",
+      "definition": "Institutions, authority relations and formal or informal decision structures that determine collective choices and the allocation of public power in a society.",
+      "inclusion": [
+        "entities that hold or compete for legitimate coercive authority",
+        "entities that make or authorise binding collective decisions",
+        "structures of representation and participation",
+        "structures of accountability and oversight of state power"
+      ],
+      "exclusion": [
+        {
+          "text": "individual motivations",
+          "goesTo": "incentives"
+        },
+        {
+          "text": "courts and legislation analysed as legal structures",
+          "goesTo": "legal"
+        }
+      ],
+      "terminal": false,
+      "children": [
+        {
+          "id": "executive-structures",
+          "name": "Executive structures"
+        },
+        {
+          "id": "legislative-structures",
+          "name": "Legislative structures"
+        },
+        {
+          "id": "electoral-structures",
+          "name": "Electoral structures"
+        },
+        {
+          "id": "political-organisation-structures",
+          "name": "Political organisation structures"
+        },
+        {
+          "id": "administrative-structures",
+          "name": "Administrative structures"
+        }
+      ]
+    },
+    "political/administrative-structures": {
+      "name": "Administrative structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "departmental-structures",
+          "name": "Departmental structures"
+        },
+        {
+          "id": "agency-structures",
+          "name": "Agency structures"
+        },
+        {
+          "id": "local-administrative-bodies",
+          "name": "Local administrative bodies"
+        },
+        {
+          "id": "administrative-support-structures",
+          "name": "Administrative support structures"
+        },
+        {
+          "id": "state-service-institutions",
+          "name": "State service institutions"
+        }
+      ]
+    },
+    "political/administrative-structures/administrative-support-structures": {
+      "name": "Administrative support structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/administrative-structures/agency-structures": {
+      "name": "Agency structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/administrative-structures/departmental-structures": {
+      "name": "Departmental structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/administrative-structures/local-administrative-bodies": {
+      "name": "Local administrative bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/administrative-structures/state-service-institutions": {
+      "name": "State service institutions",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/electoral-structures": {
+      "name": "Electoral structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "political/executive-structures": {
+      "name": "Executive structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": [
+        {
+          "id": "executive-leadership-bodies",
+          "name": "Executive leadership bodies"
+        },
+        {
+          "id": "executive-office-structures",
+          "name": "Executive office structures"
+        },
+        {
+          "id": "ministerial-structures",
+          "name": "Ministerial structures"
+        },
+        {
+          "id": "central-executive-committees",
+          "name": "Central executive committees"
+        },
+        {
+          "id": "executive-external-representation",
+          "name": "Executive-linked external representation bodies"
+        }
+      ]
+    },
+    "political/executive-structures/central-executive-committees": {
+      "name": "Central executive committees",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/executive-structures/executive-external-representation": {
+      "name": "Executive-linked external representation bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/executive-structures/executive-leadership-bodies": {
+      "name": "Executive leadership bodies",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/executive-structures/executive-office-structures": {
+      "name": "Executive office structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/executive-structures/ministerial-structures": {
+      "name": "Ministerial structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": true,
+      "children": []
+    },
+    "political/legislative-structures": {
+      "name": "Legislative structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "political/political-organisation-structures": {
+      "name": "Political organisation structures",
+      "definition": "",
+      "inclusion": [],
+      "exclusion": [],
+      "terminal": false,
+      "children": []
+    },
+    "religious": {
+      "name": "Religious",
+      "definition": "Shared belief and practice complexes organised around sacred or ultimate concerns, including the institutions and community structures that maintain, transmit and regulate those beliefs and practices.",
+      "inclusion": [
+        "belief and practice systems organised around sacred or ultimate concerns",
+        "religious institutions and leadership structures",
+        "ritual and community practices that reproduce the system",
+        "membership and affiliation structures, including non-theistic groups"
+      ],
+      "exclusion": [
+        {
+          "text": "laws, rights and regulations governing religious practice",
+          "goesTo": "legal"
+        },
+        {
+          "text": "individual moral philosophy not embedded in a belief-practice community",
+          "goesTo": "ethics"
+        },
+        {
+          "text": "political movements merely using religious rhetoric",
+          "goesTo": "political"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    },
+    "technological": {
+      "name": "Technological",
+      "definition": "Artefacts, processes and infrastructures that apply organised knowledge to achieve practical objectives, including the standardised technical definitions and system components that enable design, deployment and operation.",
+      "inclusion": [
+        "engineered artefacts and technical processes",
+        "technical infrastructures such as communications, compute, energy and manufacturing",
+        "standards and interoperability mechanisms",
+        "technology life-cycle structures treated as system components"
+      ],
+      "exclusion": [
+        {
+          "text": "the scientific enterprise itself as a social institution",
+          "goesTo": "academic"
+        },
+        {
+          "text": "economic allocation and accounting as primary objects",
+          "goesTo": "economic"
+        },
+        {
+          "text": "human biological structures themselves",
+          "goesTo": "human-biological"
+        }
+      ],
+      "terminal": false,
+      "children": []
+    }
+  }
+}

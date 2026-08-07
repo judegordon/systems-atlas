@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review queue — Systems Atlas Project</title>
+<meta name="description" content="Pending proposals, oldest first.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">ADMIN</span> Queue</p>
+      <h1>Pending proposals, oldest first.</h1>
+
+      <p id="loading" class="form__message form__message--working">Checking the account…</p>
+
+      <div id="denied" class="js-hidden">
+        <p class="form__message form__message--error">This page needs an administrator account.</p>
+        <p><a href="/account/">Sign in</a>.</p>
+      </div>
+
+      <div id="queue" class="js-hidden">
+        <p class="lede" id="queue-summary"></p>
+
+        <div class="notice">
+          <p><strong>Every decision here is published, with its reason and your name on it.</strong></p>
+          <p>There is no bulk action and there is not going to be one. A rejection that does not say which rule failed, and why this submission fails it, loses a contributor who might have been right on their second attempt.</p>
+        </div>
+
+        <p class="form__hint" id="scope-note">Proposals only — comments are a later step. Supersede is a later step too, so a proposal here is accepted or rejected or left alone.</p>
+
+        <div id="items"></div>
+
+        <p id="empty" class="js-hidden form__message form__message--ok">Nothing pending. The queue is empty.</p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/queue.js"></script>
+</body>
+</html>

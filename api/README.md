@@ -28,26 +28,34 @@ four backends rather than one.
     src/middleware/session.js
     src/routes/
     test/
-    atlas-paths.json generated — see below
+    atlas-manifest.json generated — see below
 
-## The atlas path manifest
+## The atlas manifest
 
-`docs/PROPOSALS.md` §4 requires a submitted `node_path` to "resolve in the
-current atlas". This service cannot check that directly: it deploys with `api/`
-as its root directory and cannot read `../atlas/`, and putting the taxonomy in
-Postgres would give the project a second source of truth for the one thing it
-is most careful to keep singular.
+Two things need the atlas, and neither can read it. This service deploys with
+`api/` as its root directory and cannot see `../atlas/`, and putting the
+taxonomy in Postgres would give the project a second source of truth for the
+one thing it is most careful to keep singular.
 
-So the set of valid paths is generated from the YAML and committed:
+    docs/PROPOSALS.md §4   a submitted node_path must "resolve in the current atlas"
+    docs/PROPOSALS.md §6   the review queue shows "the current state of that node"
 
-    npm run atlas:paths          # at the repository root — rewrites api/atlas-paths.json
-    npm run atlas:paths:check    # fails if it is out of date
+So the parts the API needs — the set of paths, and each node's name,
+definition, inclusion, exclusion, children and terminal flag — are generated
+from the YAML and committed:
+
+    npm run atlas:manifest          # at the repository root
+    npm run atlas:manifest:check    # fails if it is out of date
 
 It is a derived file that is checked in on purpose, because the API has to
 carry it to production. The consequence, stated rather than hidden: **a node
-added to the atlas cannot be proposed against until this is regenerated and the
-API redeployed.** `--check` exists so that going stale is caught in CI rather
-than by a contributor whose submission is refused for a node they are reading.
+added or reworded in the atlas is stale here until this is regenerated and the
+API redeployed** — a new node cannot be proposed against, and the queue shows
+an old wording. `--check` runs in CI so that is caught there rather than by a
+contributor whose submission is refused for a node they are reading.
+
+The queue links every proposal to its live node page for the same reason. If
+the manifest and the page disagree, the page is right.
 
 ## Proposals
 
@@ -71,6 +79,41 @@ bot which check it failed is how the next version of it passes.
 
 The other four types are refused by name — `subdivide` is told it is not open
 yet, not that it is invalid — so that the message is true when step 5 arrives.
+
+## The review queue
+
+    GET  /atlas/admin/queue                   pending proposals, oldest first
+    POST /atlas/admin/proposals/:id/accept    requires a reason
+    POST /atlas/admin/proposals/:id/reject    requires a reason, may name a rule
+
+Step 3 of `docs/PROPOSALS.md` §8, at `/admin/queue`. Admin-only, and a
+signed-in non-admin gets `404` rather than `403` — the endpoint is invisible
+rather than forbidden, as `docs/ACCOUNTS.md` asks.
+
+Accept and reject both require a reason and both publish it. Reject may name
+one of the six rules; §6 says "where one applies", so a rejection that is about
+the case rather than the division names none. The rules are served with the
+queue so the page cannot invent a seventh, and their numbers are the ones every
+node page prints.
+
+There is no bulk endpoint and there is not going to be one. §6: "Every decision
+is individual, because every decision is published under your name."
+
+Two departures from §6, both deliberate:
+
+- **Supersede is not built.** §8 puts the queue's third action after this step,
+  and nothing exists yet for a proposal to be superseded by.
+- **Accepting does not generate a YAML diff or open a commit.** It could not:
+  this service has no access to the repository, and a `break` produces no diff
+  in any case — it is a case the division cannot classify, not a replacement
+  structure. What it implies for `atlas/` is a judgement, and the same section
+  is emphatic that a proposal "does not write to `atlas/` unattended".
+  Recording the decision is the part that belongs to the API.
+
+`/admin/` is a fourth scripted prefix. §2 names three, and the queue cannot be
+a static page — it reads a queue and writes decisions. The list in
+`scripts/build.mjs` is the enforcement point, so the fourth is admitted there
+deliberately rather than arrived at by a page happening to carry a `<script>`.
 
 ## Running it
 
