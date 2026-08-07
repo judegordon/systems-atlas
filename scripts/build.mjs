@@ -1192,7 +1192,28 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
   );
 }
 
+// --- build provenance ------------------------------------------------------
+//
+// §7 lets a build fall back to the committed cache when the API is unreachable,
+// and warns on the terminal when it does. That warning is invisible afterwards:
+// a site built from a month-old cache looks exactly like one built a minute ago
+// from live data, and the pages cannot tell you which they are.
+//
+// This is how you tell, including from a build machine whose logs you cannot
+// read. `source` is the answer to "did this build reach the API?" — api, cache,
+// or none.
+writeFileSync(join(DIST, "build-info.json"), JSON.stringify({
+  builtAt: new Date().toISOString(),
+  proposals: {
+    source: decided.source,
+    count: decided.proposals.length,
+    dataGeneratedAt: decided.generatedAt ?? null,
+    orphaned: orphanedProposals,
+  },
+}, null, 2) + "\n");
+
 console.log(`Built ${urls.length} pages into ${DIST}/`);
+console.log(`Proposals: ${decided.proposals.length} from ${decided.source}.`);
 
 // ---------------------------------------------------------------------------
 // Not started, and not to be started without asking first: an SVG view of a
