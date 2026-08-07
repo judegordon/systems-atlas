@@ -4,14 +4,16 @@
 // withdrawal — lives in the database and a mock would only restate what the
 // test already assumes.
 //
-// That Postgres is the `Postgres-6dNn` Railway service, which has no public
-// URL. Leave a tunnel open in another terminal:
+// That Postgres is `atlas_test` on the `Postgres-6dNn` Railway service, which
+// has a public TCP proxy. There is no default — see below.
 //
-//     railway connect Postgres-6dNn --tunnel-only -P 5433
+//     TEST_DATABASE_URL=postgres://postgres:PASSWORD@HOST:PORT/atlas_test npm test
 //
-// and point the suite through it. There is no default — see below.
-//
-//     TEST_DATABASE_URL=postgres://postgres:PASSWORD@127.0.0.1:5433/atlas_test npm test
+// It used to have no public URL and was reached through
+// `railway connect Postgres-6dNn --tunnel-only`, which still works and is still
+// accepted. The tunnel was dropped roughly every five minutes and the suite
+// takes longer than that, so no single run could finish; the proxy is what
+// makes one run possible.
 //
 // `reset()` truncates every table it names, so a suite aimed at the wrong
 // database destroys it. assertTestDatabase() is what stands between a mistyped
@@ -26,15 +28,26 @@ require('dotenv').config({ quiet: true });
 
 const REQUIRED_DATABASE = 'atlas_test';
 
+// The database name carries almost all of the weight, and deliberately.
+//
 // Both Railway Postgres services answer as user `postgres` on a database named
-// `railway`, and a tunnel to either one lands on loopback. So the host and the
-// credentials cannot tell them apart, and the database name is the only part of
-// the string that can: production has no `atlas_test`, so a run misdirected at
-// it fails to connect rather than truncating the accounts table.
-const LOOPBACK = new Set(['127.0.0.1', '::1', '[::1]', 'localhost']);
-
-// Redundant against the loopback check, and kept anyway: if that check is ever
-// relaxed for a hosted runner, this is the one that still names the mistake.
+// `railway`, so the credentials cannot tell them apart. The host used to help,
+// because the test instance was reachable only through a tunnel and so always
+// on loopback — that check is gone now that it has a public proxy, and this is
+// what is left:
+//
+//   - the database must be `atlas_test`, and production has no such database,
+//     so a run misdirected at it fails to connect rather than truncating the
+//     accounts table;
+//   - production's two hostnames are refused by name, so the failure says which
+//     mistake was made rather than only that the database was wrong;
+//   - and start() asks the server it actually reached what database it is,
+//     before migrating, which is the check no connection string can talk its
+//     way past.
+//
+// What was traded away: a string that is wrong in a way none of these three
+// catch would now be attempted rather than refused outright. Keeping
+// `atlas_test` off the production instance is what keeps that from mattering.
 const PRODUCTION_HOSTS = new Set([
     'postgres.railway.internal',
     'tokaido.proxy.rlwy.net',
@@ -42,8 +55,8 @@ const PRODUCTION_HOSTS = new Set([
 
 function assertTestDatabase(raw) {
     const how =
-        'Open a tunnel with `railway connect Postgres-6dNn --tunnel-only -P 5433` ' +
-        'and set TEST_DATABASE_URL to it.';
+        'Set TEST_DATABASE_URL to the atlas_test database on Postgres-6dNn — ' +
+        '`railway variables --service Postgres-6dNn` has the host and password.';
 
     if (!raw) {
         // Deliberately no default. The old one was postgres://localhost/atlas_test,
@@ -63,12 +76,6 @@ function assertTestDatabase(raw) {
 
     if (PRODUCTION_HOSTS.has(host)) {
         throw new Error(`Refusing to run: ${host} is the production Postgres. ${how}`);
-    }
-    if (!LOOPBACK.has(host)) {
-        throw new Error(
-            `Refusing to run: TEST_DATABASE_URL points at ${host}, and the test ` +
-            `database is reachable only on loopback through the tunnel. ${how}`
-        );
     }
     if (database !== REQUIRED_DATABASE) {
         throw new Error(
@@ -108,7 +115,8 @@ async function start() {
         await pool.end();
         throw new Error(
             `Refusing to run: connected to database "${rows[0].name}", not ` +
-            `"${REQUIRED_DATABASE}". Check which service the tunnel is forwarding to.`
+            `"${REQUIRED_DATABASE}". Check which service TEST_DATABASE_URL reaches, ` +
+            `and whether a PG* variable is overriding the database it names.`
         );
     }
 

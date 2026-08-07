@@ -139,24 +139,31 @@ a separate instance from the one the API uses, sharing nothing with it. It
 creates no database of its own: point it at an empty one and it will migrate
 and truncate as it goes. `citext` must be available.
 
-`Postgres-6dNn` has no public URL, so it is reached through a tunnel. Leave
-this running in another terminal:
+`Postgres-6dNn` has a public TCP proxy. Put `TEST_DATABASE_URL` in `.env` and
+run `npm test`, or pass it inline:
 
-    railway connect Postgres-6dNn --tunnel-only -P 5433
+    TEST_DATABASE_URL=postgres://postgres:PASSWORD@HOST:PORT/atlas_test npm test
 
-`--tunnel-only` binds an ephemeral port unless `-P` is given, and the port is
-part of the connection string, so pinning it is worth the flag. Then either put
-`TEST_DATABASE_URL` in `.env` and run `npm test`, or pass it inline:
+`railway variables --service Postgres-6dNn` has the host, port and password.
 
-    TEST_DATABASE_URL=postgres://postgres:PASSWORD@127.0.0.1:5433/atlas_test npm test
+It used to have no public URL and was reached with
+`railway connect Postgres-6dNn --tunnel-only -P 5433`. That still works and is
+still accepted. It was replaced because the tunnel dropped roughly every five
+minutes — `railway connect` stays alive while its ssh child dies, so the
+process looks healthy with nothing listening — and the suite takes longer than
+that, so no single run could finish.
 
 There is no default. `test/helpers.js` refuses to run unless the database is
-named `atlas_test` and the host is loopback, and checks `current_database()`
-again once connected, before migrating. Both Railway Postgres services answer
-as `postgres` on a database named `railway`, and a tunnel to either lands on
-loopback — so the database name is the only part of the string that separates
-them, which is why the test database is not simply `railway` on the test
-instance.
+named `atlas_test`, refuses production's two hostnames by name, and asks the
+server it actually reached what database it is before migrating.
+
+The database name carries most of that. Both Railway Postgres services answer
+as `postgres` on a database named `railway`, so the credentials cannot tell
+them apart; the host used to help, because the test instance was reachable only
+on loopback, and that check went with the tunnel. Production has no `atlas_test`
+database — it was dropped when the suite moved — and keeping it that way is
+what keeps a misdirected run failing to connect rather than truncating the
+accounts table.
 
 `test/checklist.test.js` follows "What to verify before calling it done" in
 `docs/ACCOUNTS.md`, one describe block per line and in the same order.
