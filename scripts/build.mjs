@@ -577,6 +577,7 @@ function renderProposals(entries, path, sectionNo) {
 
   const accepted = entries.filter((e) => e.status === "accepted");
   const rejected = entries.filter((e) => e.status === "rejected");
+  const superseded = entries.filter((e) => e.status === "superseded");
 
   // The argument and the reason are behind <details> rather than a link to a
   // page per proposal. §7 asks for "a link to the full text"; the full text is
@@ -594,7 +595,19 @@ function renderProposals(entries, path, sectionNo) {
               e.sources.map((s) => `<li>${text(s)}</li>`).join("")}</ul>\n`
       : "";
 
-    return `        <article class="proposal proposal--${esc(e.status)}">
+    // §6: a superseded proposal is "linked to whatever replaced it". Within
+    // this node the link is an anchor on the same page; across nodes it is the
+    // other node's page and the same anchor there. Every proposal carries the
+    // id so either can resolve.
+    const replaced = e.supersededBy
+      ? `<p class="proposal__replaced">Overtaken by <a href="${
+          e.supersededBy.nodePath === path ? "" : `/atlas/${esc(e.supersededBy.nodePath)}/`
+        }#proposal-${esc(e.supersededBy.id)}">proposal ${esc(e.supersededBy.id)}</a>${
+          e.supersededBy.nodePath === path ? "" : ` on ${text(e.supersededBy.nodePath)}`
+        }.</p>`
+      : "";
+
+    return `        <article class="proposal proposal--${esc(e.status)}" id="proposal-${esc(e.id)}">
           <p class="proposal__meta">
             <span class="proposal__status">${esc(e.status)}</span>
             <span>${text(e.type)}</span>
@@ -602,6 +615,7 @@ function renderProposals(entries, path, sectionNo) {
             <span>${text(e.author)}</span>
           </p>
           <p class="proposal__case">${text(e.summary ?? "")}</p>
+          ${replaced}
           ${rule}
           <details class="proposal__more">
             <summary>The argument, and the decision in full</summary>
@@ -616,7 +630,9 @@ ${sources}            <p class="proposal__label">Decision</p>
   const lead = entries.length === 0
     ? `Nothing has been decided against this node. That is not the same as
           nothing being wrong with it.`
-    : `${accepted.length} accepted, ${rejected.length} rejected. Rejections are
+    : `${accepted.length} accepted, ${rejected.length} rejected${
+        superseded.length ? `, ${superseded.length} superseded` : ""
+      }. Rejections are
           published with their reasons because a record of what was rejected and
           why is worth more than a record of what was accepted.`;
 

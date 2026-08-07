@@ -82,9 +82,12 @@ yet, not that it is invalid — so that the message is true when step 5 arrives.
 
 ## The review queue
 
-    GET  /atlas/admin/queue                   pending proposals, oldest first
-    POST /atlas/admin/proposals/:id/accept    requires a reason
-    POST /atlas/admin/proposals/:id/reject    requires a reason, may name a rule
+    GET  /atlas/admin/queue                    pending proposals and comments
+    POST /atlas/admin/proposals/:id/accept     requires a reason
+    POST /atlas/admin/proposals/:id/reject     requires a reason, may name a rule
+    POST /atlas/admin/proposals/:id/supersede  requires a reason and a replacement
+    POST /atlas/admin/comments/:id/publish     no reason needed
+    POST /atlas/admin/comments/:id/reject      requires a reason
 
 Step 3 of `docs/PROPOSALS.md` §8, at `/admin/queue`. Admin-only, and a
 signed-in non-admin gets `404` rather than `403` — the endpoint is invisible
@@ -99,10 +102,15 @@ node page prints.
 There is no bulk endpoint and there is not going to be one. §6: "Every decision
 is individual, because every decision is published under your name."
 
-Two departures from §6, both deliberate:
+Superseding takes a replacement as well as a reason, and the replacement is
+checked rather than trusted: it must exist, must not be the proposal itself, and
+must not lead back to it along the chain of replacements. All three would
+otherwise be rendered onto a public page — a link to nothing, or one that
+circles. A superseded proposal stays published, marked, and linked to what
+replaced it, on the same page or across nodes.
 
-- **Supersede is not built.** §8 puts the queue's third action after this step,
-  and nothing exists yet for a proposal to be superseded by.
+One departure from §6, deliberate:
+
 - **Accepting does not generate a YAML diff or open a commit.** It could not:
   this service has no access to the repository, and a `break` produces no diff
   in any case — it is a case the division cannot classify, not a replacement

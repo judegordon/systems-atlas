@@ -1881,6 +1881,18 @@ textarea.form__input--tall { min-height: 13rem; }
 .proposal--accepted { border-left-color: var(--applied); }
 .proposal--rejected { border-left-color: var(--revision); }
 
+/* Superseded is not a third verdict — it is a decision that stopped mattering.
+   Marked with the neutral rule rather than a signal colour, because none of the
+   four kinds of work describes "overtaken". */
+.proposal--superseded { border-left-color: var(--night-3); }
+
+.proposal__replaced {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-2);
+  margin-bottom: var(--s3);
+}
+
 .proposal__meta {
   font-family: var(--mono);
   font-size: 12px;

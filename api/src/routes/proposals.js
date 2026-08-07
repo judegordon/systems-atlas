@@ -28,13 +28,18 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
     try {
         const { rows } = await pool.query(
+            // §6: a superseded proposal "stays visible, marked, linked to
+            // whatever replaced it", so it is published alongside the other
+            // two decided states. Pending is still the only one held back.
             `SELECT p.id, p.node_path, p.type, p.body, p.payload, p.sources,
                     p.status, p.decision_reason, p.decision_rule, p.decided_at,
-                    p.created_at, p.display_as,
+                    p.created_at, p.display_as, p.superseded_by,
+                    r.node_path AS superseded_by_node,
                     a.display_name, a.withdrawn_at
                FROM atlas.proposals p
                JOIN atlas.accounts a ON a.id = p.account_id
-              WHERE p.status IN ('accepted', 'rejected')
+               LEFT JOIN atlas.proposals r ON r.id = p.superseded_by
+              WHERE p.status IN ('accepted', 'rejected', 'superseded')
               ORDER BY p.decided_at ASC, p.id ASC`
         );
 
@@ -79,6 +84,12 @@ function publicDecided(row) {
         decisionRule: row.decision_rule,
         decidedAt: row.decided_at,
         createdAt: row.created_at,
+
+        // Null for anything not superseded. The node path comes with it so the
+        // page can link across nodes as well as within one.
+        supersededBy: row.superseded_by === null || row.superseded_by === undefined
+            ? null
+            : { id: String(row.superseded_by), nodePath: row.superseded_by_node },
     };
 }
 

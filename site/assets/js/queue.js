@@ -422,26 +422,43 @@ function decisionForm(item) {
         }
     });
 
+    // §6's third action. It needs a target, so it carries its own field rather
+    // than borrowing the rule select — a supersede names a proposal, not a rule.
+    const replacedRow = el('div', 'form__row');
+    const replacedLabel = el('label', 'form__label',
+        'Superseded by — the proposal id that overtook it');
+    const replacedBy = el('input', 'form__input');
+    replacedBy.type = 'text';
+    replacedBy.inputMode = 'numeric';
+    replacedBy.id = `replaced-${item.id}`;
+    replacedLabel.htmlFor = replacedBy.id;
+    replacedRow.append(replacedLabel, replacedBy,
+        el('p', 'form__hint', 'Only needed to supersede. It stays visible and links to that one.'));
+
     const buttons = el('div', 'queue-actions');
     const accept = el('button', 'form__button', 'Accept');
     accept.type = 'button';
     const reject = el('button', 'form__button form__button--quiet', 'Reject');
     reject.type = 'button';
-    buttons.append(accept, reject);
+    const supersede = el('button', 'form__button form__button--quiet', 'Supersede');
+    supersede.type = 'button';
+    buttons.append(accept, reject, supersede);
 
     const message = el('p', 'form__message');
     message.setAttribute('role', 'status');
     message.setAttribute('aria-live', 'polite');
 
-    form.append(ruleRow, reasonRow, buttons, message);
+    form.append(ruleRow, reasonRow, replacedRow, buttons, message);
 
     const send = async (status) => {
         accept.disabled = true;
         reject.disabled = true;
+        supersede.disabled = true;
         say(message, 'Working…', 'working');
 
         const body = { reason: reason.value };
         if (status === 'reject' && select.value) body.rule = select.value;
+        if (status === 'supersede') body.supersededBy = replacedBy.value.trim();
 
         const { ok, data } = await request(
             'POST', `/admin/proposals/${item.id}/${status}`, body);
@@ -450,6 +467,7 @@ function decisionForm(item) {
             say(message, data.error || 'Could not record the decision.', 'error');
             accept.disabled = false;
             reject.disabled = false;
+            supersede.disabled = false;
             return;
         }
 
@@ -462,6 +480,7 @@ function decisionForm(item) {
 
     accept.addEventListener('click', () => send('accept'));
     reject.addEventListener('click', () => send('reject'));
+    supersede.addEventListener('click', () => send('supersede'));
 
     return form;
 }

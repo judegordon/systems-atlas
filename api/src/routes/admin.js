@@ -239,6 +239,95 @@ router.post('/proposals/:id/accept', session.requireCsrf, (req, res, next) =>
 router.post('/proposals/:id/reject', session.requireCsrf, (req, res, next) =>
     decide(req, res, next, 'rejected'));
 
+// POST /atlas/admin/proposals/:id/supersede
+//
+// §6: "For a proposal overtaken by a later decision. Stays visible, marked,
+// linked to whatever replaced it." So it takes a replacement as well as a
+// reason, and the replacement is checked rather than trusted — a link to
+// nothing, or a link that loops, would be rendered onto a public page.
+router.post('/proposals/:id/supersede', session.requireCsrf, async (req, res, next) => {
+    const id = req.params.id;
+    const by = req.body ? req.body.supersededBy : undefined;
+
+    if (!/^\d+$/.test(String(id))) {
+        return res.status(400).json({ error: 'Not a proposal id.' });
+    }
+    if (!/^\d+$/.test(String(by))) {
+        return res.status(400).json({ error: 'Name the proposal that replaced it.' });
+    }
+    if (String(by) === String(id)) {
+        return res.status(400).json({ error: 'A proposal cannot replace itself.' });
+    }
+
+    const problem = proposals.decisionReasonProblem(req.body && req.body.reason);
+    if (problem) return res.status(400).json({ error: problem });
+
+    try {
+        const { rows: replacement } = await pool.query(
+            'SELECT id, node_path, status FROM atlas.proposals WHERE id = $1', [by]
+        );
+        if (!replacement.length) {
+            return res.status(400).json({ error: 'That replacement does not exist.' });
+        }
+
+        // Walk the chain from the replacement. If it leads back here, the two
+        // would supersede each other and the page would link in a circle.
+        const { rows: cycle } = await pool.query(
+            `WITH RECURSIVE chain(id, superseded_by) AS (
+                 SELECT id, superseded_by FROM atlas.proposals WHERE id = $1
+                 UNION ALL
+                 SELECT p.id, p.superseded_by
+                   FROM atlas.proposals p
+                   JOIN chain c ON p.id = c.superseded_by
+             )
+             SELECT 1 FROM chain WHERE id = $2 LIMIT 1`,
+            [by, id]
+        );
+        if (cycle.length) {
+            return res.status(400).json({
+                error: 'That would make the two replace each other.',
+            });
+        }
+
+        const { rows } = await pool.query(
+            `UPDATE atlas.proposals
+                SET status = 'superseded',
+                    decision_reason = $1,
+                    decided_at = now(),
+                    superseded_by = $2
+              WHERE id = $3 AND status = 'pending'
+              RETURNING id, node_path, type, display_as, status, decision_reason,
+                        decision_rule, decided_at, created_at, superseded_by`,
+            [String(req.body.reason).trim(), by, id]
+        );
+
+        if (!rows.length) {
+            const { rows: found } = await pool.query(
+                'SELECT status FROM atlas.proposals WHERE id = $1', [id]
+            );
+            if (!found.length) return res.status(404).json({ error: 'No such proposal.' });
+            return res.status(409).json({
+                error: `Already ${found[0].status}. Reload the queue.`,
+            });
+        }
+
+        const row = rows[0];
+        return res.json({
+            proposal: {
+                ...proposals.publicProposal(row),
+                decisionReason: row.decision_reason,
+                decidedAt: row.decided_at,
+                supersededBy: {
+                    id: String(row.superseded_by),
+                    nodePath: replacement[0].node_path,
+                },
+            },
+        });
+    } catch (err) {
+        return next(err);
+    }
+});
+
 
 // Comments --------------------------------------------------------------------
 //
