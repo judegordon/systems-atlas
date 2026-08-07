@@ -20,7 +20,7 @@ import {
   readdirSync, readFileSync, writeFileSync, mkdirSync,
   cpSync, rmSync, existsSync, statSync,
 } from "node:fs";
-import { join, dirname, relative } from "node:path";
+import { join, dirname, relative, sep } from "node:path";
 import { execFileSync } from "node:child_process";
 import yaml from "js-yaml";
 
@@ -174,7 +174,14 @@ function copyPages(dir) {
     writeFileSync(out, expand(readFileSync(full, "utf8"), rel));
 
     if (entry === "index.html") {
-      const dir = dirname(rel);
+      // relative() answers in the platform's separator; a URL has only one.
+      // Left as it came back, a nested page registered as /tools\konki/ — so
+      // the sitemap was written with a backslash in the URL, the coverage
+      // check below read /tools/konki/ out of dist/ and found nothing to match
+      // it, and the depth test on the next line saw no slash and gave the page
+      // a top-level priority. Three wrong answers from one separator, and all
+      // three only on Windows, because on Linux the two forms are the same.
+      const dir = dirname(rel).split(sep).join("/");
       const urlPath = dir === "." ? "/" : `/${dir}/`;
       // A sitemap is a list of pages asking to be indexed. The account pages
       // carry noindex and are of no use to anyone who is not already holding
