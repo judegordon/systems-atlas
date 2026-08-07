@@ -1705,6 +1705,60 @@ a.entry:hover, a.entry:focus-visible { border-color: var(--night-3); }
    signed-out visitor never sees a flash of the signed-in page. */
 .js-hidden { display: none; }
 
+/* A proposal is a case and an argument about it. Both want the reading
+   measure rather than the 26rem column an email address is comfortable in. */
+.form--wide { max-width: 100%; }
+
+textarea.form__input {
+  display: block;
+  min-height: 7rem;
+  resize: vertical;
+}
+
+textarea.form__input--tall { min-height: 13rem; }
+
+/* The per-submission anonymity choice. Radios rather than a select, because
+   both options have to be readable without opening anything: the choice is
+   about what the public sees and is easy to get wrong in a hurry. */
+.form__choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3) var(--s5);
+}
+
+.form__choice-option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  font-size: 16px;
+  color: var(--night);
+}
+
+.form__choice-option input { accent-color: var(--evidence); }
+
+/* The honeypot, from PROPOSALS.md §4. Positioned off-screen rather than
+   display:none, because a form-filling script that skips hidden fields is
+   exactly the one worth catching. aria-hidden and tabindex keep it away from
+   anyone reading the page with a screen reader or a keyboard. */
+.form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* The count under a bounded field. Turns Revision Magenta once the bound is
+   passed, so the form says so before the server does. */
+.form__count {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-3);
+  margin-top: var(--s2);
+}
+
+.form__count--over { color: var(--revision); }
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

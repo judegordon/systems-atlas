@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propose a break — Systems Atlas Project</title>
+<meta name="description" content="Submit a case the atlas cannot classify. Every decision is published, including the rejections.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/propose/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">PROPOSE</span> Break</p>
+      <h1>Here is a case this division cannot classify.</h1>
+      <p class="lede">The most useful thing you can send. It needs a case, not a replacement structure — you do not have to know how the node should divide instead.</p>
+
+      <p id="loading" class="form__message form__message--working">Checking whether you are signed in…</p>
+
+      <div id="signed-out" class="js-hidden">
+        <div class="notice">
+          <p><strong>You need an account to submit.</strong></p>
+          <p>Only so that every submission is attributable to someone. You can still publish anonymously — that is chosen per submission, and an anonymous submission is visible to an administrator and to nobody else.</p>
+        </div>
+        <p><a href="/account/">Sign in</a>, or <a href="/account/new/">create an account</a>.</p>
+      </div>
+
+      <div id="signed-in" class="js-hidden">
+
+        <p id="unverified-note" class="form__message form__message--error js-hidden">Verify your email address before submitting. The link was sent when you created the account.</p>
+
+        <div class="notice">
+          <p><strong>What a break is.</strong></p>
+          <p>A division fails when something real does not fit it: an object that belongs to two components at once, or to none. Name that thing, say which node's division it defeats, and say why. You do not need to propose the fix.</p>
+          <p>Rejections are published with their reasons, and so are acceptances. A rejection is an argument about the case, not a verdict on you.</p>
+        </div>
+
+        <form class="form form--wide" id="propose-form" novalidate>
+
+          <div class="form__row">
+            <label class="form__label" for="nodePath">Which node</label>
+            <input class="form__input" type="text" id="nodePath" name="nodePath" autocomplete="off" spellcheck="false" required>
+            <p class="form__hint">The path from the node's page address. <code>systemsatlasproject.com/atlas/<strong>human-biological/nervous-system</strong>/</code> is <code>human-biological/nervous-system</code>.</p>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="case">The case</label>
+            <textarea class="form__input" id="case" name="case" maxlength="1000" required></textarea>
+            <p class="form__hint">The thing that does not fit. One or two sentences — a specific object, event or structure, not a category.</p>
+            <p class="form__count" id="case-count"></p>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="body">Why the division cannot take it</label>
+            <textarea class="form__input form__input--tall" id="body" name="body" maxlength="4000" required></textarea>
+            <p class="form__hint">Which components it falls between or across, and why each one is wrong. Markdown is kept.</p>
+            <p class="form__count" id="body-count"></p>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="sources">Sources</label>
+            <textarea class="form__input" id="sources" name="sources"></textarea>
+            <p class="form__hint">One per line. Optional — a case nobody has written up is still a case. A definition without a source is an opinion with formatting, but a counterexample can be its own evidence.</p>
+          </div>
+
+          <div class="form__row">
+            <span class="form__label" id="display-as-label">Publish this as</span>
+            <div class="form__choice" role="radiogroup" aria-labelledby="display-as-label">
+              <label class="form__choice-option">
+                <input type="radio" name="displayAs" value="name" checked>
+                <span>My display name</span>
+              </label>
+              <label class="form__choice-option">
+                <input type="radio" name="displayAs" value="anonymous">
+                <span>Anonymous</span>
+              </label>
+            </div>
+            <p class="form__hint">Decided per submission. Either way an administrator can see the account behind it; the public cannot.</p>
+          </div>
+
+          <div class="form__trap" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="form__button" type="submit">Submit the break</button>
+          <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="account-section">
+          <p>Anything published here stays published if you delete your account. Your name is removed from it; the argument is not.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/propose.js"></script>
+</body>
+</html>

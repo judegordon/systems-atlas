@@ -26,6 +26,11 @@ const LIMITS = {
     signin:        { ip: { max: 10, window: HOUR }, account: { max: 5, window: HOUR } },
     reset:         { ip: { max: 3,  window: HOUR }, account: { max: 3, window: DAY } },
     verify_resend: { account: { max: 3, window: HOUR } },
+
+    // docs/PROPOSALS.md §4. Only the per-IP half is here: the per-account limit
+    // is counted off atlas.proposals in the route, because a proposal leaves a
+    // row of its own and counting those is exact where counting attempts is not.
+    propose:       { ip: { max: 20, window: DAY } },
 };
 
 async function record(action, { accountId = null, ip, succeeded = false }) {

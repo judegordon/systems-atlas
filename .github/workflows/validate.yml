@@ -17,5 +17,10 @@ jobs:
       - name: Check the atlas against its own rules
         run: npm run validate -- --stats
         continue-on-error: true
+      # api/atlas-paths.json is generated from atlas/ and committed, because the
+      # API deploys from api/ and cannot read the YAML. Stale, it refuses
+      # proposals against nodes that exist. This is where that is noticed.
+      - name: Check the atlas path manifest is current
+        run: npm run atlas:paths:check
       - name: Build
         run: npm run build

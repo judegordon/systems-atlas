@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "atlas:paths": "node scripts/atlas-paths.mjs",
+    "atlas:paths:check": "node scripts/atlas-paths.mjs --check"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

@@ -1,8 +1,13 @@
 # Systems Atlas API
 
 Accounts for the atlas: sign up, verify, sign in, reset, settings, withdrawal,
-and an admin flag. Build steps 1 to 5 of `docs/ACCOUNTS.md`. Proposals are the
-next document, not this one.
+and an admin flag. Build steps 1 to 5 of `docs/ACCOUNTS.md`.
+
+Plus the first step of `docs/PROPOSALS.md`: step 2 of its build order, the
+`break` proposal type and nothing else. The review queue, the other four types,
+comments, and rendering any of it into the static build are later steps and are
+not here. `break` is first because it is the one that needs a case rather than
+a replacement structure.
 
 Separate from the app accounts used by Konki, Shutoku, Kantetsu and Bottou —
 different database, different schema, different tokens. `docs/ACCOUNTS.md`
@@ -11,17 +16,61 @@ four backends rather than one.
 
 ## Layout
 
-    migrations/     numbered SQL, applied in filename order
-    scripts/        migrate.js
-    src/db.js       one pool
-    src/accounts.js passwords, single-use tokens, the one public shape
+    migrations/      numbered SQL, applied in filename order
+    scripts/         migrate.js
+    src/db.js        one pool
+    src/accounts.js  passwords, single-use tokens, the one public shape
+    src/proposals.js the bounds for a break, and the signed form token
     src/rateLimit.js
-    src/mail.js     two templates, and no third
-    src/deferred.js work moved off the request's clock, so that how long an
-                    answer takes does not disclose whether an address exists
+    src/mail.js      two templates, and no third
+    src/deferred.js  work moved off the request's clock, so that how long an
+                     answer takes does not disclose whether an address exists
     src/middleware/session.js
     src/routes/
     test/
+    atlas-paths.json generated — see below
+
+## The atlas path manifest
+
+`docs/PROPOSALS.md` §4 requires a submitted `node_path` to "resolve in the
+current atlas". This service cannot check that directly: it deploys with `api/`
+as its root directory and cannot read `../atlas/`, and putting the taxonomy in
+Postgres would give the project a second source of truth for the one thing it
+is most careful to keep singular.
+
+So the set of valid paths is generated from the YAML and committed:
+
+    npm run atlas:paths          # at the repository root — rewrites api/atlas-paths.json
+    npm run atlas:paths:check    # fails if it is out of date
+
+It is a derived file that is checked in on purpose, because the API has to
+carry it to production. The consequence, stated rather than hidden: **a node
+added to the atlas cannot be proposed against until this is regenerated and the
+API redeployed.** `--check` exists so that going stale is caught in CI rather
+than by a contributor whose submission is refused for a node they are reading.
+
+## Proposals
+
+    GET  /atlas/proposals/new    issue a form token
+    POST /atlas/proposals        submit — type must be `break`
+
+Both require a session. `POST` additionally requires the account to be
+verified, a CSRF token, a `node_path` that resolves, and a form token at least
+20 seconds old.
+
+The form token is what makes that last rule a check rather than a decoration.
+`docs/PROPOSALS.md` §4 asks for a "minimum time-on-form of 20 seconds", but the
+form is a static page and the server has no other way to know when it was
+opened. `GET /atlas/proposals/new` returns `<issuedAt>.<hmac>`; the submission
+carries it back. An elapsed-milliseconds number sent by the page would have
+been simpler and would have checked nothing, because the value a script sends
+is the value it wants to send.
+
+The honeypot answers `202` rather than a `4xx`, and stores nothing. Telling a
+bot which check it failed is how the next version of it passes.
+
+The other four types are refused by name — `subdivide` is told it is not open
+yet, not that it is invalid — so that the message is true when step 5 arrives.
 
 ## Running it
 
@@ -74,6 +123,7 @@ limit, and 127.0.0.1 is the same address in both. `npm test` sets
 | `RESEND_API_KEY` | yes in production | Absent, a send fails and is logged; the request still returns what it would have. |
 | `SITE_ORIGIN` | no | The one allowed CORS origin and the host in emailed links. Defaults to `https://systemsatlasproject.com`. |
 | `MAIL_TRANSPORT` | no | `log` collects mail in memory instead of sending it. |
+| `FORM_SECRET` | no, but set it | Signs the proposal form token that enforces the 20-second minimum. Unset, a random per-process value is used and tokens stop working across a restart — the person is asked to reload, so it degrades rather than breaks. |
 | `PORT` | no | Railway sets this — 8080 in practice. `server.js` reads it and falls back to 3000 when run by hand. A public domain routes to a target port that is set separately from this variable, and the two have to agree. |
 
 ## Deploying

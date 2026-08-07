@@ -51,6 +51,7 @@ app.use('/atlas/accounts', require('./src/routes/accounts'));
 app.use('/atlas/sessions', require('./src/routes/sessions'));
 app.use('/atlas/passwords', require('./src/routes/passwords'));
 app.use('/atlas/me', require('./src/routes/me'));
+app.use('/atlas/proposals', require('./src/routes/proposals'));
 app.use('/atlas/admin', require('./src/routes/admin'));
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
