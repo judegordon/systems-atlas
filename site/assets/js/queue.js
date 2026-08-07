@@ -103,7 +103,7 @@ function render(item) {
     article.append(head);
 
     article.append(nodePanel(item.node, item.nodePath));
-    article.append(submissionPanel(item.submission));
+    article.append(submissionPanel(item.submission, item.type));
     article.append(accountPanel(item.account));
     article.append(decisionForm(item));
 
@@ -154,14 +154,79 @@ function fieldList(label, values, whenEmpty) {
     return wrap;
 }
 
-function submissionPanel(submission) {
+// Every type has an argument; what the argument is for differs, and a label
+// that says "why the division cannot take it" above a relocation is a label
+// that stopped being read.
+const ARGUMENT_LABEL = {
+    break: 'Why the division cannot take it',
+    subdivide: 'Why these parts, and why this many',
+    redefine: 'What is wrong with the current wording',
+    relocate: 'Why it belongs under that parent',
+    merge: 'Why these are not distinct',
+};
+
+// The whole payload, laid out per type. A subdivision cannot be judged from a
+// one-line summary — the six fields of each proposed child are the submission.
+function payloadDetail(type, payload) {
+    const wrap = el('div', 'queue-field');
+    if (!payload) return wrap;
+
+    if (type === 'subdivide') {
+        for (const child of payload.children || []) {
+            const block = el('div', 'queue-child');
+            block.append(el('p', 'queue-child__name', child.name));
+            block.append(el('p', null, child.definition || 'No definition. A declared gap.'));
+            for (const [key, label] of [
+                ['inclusion', 'Includes'], ['exclusion', 'Excludes'],
+                ['sources', 'Sources'], ['boundary_cases', 'Boundary cases'],
+                ['uncertainty', 'Uncertainty'],
+            ]) {
+                if (child[key] && child[key].length) {
+                    block.append(fieldList(label, child[key], ''));
+                }
+            }
+            wrap.append(block);
+        }
+        return wrap;
+    }
+
+    if (type === 'redefine') {
+        if (payload.definition) {
+            wrap.append(el('p', 'queue-field__label', 'Proposed definition'));
+            wrap.append(el('p', 'queue-body', payload.definition));
+        }
+        if (payload.inclusion) wrap.append(fieldList('Proposed inclusion', payload.inclusion, ''));
+        if (payload.exclusion) wrap.append(fieldList('Proposed exclusion', payload.exclusion, ''));
+        return wrap;
+    }
+
+    if (type === 'relocate') {
+        wrap.append(el('p', 'queue-field__label', 'Proposed parent'));
+        const p = el('p', null);
+        const a = el('a', null, payload.newParent);
+        a.href = `/atlas/${payload.newParent}/`;
+        p.append(a);
+        wrap.append(p);
+        return wrap;
+    }
+
+    if (type === 'merge') {
+        wrap.append(fieldList('Components to join', payload.siblings || [], ''));
+        return wrap;
+    }
+
+    return wrap;      // break — the summary is the case, and that is all of it
+}
+
+function submissionPanel(submission, type) {
     const panel = el('section', 'queue-panel');
     panel.append(el('h3', 'queue-panel__title', 'The submission'));
 
-    panel.append(el('p', 'queue-field__label', 'The case'));
-    panel.append(el('p', 'queue-case', submission.case || '—'));
+    panel.append(el('p', 'queue-field__label', 'What it proposes'));
+    panel.append(el('p', 'queue-case', submission.summary || '—'));
+    panel.append(payloadDetail(type, submission.payload));
 
-    panel.append(el('p', 'queue-field__label', 'Why the division cannot take it'));
+    panel.append(el('p', 'queue-field__label', ARGUMENT_LABEL[type] || 'The argument'));
     // Markdown is kept as written and shown as written. Rendering it would mean
     // turning contributor text into markup on the page that decides its fate.
     panel.append(el('pre', 'queue-body', submission.body));

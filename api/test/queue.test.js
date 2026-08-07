@@ -101,7 +101,7 @@ describe('what the queue shows', () => {
         const item = (await a.get('/atlas/admin/queue')).data.items[0];
 
         assert.equal(item.id, id);
-        assert.match(item.submission.case, /neuroendocrine/);
+        assert.match(item.submission.summary, /neuroendocrine/);
         assert.match(item.submission.body, /Signalling and secretion/);
         assert.deepEqual(item.submission.sources, ['Kandel, Principles of Neural Science']);
     });

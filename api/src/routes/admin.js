@@ -88,7 +88,11 @@ router.get('/queue', async (req, res, next) => {
             node: proposals.nodeState(r.node_path),
 
             submission: {
-                case: r.payload && r.payload.case ? r.payload.case : null,
+                // `summary` is one line whatever the type proposes; `payload`
+                // is the whole of it, because a subdivision cannot be reviewed
+                // from a summary. The page decides how much to show.
+                summary: proposals.summarisePayload(r.type, r.payload),
+                payload: r.payload,
                 body: r.body,
                 sources: r.sources || [],
                 displayAs: r.display_as,

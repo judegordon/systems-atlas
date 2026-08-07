@@ -71,7 +71,8 @@ function publicDecided(row) {
         type: row.type,
         status: row.status,
         author,
-        case: row.payload && row.payload.case ? row.payload.case : null,
+        summary: proposals.summarisePayload(row.type, row.payload),
+        payload: row.payload,
         body: row.body,
         sources: row.sources || [],
         decisionReason: row.decision_reason,
@@ -87,8 +88,10 @@ function publicDecided(row) {
 // unverified account is signed in but may not submit.
 router.use(session.require);
 
-const BUILT = new Set(['break']);
-const PLANNED = new Set(['subdivide', 'redefine', 'relocate', 'merge']);
+// All five types from §4 are open as of build step 5. `break` stays first
+// wherever they are listed: it needs a case rather than a replacement
+// structure, and it is the one most people can write.
+const BUILT = new Set(['break', 'subdivide', 'redefine', 'relocate', 'merge']);
 
 // §4: "5 proposals per account per day". The per-IP half of that line is 20 a
 // day and lives in src/rateLimit.js with the others.
@@ -122,11 +125,6 @@ router.post('/', session.requireCsrf, async (req, res, next) => {
     }
 
     if (!BUILT.has(type)) {
-        if (PLANNED.has(type)) {
-            return res.status(400).json({
-                error: 'Only break proposals are open at the moment.',
-            });
-        }
         return res.status(400).json({ error: 'Unknown proposal type.' });
     }
 
@@ -139,10 +137,14 @@ router.post('/', session.requireCsrf, async (req, res, next) => {
         });
     }
 
+    // node_path is validated before the payload, because two of the five types
+    // are checked against the node itself — a merge names components that have
+    // to be its children, and a relocation must not move a node under its own
+    // descendant.
     const problem =
         proposals.nodePathProblem(nodePath)
         || proposals.displayAsProblem(displayAs)
-        || proposals.caseProblem(body.case)
+        || proposals.payloadProblem(type, body, String(nodePath).trim())
         || proposals.bodyProblem(body.body)
         || proposals.sourcesProblem(sources)
         || proposals.formTokenProblem(formToken);
@@ -177,14 +179,15 @@ router.post('/', session.requireCsrf, async (req, res, next) => {
         const { rows } = await pool.query(
             `INSERT INTO atlas.proposals
                  (account_id, node_path, type, display_as, body, payload, sources)
-             VALUES ($1, $2, 'break', $3, $4, $5::jsonb, $6::jsonb)
+             VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb)
              RETURNING id, node_path, type, display_as, status, created_at`,
             [
                 req.account.id,
                 String(nodePath).trim(),
+                type,
                 displayAs,
                 String(body.body).trim(),
-                JSON.stringify({ case: String(body.case).trim() }),
+                JSON.stringify(proposals.buildPayload(type, body)),
                 JSON.stringify(proposals.cleanSources(sources)),
             ]
         );

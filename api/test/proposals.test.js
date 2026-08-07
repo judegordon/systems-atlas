@@ -189,11 +189,14 @@ describe('the fields', () => {
 
 
 describe('the types that are not built yet', () => {
-    test('subdivide is refused as not yet open, not as invalid', async () => {
+    test('subdivide is open as of step 5, and refused only on its own payload', async () => {
         const c = await contributor('subdivide@example.com');
+        // The break payload carries no `children`, so this is refused for the
+        // reason a subdivide is refused — not for being a type nobody built.
         const r = await c.post('/atlas/proposals', aBreak({ type: 'subdivide' }));
         assert.equal(r.status, 400);
-        assert.match(r.data.error, /only break/i);
+        assert.doesNotMatch(r.data.error, /only break/i);
+        assert.match(r.data.error, /components/i);
     });
 
     test('a type that is not in the document at all is refused as unknown', async () => {

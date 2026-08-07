@@ -1949,6 +1949,42 @@ textarea.form__input--tall { min-height: 13rem; }
   font-size: 15px;
 }
 
+/* Proposal types on the form and in the queue -------------------------------- */
+
+.form__choice--stack {
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+/* One proposed component on the subdivide form: the six fields a node carries,
+   in a block that can be added and removed. */
+.child {
+  border: 1px solid var(--rule-dark);
+  border-left: 3px solid var(--structural);
+  padding: var(--s4);
+  margin: 0 0 var(--s4);
+}
+
+.child__legend {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-2);
+  padding: 0 var(--s2);
+}
+
+.child .form__row:last-of-type { margin-bottom: var(--s4); }
+
+/* The same block, read-only, in the review queue. */
+.queue-child {
+  border-left: 2px solid var(--rule-dark);
+  padding-left: var(--s4);
+  margin-bottom: var(--s4);
+}
+
+.queue-child__name { font-weight: 600; margin-bottom: var(--s2); }
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

@@ -64,6 +64,232 @@ function nodeState(value) {
 }
 
 
+// Payloads, per type ----------------------------------------------------------
+//
+// §4 gives the payload shape for `subdivide` and for no other type: "For
+// subdivide, payload carries the proposed children, each with the same six
+// fields a node carries." The other three are described only by what they say:
+//
+//   redefine   this node's definition, inclusion or exclusion is wrong
+//   relocate   this node belongs under a different parent
+//   merge      these siblings are not distinct and should be one
+//
+// So their shapes are designed here rather than transcribed, and kept as small
+// as the sentence allows. Each carries the change being proposed and nothing
+// else; the argument for it is `body`, which every type has.
+
+// Rule 01's ceiling and Rule 05's floor, which are the two the count can break.
+const CHILDREN_MAX = 7;
+const CHILDREN_MIN = 2;
+const CHILD_NAME_MAX = 80;
+const CHILD_TEXT_MAX = 1000;
+
+function parentOf(path) {
+    const cut = path.lastIndexOf('/');
+    return cut < 0 ? null : path.slice(0, cut);
+}
+
+// Paths are slash-joined ids, so descent is a prefix test. The trailing slash
+// matters: `legal-x` must not read as a descendant of `legal`.
+function isSelfOrDescendant(candidate, ancestor) {
+    return candidate === ancestor || candidate.startsWith(`${ancestor}/`);
+}
+
+function childIdsOf(path) {
+    const node = MANIFEST.nodes[path];
+    return node ? node.children.map((c) => c.id) : [];
+}
+
+// A list of non-empty strings, or a problem. Absent counts as empty, because
+// the six fields are "key required, may be empty" on a real node too.
+function stringListProblem(value, label, max = CHILD_TEXT_MAX) {
+    if (value === undefined || value === null) return null;
+    if (!Array.isArray(value)) return `${label} must be a list.`;
+    for (const entry of value) {
+        if (typeof entry !== 'string') return `${label} must be a list of lines.`;
+        if (entry.trim().length > max) {
+            return `Each ${label.toLowerCase()} line is limited to ${max} characters.`;
+        }
+    }
+    return null;
+}
+
+function cleanList(value) {
+    if (!Array.isArray(value)) return [];
+    return value.map((s) => String(s).trim()).filter((s) => s !== '');
+}
+
+function subdivideProblem(body) {
+    const children = body.children;
+    if (!Array.isArray(children)) return 'A subdivision needs its proposed components.';
+
+    // Rule 05 before Rule 01: one child is not a small division, it is not a
+    // division. The client refuses both before sending and quotes the rule;
+    // these are the same refusals restated where they cannot be skipped.
+    if (children.length < CHILDREN_MIN) {
+        return `Rule 05 — a division needs at least ${CHILDREN_MIN} parts. `
+             + 'One part divides nothing.';
+    }
+    if (children.length > CHILDREN_MAX) {
+        return `Rule 01 — at most ${CHILDREN_MAX} components. `
+             + `This proposes ${children.length}.`;
+    }
+
+    for (const child of children) {
+        if (!child || typeof child !== 'object') return 'Each component must be a block.';
+
+        const name = typeof child.name === 'string' ? child.name.trim() : '';
+        if (name === '') return 'Every component needs a name.';
+        if (name.length > CHILD_NAME_MAX) {
+            return `A component name is limited to ${CHILD_NAME_MAX} characters.`;
+        }
+
+        if (typeof child.definition === 'string'
+            && child.definition.trim().length > CHILD_TEXT_MAX) {
+            return `A component definition is limited to ${CHILD_TEXT_MAX} characters.`;
+        }
+
+        // An empty definition is a declared gap and is allowed, as it is on a
+        // real node. The form warns; it does not refuse.
+        const listProblem =
+            stringListProblem(child.inclusion, 'Inclusion')
+            || stringListProblem(child.exclusion, 'Exclusion')
+            || stringListProblem(child.sources, 'Sources')
+            || stringListProblem(child.boundary_cases, 'Boundary cases')
+            || stringListProblem(child.uncertainty, 'Uncertainty');
+        if (listProblem) return listProblem;
+    }
+    return null;
+}
+
+function redefineProblem(body) {
+    const hasDefinition = typeof body.definition === 'string' && body.definition.trim() !== '';
+    const hasInclusion = Array.isArray(body.inclusion) && cleanList(body.inclusion).length > 0;
+    const hasExclusion = Array.isArray(body.exclusion) && cleanList(body.exclusion).length > 0;
+
+    if (!hasDefinition && !hasInclusion && !hasExclusion) {
+        return 'A redefinition needs a replacement: a definition, an inclusion list, '
+             + 'or an exclusion list.';
+    }
+    if (hasDefinition && body.definition.trim().length > BODY_MAX) {
+        return `The replacement definition is limited to ${BODY_MAX} characters.`;
+    }
+    return stringListProblem(body.inclusion, 'Inclusion')
+        || stringListProblem(body.exclusion, 'Exclusion');
+}
+
+function relocateProblem(body, nodePath) {
+    const target = typeof body.newParent === 'string' ? body.newParent.trim() : '';
+    if (target === '') return 'A relocation needs the parent it should move under.';
+    if (!knownNodePath(target)) {
+        return 'That parent is not in the atlas. Check the path from the node page URL.';
+    }
+    // Moving a node under itself or under one of its own descendants would make
+    // the tree stop being a tree. Refused here rather than discovered by
+    // whoever tries to apply it.
+    if (isSelfOrDescendant(target, nodePath)) {
+        return target === nodePath
+            ? 'A node cannot be its own parent.'
+            : 'That parent is inside the node being moved, which would make a loop.';
+    }
+    if (target === parentOf(nodePath)) {
+        return 'That is already its parent.';
+    }
+    return null;
+}
+
+function mergeProblem(body, nodePath) {
+    const siblings = Array.isArray(body.siblings) ? body.siblings.map((s) => String(s).trim()) : null;
+    if (!siblings) return 'A merge needs the components it would join.';
+    if (siblings.length < 2) return 'A merge needs at least two components.';
+    if (new Set(siblings).size !== siblings.length) {
+        return 'The same component is listed twice.';
+    }
+
+    // node_path is the parent whose division changes, so the components named
+    // have to be its children. Naming the parent is what makes "siblings"
+    // checkable at all — two ids on their own do not say what they are under.
+    const known = new Set(childIdsOf(nodePath));
+    if (known.size === 0) {
+        return 'That node has no components to merge. Choose the node they sit under.';
+    }
+    for (const id of siblings) {
+        if (!known.has(id)) {
+            return `"${id}" is not a component of that node.`;
+        }
+    }
+    if (siblings.length > known.size) {
+        return 'That is more components than the node has.';
+    }
+    return null;
+}
+
+// Returns a problem sentence, or null. `break` is checked by caseProblem.
+function payloadProblem(type, body, nodePath) {
+    if (type === 'break') return caseProblem(body.case);
+    if (type === 'subdivide') return subdivideProblem(body);
+    if (type === 'redefine') return redefineProblem(body);
+    if (type === 'relocate') return relocateProblem(body, nodePath);
+    if (type === 'merge') return mergeProblem(body, nodePath);
+    return 'Unknown proposal type.';
+}
+
+// What is stored. Built from scratch rather than passed through, so a field
+// nobody validated cannot reach the column.
+function buildPayload(type, body) {
+    if (type === 'break') {
+        return { case: String(body.case).trim() };
+    }
+    if (type === 'subdivide') {
+        return {
+            children: body.children.map((c) => ({
+                name: String(c.name).trim(),
+                definition: typeof c.definition === 'string' ? c.definition.trim() : '',
+                inclusion: cleanList(c.inclusion),
+                exclusion: cleanList(c.exclusion),
+                sources: cleanList(c.sources),
+                boundary_cases: cleanList(c.boundary_cases),
+                uncertainty: cleanList(c.uncertainty),
+            })),
+        };
+    }
+    if (type === 'redefine') {
+        const out = {};
+        if (typeof body.definition === 'string' && body.definition.trim() !== '') {
+            out.definition = body.definition.trim();
+        }
+        if (cleanList(body.inclusion).length) out.inclusion = cleanList(body.inclusion);
+        if (cleanList(body.exclusion).length) out.exclusion = cleanList(body.exclusion);
+        return out;
+    }
+    if (type === 'relocate') {
+        return { newParent: String(body.newParent).trim() };
+    }
+    if (type === 'merge') {
+        return { siblings: body.siblings.map((s) => String(s).trim()) };
+    }
+    return {};
+}
+
+// A one-line description of what a payload proposes, for the queue and the node
+// page. Neither of those should be reaching into payload shapes themselves.
+function summarisePayload(type, payload) {
+    if (!payload) return '';
+    if (type === 'break') return payload.case ?? '';
+    if (type === 'subdivide') {
+        const names = (payload.children ?? []).map((c) => c.name);
+        return `Divide into ${names.length}: ${names.join(', ')}`;
+    }
+    if (type === 'redefine') {
+        const changed = ['definition', 'inclusion', 'exclusion'].filter((k) => payload[k]);
+        return `Rewrite the ${changed.join(', ')}`;
+    }
+    if (type === 'relocate') return `Move under ${payload.newParent}`;
+    if (type === 'merge') return `Merge ${(payload.siblings ?? []).join(' + ')}`;
+    return '';
+}
+
+
 // The six rules --------------------------------------------------------------
 //
 // `decision_rule` in §4 is "which of the six rules it failed, if any". The
@@ -270,8 +496,17 @@ module.exports = {
     MIN_SECONDS_ON_FORM,
     FORM_TOKEN_MAX_AGE_MS,
     RULES,
+    CHILDREN_MAX,
+    CHILDREN_MIN,
+    CHILD_NAME_MAX,
+    CHILD_TEXT_MAX,
     knownNodePath,
     nodeState,
+    parentOf,
+    childIdsOf,
+    payloadProblem,
+    buildPayload,
+    summarisePayload,
     decisionRuleProblem,
     decisionReasonProblem,
     nodePathProblem,

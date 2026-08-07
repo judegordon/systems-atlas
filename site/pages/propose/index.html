@@ -53,16 +53,84 @@
           </div>
 
           <div class="form__row">
+            <span class="form__label" id="type-label">What kind of proposal</span>
+            <div class="form__choice form__choice--stack" role="radiogroup" aria-labelledby="type-label">
+              <label class="form__choice-option">
+                <input type="radio" name="type" value="break" checked>
+                <span><strong>Break</strong> — here is a case this division cannot classify</span>
+              </label>
+              <label class="form__choice-option">
+                <input type="radio" name="type" value="subdivide">
+                <span><strong>Subdivide</strong> — this node should divide into these components</span>
+              </label>
+              <label class="form__choice-option">
+                <input type="radio" name="type" value="redefine">
+                <span><strong>Redefine</strong> — its definition, inclusion or exclusion is wrong</span>
+              </label>
+              <label class="form__choice-option">
+                <input type="radio" name="type" value="relocate">
+                <span><strong>Relocate</strong> — it belongs under a different parent</span>
+              </label>
+              <label class="form__choice-option">
+                <input type="radio" name="type" value="merge">
+                <span><strong>Merge</strong> — these components are not distinct</span>
+              </label>
+            </div>
+            <p class="form__hint">Break is first because it is the easiest to get right: it needs a case, not a replacement structure.</p>
+          </div>
+
+          <!-- break -->
+          <div class="form__row" data-for="break">
             <label class="form__label" for="case">The case</label>
-            <textarea class="form__input" id="case" name="case" maxlength="1000" required></textarea>
+            <textarea class="form__input" id="case" name="case" maxlength="1000"></textarea>
             <p class="form__hint">The thing that does not fit. One or two sentences — a specific object, event or structure, not a category.</p>
             <p class="form__count" id="case-count"></p>
           </div>
 
+          <!-- subdivide -->
+          <div class="form__row" data-for="subdivide">
+            <span class="form__label">The components you propose</span>
+            <p class="form__hint">Five is the target and seven is the ceiling, from Miller (1956) at the cautious end. Each component carries the same six fields a node carries; only the name is required, and an empty field is a declared gap rather than a mistake.</p>
+            <div id="children"></div>
+            <button class="form__button form__button--quiet" type="button" id="add-child">Add a component</button>
+            <p class="form__message" id="children-message" role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- redefine -->
+          <div class="form__row" data-for="redefine">
+            <label class="form__label" for="newDefinition">Proposed definition</label>
+            <textarea class="form__input" id="newDefinition" name="newDefinition" maxlength="4000"></textarea>
+            <p class="form__hint">Leave empty if the definition is fine and only the lists below are wrong.</p>
+          </div>
+          <div class="form__row" data-for="redefine">
+            <label class="form__label" for="newInclusion">Proposed inclusion</label>
+            <textarea class="form__input" id="newInclusion" name="newInclusion"></textarea>
+            <p class="form__hint">One per line. What falls inside.</p>
+          </div>
+          <div class="form__row" data-for="redefine">
+            <label class="form__label" for="newExclusion">Proposed exclusion</label>
+            <textarea class="form__input" id="newExclusion" name="newExclusion"></textarea>
+            <p class="form__hint">One per line. What falls outside — and where it goes instead, if you know.</p>
+          </div>
+
+          <!-- relocate -->
+          <div class="form__row" data-for="relocate">
+            <label class="form__label" for="newParent">Proposed parent</label>
+            <input class="form__input" type="text" id="newParent" name="newParent" autocomplete="off" spellcheck="false">
+            <p class="form__hint">A path, the same way the node above is written. It cannot be the node itself or anything inside it.</p>
+          </div>
+
+          <!-- merge -->
+          <div class="form__row" data-for="merge">
+            <label class="form__label" for="siblings">Components to join</label>
+            <textarea class="form__input" id="siblings" name="siblings"></textarea>
+            <p class="form__hint">One id per line, and they must be components of the node named above — so name the node they sit under, not one of them.</p>
+          </div>
+
           <div class="form__row">
-            <label class="form__label" for="body">Why the division cannot take it</label>
+            <label class="form__label" for="body" id="body-label">Why the division cannot take it</label>
             <textarea class="form__input form__input--tall" id="body" name="body" maxlength="4000" required></textarea>
-            <p class="form__hint">Which components it falls between or across, and why each one is wrong. Markdown is kept.</p>
+            <p class="form__hint" id="body-hint">Which components it falls between or across, and why each one is wrong. Markdown is kept.</p>
             <p class="form__count" id="body-count"></p>
           </div>
 

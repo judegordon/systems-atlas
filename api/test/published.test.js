@@ -111,7 +111,7 @@ describe('what is published', () => {
 
         assert.equal(p.nodePath, NODE);
         assert.equal(p.type, 'break');
-        assert.match(p.case, /neuroendocrine/);
+        assert.match(p.summary, /neuroendocrine/);
         assert.match(p.body, /Signalling and secretion/);
         assert.deepEqual(p.sources, ['Kandel, Principles of Neural Science']);
     });

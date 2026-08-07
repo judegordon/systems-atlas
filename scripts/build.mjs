@@ -601,7 +601,7 @@ function renderProposals(entries, path, sectionNo) {
             <span>${text(String(e.decidedAt ?? "").slice(0, 10))}</span>
             <span>${text(e.author)}</span>
           </p>
-          <p class="proposal__case">${text(e.case ?? "")}</p>
+          <p class="proposal__case">${text(e.summary ?? "")}</p>
           ${rule}
           <details class="proposal__more">
             <summary>The argument, and the decision in full</summary>
