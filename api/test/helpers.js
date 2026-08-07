@@ -4,10 +4,86 @@
 // withdrawal — lives in the database and a mock would only restate what the
 // test already assumes.
 //
+// That Postgres is the `Postgres-6dNn` Railway service, which has no public
+// URL. Leave a tunnel open in another terminal:
+//
+//     railway connect Postgres-6dNn --tunnel-only -P 5433
+//
+// and point the suite through it. There is no default — see below.
+//
+//     TEST_DATABASE_URL=postgres://postgres:PASSWORD@127.0.0.1:5433/atlas_test npm test
+//
+// `reset()` truncates every table it names, so a suite aimed at the wrong
+// database destroys it. assertTestDatabase() is what stands between a mistyped
+// host and the production accounts table.
+//
+
+// So that TEST_DATABASE_URL can live in api/.env rather than on the command
+// line, where the tunnel's password would end up in shell history. This has to
+// run before the guard below. dotenv never overrides a variable that is already
+// set, so `TEST_DATABASE_URL=... npm test` still wins over the file.
+require('dotenv').config({ quiet: true });
+
+const REQUIRED_DATABASE = 'atlas_test';
+
+// Both Railway Postgres services answer as user `postgres` on a database named
+// `railway`, and a tunnel to either one lands on loopback. So the host and the
+// credentials cannot tell them apart, and the database name is the only part of
+// the string that can: production has no `atlas_test`, so a run misdirected at
+// it fails to connect rather than truncating the accounts table.
+const LOOPBACK = new Set(['127.0.0.1', '::1', '[::1]', 'localhost']);
+
+// Redundant against the loopback check, and kept anyway: if that check is ever
+// relaxed for a hosted runner, this is the one that still names the mistake.
+const PRODUCTION_HOSTS = new Set([
+    'postgres.railway.internal',
+    'tokaido.proxy.rlwy.net',
+]);
+
+function assertTestDatabase(raw) {
+    const how =
+        'Open a tunnel with `railway connect Postgres-6dNn --tunnel-only -P 5433` ' +
+        'and set TEST_DATABASE_URL to it.';
+
+    if (!raw) {
+        // Deliberately no default. The old one was postgres://localhost/atlas_test,
+        // which quietly resolved to whatever Postgres happened to be on 5432.
+        throw new Error(`TEST_DATABASE_URL is not set. ${how}`);
+    }
+
+    let url;
+    try {
+        url = new URL(raw);
+    } catch {
+        throw new Error(`TEST_DATABASE_URL is not a URL. ${how}`);
+    }
+
+    const host = url.hostname;
+    const database = decodeURIComponent(url.pathname.replace(/^\//, ''));
+
+    if (PRODUCTION_HOSTS.has(host)) {
+        throw new Error(`Refusing to run: ${host} is the production Postgres. ${how}`);
+    }
+    if (!LOOPBACK.has(host)) {
+        throw new Error(
+            `Refusing to run: TEST_DATABASE_URL points at ${host}, and the test ` +
+            `database is reachable only on loopback through the tunnel. ${how}`
+        );
+    }
+    if (database !== REQUIRED_DATABASE) {
+        throw new Error(
+            `Refusing to run: TEST_DATABASE_URL names database ` +
+            `"${database || '(none)'}", not "${REQUIRED_DATABASE}". ` +
+            `This suite truncates every table it finds. ${how}`
+        );
+    }
+
+    return raw;
+}
+
 process.env.NODE_ENV = 'test';
 process.env.MAIL_TRANSPORT = 'log';
-process.env.DATABASE_URL =
-    process.env.TEST_DATABASE_URL || 'postgres://localhost/atlas_test';
+process.env.DATABASE_URL = assertTestDatabase(process.env.TEST_DATABASE_URL);
 process.env.SITE_ORIGIN = 'http://localhost:8788';
 
 const { execFileSync } = require('child_process');
@@ -22,6 +98,20 @@ let server;
 let base;
 
 async function start() {
+    // The string was checked before the pool was built. This checks the server
+    // the pool actually reached, which is the only answer that cannot be wrong:
+    // a tunnel forwarded to the wrong service, or a PG* variable overriding the
+    // database, would both get past the parse above and are caught here. It
+    // runs before migrate.js, so a misdirected run creates nothing either.
+    const { rows } = await pool.query('SELECT current_database() AS name');
+    if (rows[0].name !== REQUIRED_DATABASE) {
+        await pool.end();
+        throw new Error(
+            `Refusing to run: connected to database "${rows[0].name}", not ` +
+            `"${REQUIRED_DATABASE}". Check which service the tunnel is forwarding to.`
+        );
+    }
+
     execFileSync('node', [path.join(__dirname, '..', 'scripts', 'migrate.js')], {
         stdio: 'pipe',
         env: process.env,

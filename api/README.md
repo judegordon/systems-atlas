@@ -34,10 +34,29 @@ four backends rather than one.
 
 ## Tests
 
-The suite needs a real Postgres with `citext` available. It creates nothing:
-point it at an empty database and it will migrate and truncate as it goes.
+The suite runs against `atlas_test` on the `Postgres-6dNn` Railway service —
+a separate instance from the one the API uses, sharing nothing with it. It
+creates no database of its own: point it at an empty one and it will migrate
+and truncate as it goes. `citext` must be available.
 
-    TEST_DATABASE_URL=postgres://user:pass@127.0.0.1:5432/atlas_test npm test
+`Postgres-6dNn` has no public URL, so it is reached through a tunnel. Leave
+this running in another terminal:
+
+    railway connect Postgres-6dNn --tunnel-only -P 5433
+
+`--tunnel-only` binds an ephemeral port unless `-P` is given, and the port is
+part of the connection string, so pinning it is worth the flag. Then either put
+`TEST_DATABASE_URL` in `.env` and run `npm test`, or pass it inline:
+
+    TEST_DATABASE_URL=postgres://postgres:PASSWORD@127.0.0.1:5433/atlas_test npm test
+
+There is no default. `test/helpers.js` refuses to run unless the database is
+named `atlas_test` and the host is loopback, and checks `current_database()`
+again once connected, before migrating. Both Railway Postgres services answer
+as `postgres` on a database named `railway`, and a tunnel to either lands on
+loopback — so the database name is the only part of the string that separates
+them, which is why the test database is not simply `railway` on the test
+instance.
 
 `test/checklist.test.js` follows "What to verify before calling it done" in
 `docs/ACCOUNTS.md`, one describe block per line and in the same order.
@@ -55,13 +74,13 @@ limit, and 127.0.0.1 is the same address in both. `npm test` sets
 | `RESEND_API_KEY` | yes in production | Absent, a send fails and is logged; the request still returns what it would have. |
 | `SITE_ORIGIN` | no | The one allowed CORS origin and the host in emailed links. Defaults to `https://systemsatlasproject.com`. |
 | `MAIL_TRANSPORT` | no | `log` collects mail in memory instead of sending it. |
-| `PORT` | no | Railway sets this. |
+| `PORT` | no | Railway sets this — 8080 in practice. `server.js` reads it and falls back to 3000 when run by hand. A public domain routes to a target port that is set separately from this variable, and the two have to agree. |
 
 ## Deploying
 
-The database exists; the service does not yet.
+The service is up at `https://api.systemsatlasproject.com`.
 
-Railway project `systems-atlas-backend`, its own Postgres, in the same
+Railway project `systemsatlas`, its own Postgres, in the same
 workspace as the four app backends and sharing nothing with them. ACCOUNTS.md
 was written expecting one shared Postgres with an `atlas` schema beside the app
 tables in `public`. There is no shared Postgres — the apps have four, one each
@@ -74,18 +93,24 @@ Done:
 
 1. Postgres provisioned, with a volume and a public TCP proxy.
 2. `001_atlas_accounts.sql` applied to the production database.
-
-Still to do:
-
-3. A service in that project rooted at `api/`, with `RESEND_API_KEY` set and
-   `DATABASE_URL` referenced from the Postgres service.
+3. A service rooted at `api/`, with `RESEND_API_KEY` set and `DATABASE_URL`
+   referenced from the Postgres service as `${{Postgres.DATABASE_URL}}`. The
+   reference matters: pasting a literal is how it briefly came to point at the
+   test instance instead.
 4. The custom domain `api.systemsatlasproject.com` on the service, and the
    CNAME for it at the registrar.
 
-`atlas_test` on the same instance is what the suite runs against. It is on the
-production Postgres because there was nowhere else to put it, and the suite
-truncates every table it finds — so once production holds anything, the test
-database belongs somewhere production is not reachable from.
+The domain's target port must match the port the app is listening on. Railway
+injects `PORT=8080`; the domain was created defaulting to 3000, and every
+request returned 502 while the app itself logged a clean start. Neither the
+logs nor the service status showed it — only `railway domain status` did.
+
+The test database is no longer on this instance. It was `atlas_test` on the
+production Postgres because there was nowhere else to put it; the suite
+truncates every table it finds, and production now has a service in front of
+it. `atlas_test` has been dropped from the production instance and the suite
+runs against the separate `Postgres-6dNn` service, which has no public URL.
+See "Tests" above.
 
 The cookie is host-only and set by `api.systemsatlasproject.com`. Because
 SameSite is judged on the registrable domain, the site's fetches from
