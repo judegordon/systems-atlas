@@ -335,6 +335,24 @@ describe('what is published', () => {
         assert.equal(r.data.comments.length, 0);
     });
 
+    test('the shape is the one scripts/build.mjs threads and renders', async () => {
+        // Step 7 reads these five field names off this endpoint. Renaming one
+        // would leave the build writing "undefined" into a node page, and a
+        // page that is wrong is worse than a build that failed.
+        const c = await contributor('shape@example.com', 'Jo Bloggs');
+        const a = await admin();
+        await published(c, a);
+
+        const { data } = await anyone().get('/atlas/comments');
+        const posted = data.comments[0];
+
+        for (const field of ['id', 'nodePath', 'parentId', 'author', 'body', 'createdAt']) {
+            assert.ok(field in posted, `the build needs ${field}`);
+        }
+        assert.equal(posted.parentId, null, 'top-level parentId must be null, not absent');
+        assert.ok(Date.parse(posted.createdAt), 'createdAt must parse as a date');
+    });
+
     test('a reply carries the id of what it answers, so a thread can be built', async () => {
         const c = await contributor();
         const a = await admin();

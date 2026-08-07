@@ -2027,6 +2027,17 @@ textarea.form__input--tall { min-height: 13rem; }
   padding: 0 0 0 var(--s4);
 }
 
+/* The thread as it is baked into a node page. Night field, so the rules that
+   separate comments are the light ones. */
+.thread {
+  max-width: var(--reading);
+  margin: var(--s6) auto 0;
+}
+
+.field--night .comment { border-top-color: var(--rule-light); }
+.field--night .comment__meta { color: var(--structure-3); }
+.field--night .comment--reply { border-left-color: var(--rule-light); }
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

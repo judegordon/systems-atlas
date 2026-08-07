@@ -638,7 +638,57 @@ ${sources}            <p class="proposal__label">Decision</p>
 ${body}
       <div class="reading">
         <p class="proposal__invite">
-          <a href="/propose/?node=${esc(path)}">Propose a break against this node &rarr;</a>
+          <a href="/propose/?node=${esc(path)}">Propose a change to this node &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+`;
+}
+
+// docs/PROPOSALS.md §7: "Discussion — published comments, threaded one level,
+// each with display name or Anonymous and a date." Rendered like the proposals
+// section and for the same reason: always present, because it carries the
+// second of the two links, and a thread nobody can find is not a thread.
+//
+// Nothing here is fetched at runtime. A node page with forty comments is still
+// a plain HTML file that runs no script.
+function renderDiscussion(tops, path, sectionNo) {
+  const total = tops.reduce((n, t) => n + 1 + t.replies.length, 0);
+
+  const comment = (c, isReply) => `        <article class="comment${
+    isReply ? " comment--reply" : ""}">
+          <p class="comment__meta">${text(c.author)} · ${
+            text(String(c.createdAt ?? "").slice(0, 10))}</p>
+          <p class="comment__body">${esc(String(c.body ?? "").trim())}</p>
+        </article>`;
+
+  const body = tops.length
+    ? `      <div class="thread">\n${tops.map((t) =>
+        [comment(t, false), ...t.replies.map((r) => comment(r, true))].join("\n")
+      ).join("\n")}\n      </div>`
+    : "";
+
+  const lead = total === 0
+    ? `Nothing published on this node yet.`
+    : `${total} comment${total === 1 ? "" : "s"}, one level of replies. An argument
+          that needs to nest further is a proposal.`;
+
+  return `
+  <!-- Discussion =========================================================== -->
+  <section class="field--night band">
+    <div class="wrap">
+      <div class="reading">
+        <p class="eyebrow"><span class="eyebrow__no">§ ${sectionNo}</span> Discussion</p>
+        <h2 class="section-title">What has been said about this node.</h2>
+        <div class="prose">
+          <p>${lead}</p>
+        </div>
+      </div>
+${body}
+      <div class="reading">
+        <p class="proposal__invite">
+          <a href="/discuss/?node=${esc(path)}">Join the discussion &rarr;</a>
         </p>
       </div>
     </div>
@@ -798,47 +848,50 @@ ${ladder}
 // with neither says it has nothing rather than rendering an empty section that
 // looks like a node nobody has argued with.
 
-const PROPOSALS_CACHE = join("cache", "proposals.json");
-
-async function readProposals() {
+// One reader for both, because §7 treats them the same way: fetched at build
+// time, cached in the repo, and never allowed to fail the build.
+async function readPublished(what, key, cacheFile, whenMissing) {
   if (process.argv.includes("--no-fetch")) {
-    if (!existsSync(PROPOSALS_CACHE)) return { proposals: [], source: "none" };
-    const cached = JSON.parse(readFileSync(PROPOSALS_CACHE, "utf8"));
-    return { ...cached, source: "cache" };
+    if (!existsSync(cacheFile)) return { [key]: [], source: "none" };
+    return { ...JSON.parse(readFileSync(cacheFile, "utf8")), source: "cache" };
   }
 
   try {
-    const response = await fetch(`${API_ORIGIN}/atlas/proposals`, {
+    const response = await fetch(`${API_ORIGIN}/atlas/${what}`, {
       signal: AbortSignal.timeout(20000),
       headers: { Accept: "application/json" },
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const data = await response.json();
-    if (!Array.isArray(data.proposals)) throw new Error("no proposals array");
+    if (!Array.isArray(data[key])) throw new Error(`no ${key} array`);
 
-    mkdirSync(dirname(PROPOSALS_CACHE), { recursive: true });
-    writeFileSync(PROPOSALS_CACHE, JSON.stringify(data, null, 2) + "\n");
+    mkdirSync(dirname(cacheFile), { recursive: true });
+    writeFileSync(cacheFile, JSON.stringify(data, null, 2) + "\n");
     return { ...data, source: "api" };
   } catch (err) {
-    if (existsSync(PROPOSALS_CACHE)) {
-      const cached = JSON.parse(readFileSync(PROPOSALS_CACHE, "utf8"));
+    if (existsSync(cacheFile)) {
+      const cached = JSON.parse(readFileSync(cacheFile, "utf8"));
       console.warn(
-        `\nThe API was unreachable (${err.message}). Using the cache from ` +
-        `${cached.generatedAt ?? "an earlier build"} — proposals decided since ` +
-        `then are not on this build.\n`
+        `\nThe API was unreachable for ${what} (${err.message}). Using the cache ` +
+        `from ${cached.generatedAt ?? "an earlier build"} — anything published ` +
+        `since then is not on this build.\n`
       );
       return { ...cached, source: "cache" };
     }
-    console.warn(
-      `\nThe API was unreachable (${err.message}) and there is no cache. ` +
-      `Node pages will say no proposals have been decided, which may be wrong.\n`
-    );
-    return { proposals: [], source: "none" };
+    console.warn(`\nThe API was unreachable for ${what} (${err.message}) and there ` +
+      `is no cache. ${whenMissing}\n`);
+    return { [key]: [], source: "none" };
   }
 }
 
-const decided = await readProposals();
+const decided = await readPublished(
+  "proposals", "proposals", join("cache", "proposals.json"),
+  "Node pages will say no proposals have been decided, which may be wrong.");
+
+const discussion = await readPublished(
+  "comments", "comments", join("cache", "comments.json"),
+  "Node pages will show no discussion, which may be wrong.");
 
 // Grouped by the node they target. A proposal whose node has left the atlas is
 // dropped from the pages and counted here, rather than disappearing quietly.
@@ -848,6 +901,30 @@ for (const p of decided.proposals) {
   if (!nodes.has(p.nodePath)) { orphanedProposals += 1; continue; }
   if (!proposalsByNode.has(p.nodePath)) proposalsByNode.set(p.nodePath, []);
   proposalsByNode.get(p.nodePath).push(p);
+}
+
+// Comments, threaded one level. The database will not store a third level, so
+// this does not have to defend against one — but a reply whose parent was
+// rejected after it was published would otherwise vanish silently, so it is
+// counted and reported rather than dropped without a word.
+const commentsByNode = new Map();
+let orphanedComments = 0;
+{
+  const tops = new Map();          // id -> { comment, replies }
+  for (const c of discussion.comments) {
+    if (!nodes.has(c.nodePath)) { orphanedComments += 1; continue; }
+    if (c.parentId === null) tops.set(c.id, { ...c, replies: [] });
+  }
+  for (const c of discussion.comments) {
+    if (c.parentId === null || !nodes.has(c.nodePath)) continue;
+    const parent = tops.get(c.parentId);
+    if (!parent) { orphanedComments += 1; continue; }
+    parent.replies.push(c);
+  }
+  for (const top of tops.values()) {
+    if (!commentsByNode.has(top.nodePath)) commentsByNode.set(top.nodePath, []);
+    commentsByNode.get(top.nodePath).push(top);
+  }
 }
 
 // --- hand-written pages ----------------------------------------------------
@@ -883,6 +960,7 @@ for (const [path, { node, depth, trail }] of nodes) {
     checks: renderChecks(node),
     diagnostics: renderNodeDiagnostics(entries, entries.length ? nextNo() : null),
     proposals: renderProposals(proposalsByNode.get(path) ?? [], path, nextNo()),
+    discussion: renderDiscussion(commentsByNode.get(path) ?? [], path, nextNo()),
   }), `atlas/${path}`);
 
   const out = join(DIST, "atlas", ...path.split("/"), "index.html");
@@ -1210,10 +1288,23 @@ writeFileSync(join(DIST, "build-info.json"), JSON.stringify({
     dataGeneratedAt: decided.generatedAt ?? null,
     orphaned: orphanedProposals,
   },
+  comments: {
+    source: discussion.source,
+    count: discussion.comments.length,
+    dataGeneratedAt: discussion.generatedAt ?? null,
+    orphaned: orphanedComments,
+  },
 }, null, 2) + "\n");
 
 console.log(`Built ${urls.length} pages into ${DIST}/`);
 console.log(`Proposals: ${decided.proposals.length} from ${decided.source}.`);
+console.log(`Comments: ${discussion.comments.length} from ${discussion.source}.`);
+if (orphanedProposals || orphanedComments) {
+  console.warn(
+    `Dropped ${orphanedProposals} proposal(s) and ${orphanedComments} comment(s) ` +
+    `pointing at nodes that are no longer in the atlas.`
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Not started, and not to be started without asking first: an SVG view of a
