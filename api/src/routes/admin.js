@@ -113,7 +113,50 @@ router.get('/queue', async (req, res, next) => {
             },
         }));
 
-        return res.json({ pending: items.length, items, rules: proposals.RULES });
+        // §6: the queue shows "pending proposals and comments". They are kept
+        // as two lists rather than one merged stream — the actions differ
+        // (accept/reject against publish/reject) and a single list would have
+        // to carry which pair applies to each row anyway.
+        const { rows: pendingComments } = await pool.query(
+            `SELECT c.id, c.node_path, c.parent_id, c.display_as, c.body, c.created_at,
+                    a.id AS account_id, a.email, a.display_name, a.verified_at,
+                    a.created_at AS account_created_at,
+                    p.body AS parent_body
+               FROM atlas.comments c
+               JOIN atlas.accounts a ON a.id = c.account_id
+               LEFT JOIN atlas.comments p ON p.id = c.parent_id
+              WHERE c.status = 'pending'
+              ORDER BY c.created_at ASC, c.id ASC`
+        );
+
+        const commentItems = pendingComments.map((r) => ({
+            id: String(r.id),
+            nodePath: r.node_path,
+            node: proposals.nodeState(r.node_path),
+            parentId: r.parent_id === null ? null : String(r.parent_id),
+            // What it is answering, so a reply can be judged without hunting
+            // for the comment above it.
+            replyingTo: r.parent_body,
+            submission: {
+                body: r.body,
+                displayAs: r.display_as,
+                createdAt: r.created_at,
+            },
+            account: {
+                id: String(r.account_id),
+                email: r.email,
+                displayName: r.display_name,
+                verified: Boolean(r.verified_at),
+                createdAt: r.account_created_at,
+            },
+        }));
+
+        return res.json({
+            pending: items.length + commentItems.length,
+            items,
+            comments: commentItems,
+            rules: proposals.RULES,
+        });
     } catch (err) {
         return next(err);
     }
@@ -195,5 +238,67 @@ router.post('/proposals/:id/accept', session.requireCsrf, (req, res, next) =>
 // POST /atlas/admin/proposals/:id/reject
 router.post('/proposals/:id/reject', session.requireCsrf, (req, res, next) =>
     decide(req, res, next, 'rejected'));
+
+
+// Comments --------------------------------------------------------------------
+//
+// §5 gives comments three states and no rule field: 'pending', 'published',
+// 'rejected'. Publishing needs no reason — there is nothing to explain about
+// letting an argument stand — and rejecting requires one, as everywhere else.
+
+async function decideComment(req, res, next, status) {
+    const id = req.params.id;
+    if (!/^\d+$/.test(String(id))) {
+        return res.status(400).json({ error: 'Not a comment id.' });
+    }
+
+    const reason = req.body ? req.body.reason : undefined;
+    if (status === 'rejected') {
+        const problem = proposals.decisionReasonProblem(reason);
+        if (problem) return res.status(400).json({ error: problem });
+    }
+
+    try {
+        const { rows } = await pool.query(
+            `UPDATE atlas.comments
+                SET status = $1,
+                    decision_reason = $2,
+                    decided_at = now()
+              WHERE id = $3 AND status = 'pending'
+              RETURNING id, node_path, parent_id, status, decision_reason, decided_at`,
+            [status, status === 'rejected' ? String(reason).trim() : null, id]
+        );
+
+        if (!rows.length) {
+            const { rows: found } = await pool.query(
+                'SELECT status FROM atlas.comments WHERE id = $1', [id]
+            );
+            if (!found.length) return res.status(404).json({ error: 'No such comment.' });
+            return res.status(409).json({
+                error: `Already ${found[0].status}. Reload the queue.`,
+            });
+        }
+
+        return res.json({
+            comment: {
+                id: String(rows[0].id),
+                nodePath: rows[0].node_path,
+                status: rows[0].status,
+                decisionReason: rows[0].decision_reason,
+                decidedAt: rows[0].decided_at,
+            },
+        });
+    } catch (err) {
+        return next(err);
+    }
+}
+
+// POST /atlas/admin/comments/:id/publish
+router.post('/comments/:id/publish', session.requireCsrf, (req, res, next) =>
+    decideComment(req, res, next, 'published'));
+
+// POST /atlas/admin/comments/:id/reject
+router.post('/comments/:id/reject', session.requireCsrf, (req, res, next) =>
+    decideComment(req, res, next, 'rejected'));
 
 module.exports = router;

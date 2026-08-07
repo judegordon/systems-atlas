@@ -1985,6 +1985,48 @@ textarea.form__input--tall { min-height: 13rem; }
 
 .queue-child__name { font-weight: 600; margin-bottom: var(--s2); }
 
+/* A comment in the queue. Evidence Blue rather than Structural Orange: a
+   comment is a reading of the atlas, not a change to its structure. */
+.queue-item--comment { border-left-color: var(--evidence); }
+
+/* The thread on /discuss/ ---------------------------------------------------- */
+
+.comment {
+  border-top: 1px solid var(--rule-dark);
+  padding: var(--s4) 0;
+}
+
+.comment__meta {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--night-3);
+  margin-bottom: var(--s2);
+}
+
+.comment__body { white-space: pre-wrap; }
+
+.comment__reply {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--night-3);
+  color: var(--night-2);
+  padding: 0;
+  margin-top: var(--s3);
+  cursor: pointer;
+}
+
+.comment__reply:hover { color: var(--night); border-bottom-color: var(--night); }
+
+/* One level, and the indent says so. There is no third level to style. */
+.comment--reply {
+  margin: var(--s4) 0 0 var(--s5);
+  border-top: 0;
+  border-left: 2px solid var(--rule-dark);
+  padding: 0 0 0 var(--s4);
+}
+
 .account-section {
   border-top: 1px solid var(--rule-dark);
   padding-top: var(--s5);

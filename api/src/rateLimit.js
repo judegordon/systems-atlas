@@ -31,6 +31,10 @@ const LIMITS = {
     // is counted off atlas.proposals in the route, because a proposal leaves a
     // row of its own and counting those is exact where counting attempts is not.
     propose:       { ip: { max: 20, window: DAY } },
+
+    // docs/PROPOSALS.md §5: "Same rate limits and honeypot." Same shape as
+    // propose, and the per-account half is counted off atlas.comments.
+    comment:       { ip: { max: 20, window: DAY } },
 };
 
 async function record(action, { accountId = null, ip, succeeded = false }) {

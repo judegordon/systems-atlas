@@ -73,17 +73,24 @@ async function load() {
     rules = data.rules || [];
     list.replaceChildren();
 
-    summary.textContent = data.pending === 1
-        ? '1 proposal waiting.'
-        : `${data.pending} proposals waiting.`;
+    const comments = data.comments || [];
+    const parts = [];
+    if (data.items.length) {
+        parts.push(`${data.items.length} proposal${data.items.length === 1 ? '' : 's'}`);
+    }
+    if (comments.length) {
+        parts.push(`${comments.length} comment${comments.length === 1 ? '' : 's'}`);
+    }
+    summary.textContent = parts.length ? `${parts.join(' and ')} waiting.` : '';
 
-    if (!data.items.length) {
+    if (!data.items.length && !comments.length) {
         show(empty);
         return;
     }
     hide(empty);
 
     for (const item of data.items) list.append(render(item));
+    for (const item of comments) list.append(renderComment(item));
 }
 
 // Render ----------------------------------------------------------------------
@@ -108,6 +115,108 @@ function render(item) {
     article.append(decisionForm(item));
 
     return article;
+}
+
+// A pending comment. §5 gives it three states and no rule field, so the two
+// actions are publish and reject, and only the rejection needs a reason —
+// there is nothing to explain about letting an argument stand.
+function renderComment(item) {
+    const article = el('article', 'queue-item queue-item--comment');
+
+    const head = el('header', 'queue-item__head');
+    head.append(el('p', 'queue-item__meta',
+        `#${item.id} · comment${item.parentId ? ' · reply' : ''} · `
+        + `posted ${date(item.submission.createdAt)}`));
+
+    const heading = el('h2', 'queue-item__node');
+    const link = el('a', null, item.nodePath);
+    link.href = `/atlas/${item.nodePath}/`;
+    heading.append(link);
+    head.append(heading);
+    article.append(head);
+
+    if (item.replyingTo) {
+        const panel = el('section', 'queue-panel');
+        panel.append(el('h3', 'queue-panel__title', 'Answering'));
+        panel.append(el('pre', 'queue-body', item.replyingTo));
+        article.append(panel);
+    }
+
+    const body = el('section', 'queue-panel');
+    body.append(el('h3', 'queue-panel__title', 'The comment'));
+    body.append(el('pre', 'queue-body', item.submission.body));
+    body.append(el('p', 'queue-field__label',
+        item.submission.displayAs === 'anonymous'
+            ? 'To be published anonymously'
+            : 'To be published under their display name'));
+    article.append(body);
+
+    const who = el('section', 'queue-panel');
+    who.append(el('h3', 'queue-panel__title', 'Who sent it'));
+    const facts = el('dl', 'queue-facts');
+    for (const [k, v] of [
+        ['Display name', item.account.displayName],
+        ['Email', item.account.email],
+        ['Verified', item.account.verified ? 'Yes' : 'No'],
+        ['Joined', date(item.account.createdAt)],
+    ]) {
+        facts.append(el('dt', null, k), el('dd', null, v));
+    }
+    who.append(facts);
+    article.append(who);
+
+    article.append(commentDecision(item));
+    return article;
+}
+
+function commentDecision(item) {
+    const form = el('form', 'form queue-decision');
+    form.append(el('p', 'queue-panel__title', 'Decide'));
+
+    const row = el('div', 'form__row');
+    const label = el('label', 'form__label', 'Reason — required to reject, published with it');
+    const reason = el('textarea', 'form__input');
+    reason.id = `comment-reason-${item.id}`;
+    reason.maxLength = 4000;
+    label.htmlFor = reason.id;
+    row.append(label, reason);
+
+    const buttons = el('div', 'queue-actions');
+    const publish = el('button', 'form__button', 'Publish');
+    publish.type = 'button';
+    const reject = el('button', 'form__button form__button--quiet', 'Reject');
+    reject.type = 'button';
+    buttons.append(publish, reject);
+
+    const message = el('p', 'form__message');
+    message.setAttribute('role', 'status');
+    message.setAttribute('aria-live', 'polite');
+
+    form.append(row, buttons, message);
+
+    const send = async (action) => {
+        publish.disabled = true;
+        reject.disabled = true;
+        say(message, 'Working…', 'working');
+
+        const payload = action === 'reject' ? { reason: reason.value } : {};
+        const { ok, data } = await request(
+            'POST', `/admin/comments/${item.id}/${action}`, payload);
+
+        if (!ok) {
+            say(message, data.error || 'Could not record the decision.', 'error');
+            publish.disabled = false;
+            reject.disabled = false;
+            return;
+        }
+        say(message, `Recorded as ${data.comment.status}.`, 'ok');
+        await load();
+    };
+
+    publish.addEventListener('click', () => send('publish'));
+    reject.addEventListener('click', () => send('reject'));
+
+    return form;
 }
 
 // The node as the atlas currently has it. Generated at build time and shipped

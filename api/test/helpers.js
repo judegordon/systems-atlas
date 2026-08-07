@@ -133,7 +133,7 @@ async function stop() {
 // id from one test cannot be mistaken for an id from another.
 async function reset() {
     await pool.query(
-        'TRUNCATE atlas.accounts, atlas.tokens, atlas.sessions, atlas.auth_attempts, atlas.proposals RESTART IDENTITY CASCADE'
+        'TRUNCATE atlas.accounts, atlas.tokens, atlas.sessions, atlas.auth_attempts, atlas.proposals, atlas.comments RESTART IDENTITY CASCADE'
     );
     mail.outbox.length = 0;
 }

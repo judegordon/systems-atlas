@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discussion — Systems Atlas Project</title>
+<meta name="description" content="The thread on a node. One level of replies; anything deeper wants to be a proposal.">
+<meta name="theme-color" content="#101820">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://systemsatlasproject.com/discuss/">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icon-128.png" sizes="128x128" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!--#include masthead-->
+
+<main id="main" class="field--paper doc">
+  <div class="wrap">
+    <div class="doc__inner">
+      <p class="eyebrow"><span class="eyebrow__no">DISCUSS</span> <span id="node-label">A node</span></p>
+      <h1>The thread on this node.</h1>
+      <p class="lede">One level of replies, and no deeper. An argument that needs to nest further is a proposal.</p>
+
+      <p id="loading" class="form__message form__message--working">Loading the thread…</p>
+
+      <div id="no-node" class="js-hidden">
+        <p class="form__message form__message--error">No node was named. Open a discussion from the node page you want to talk about.</p>
+        <p><a href="/atlas/">Browse the atlas</a>.</p>
+      </div>
+
+      <div id="thread-wrap" class="js-hidden">
+        <p><a id="node-link" href="/atlas/">Read the node &rarr;</a></p>
+
+        <div id="thread"></div>
+        <p id="thread-empty" class="js-hidden form__hint">Nothing published on this node yet.</p>
+
+        <div id="signed-out" class="js-hidden account-section">
+          <p>You need an account to post. <a href="/account/">Sign in</a>, or <a href="/account/new/">create one</a>.</p>
+        </div>
+
+        <div id="signed-in" class="js-hidden account-section">
+          <p id="unverified-note" class="form__message form__message--error js-hidden">Verify your email address before posting.</p>
+
+          <form class="form form--wide" id="comment-form" novalidate>
+            <p class="form__label" id="replying-label">Add to the thread</p>
+            <p class="form__hint js-hidden" id="replying-to"></p>
+
+            <div class="form__row">
+              <label class="form__label" for="body">Your comment</label>
+              <textarea class="form__input" id="body" name="body" maxlength="2000" required></textarea>
+              <p class="form__hint">Up to 2000 characters. Longer than that is a proposal, not a comment.</p>
+              <p class="form__count" id="body-count"></p>
+            </div>
+
+            <div class="form__row">
+              <span class="form__label" id="display-as-label">Publish this as</span>
+              <div class="form__choice" role="radiogroup" aria-labelledby="display-as-label">
+                <label class="form__choice-option">
+                  <input type="radio" name="displayAs" value="name" checked>
+                  <span>My display name</span>
+                </label>
+                <label class="form__choice-option">
+                  <input type="radio" name="displayAs" value="anonymous">
+                  <span>Anonymous</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form__trap" aria-hidden="true">
+              <label for="website">Website</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="queue-actions">
+              <button class="form__button" type="submit">Post</button>
+              <button class="form__button form__button--quiet js-hidden" type="button" id="cancel-reply">Cancel reply</button>
+            </div>
+            <p class="form__message" id="form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <p class="form__hint">Everything here is read before it appears. Anything published stays published if you delete your account; your name is removed from it, the argument is not.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!--#include footer-->
+
+<script type="module" src="/assets/js/discuss.js"></script>
+</body>
+</html>
